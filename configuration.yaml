@@ -1,0 +1,66 @@
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Load frontend themes from the themes folder
+frontend:
+#  themes: !include_dir_merge_named themes
+  themes:
+    shelly:
+      ha-view-sections-column-gap: 0px
+      ha-section-grid-row-gap: 0px
+      ha-view-sections-row-gap: 4px
+      --custom-height-offset-desktop: -60px
+    musik:
+      --control-button-padding: 0
+      --control-button-border-radius: 10px
+      --control-button-background-opacity: 0
+  extra_module_url:
+    - /www/community/lovelace-card-mod/card-mod.js
+
+pyscript:
+  allow_all_imports: true
+  hass_is_global: true
+  global:
+    spotify_api_secret: !secret my_spotify_api_secret
+    spotify_client_id: !secret spotify_client_id
+    tado_home_id: !secret tado_home_id
+
+
+logger:
+  default: info
+  logs:
+    custom_components.pyscript: info
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+shell_command:
+  set_temperature_offset: /config/set_temperature_offset.sh {{ home_id }} {{ device }} {{ offset }}
+
+  get_tado_access_token: "jq -r '.access_token' /config/tado_response.json"
+
+  get_tado_response_json: "jq -r '.' /config/tado_response.json"
+
+  get_tado_rooms_devices_json: "jq -r '.' /config/tado_rooms_devices.json"
+
+  get_tado_temperature_as_measured: >-
+    jq -r '.rooms[].devices[] | select(.serialNumber=="{{ device }}") | .temperatureAsMeasured' /config/tado_rooms_devices.json
+
+  get_tado_schedule: /config/get_tado_schedule.sh {{ home_id }} {{zone}} {{room}}
+
+  get_tado_away_schedule: /config/get_tado_away_schedule.sh {{ home_id }} {{zone}} {{room}}
+  
+  get_tado_schedule_json: "jq -r '.' /config/tado_schedule_{{ room }}.json"
+
+  get_tado_away_schedule_json: "jq -r '.' /config/tado_away_schedule_{{ room }}.json"
+  
+  get_tado_rooms_devices: /config/get_tado_rooms_devices.sh {{ home_id }}
+
+  run_gitbackup: bash -c "/config/backup2git.sh >> /config/backup2git.log 2>&1"
+
+  
+  
+  
+  

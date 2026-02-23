@@ -1,0 +1,11 @@
+*
+!automations.yaml
+!scripts.yaml
+!configuration.yaml
+!pyscript/ 
+!pyscript/**
+!dashboard_backups/ 
+!dashboard_backups/**
+!**.sh
+!.gitignore
+

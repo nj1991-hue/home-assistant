@@ -1,0 +1,1772 @@
+- id: '1741251485090'
+  alias: regroup_when_tv_turns_off
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.someone_is_watching_tv
+    from: 'on'
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
+  conditions: []
+  actions:
+  - action: media_player.volume_set
+    metadata: {}
+    data:
+      volume_level: 0.02
+    target:
+      entity_id: media_player.stue
+  - action: media_player.join
+    metadata: {}
+    data:
+      group_members:
+      - media_player.spisestue
+      - media_player.stue
+    target:
+      entity_id: media_player.spisestue
+  mode: single
+- id: '1741252430255'
+  alias: turn_off_radio
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.radio_is_playing_on_sonos
+    from: 'on'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 15
+  conditions: []
+  actions:
+  - if:
+    - condition: state
+      entity_id: input_text.resume_npo_radio_2_after_commercials
+      state: 'True'
+    then:
+    - delay:
+        hours: 0
+        minutes: 20
+        seconds: 0
+    - if:
+      - condition: state
+        entity_id: binary_sensor.radio_is_playing_on_sonos
+        state: 'off'
+      then:
+      - action: media_player.turn_off
+        target:
+          entity_id: media_player.argon_radio_2i_305890754e1c
+        data: {}
+    else:
+    - action: media_player.turn_off
+      target:
+        entity_id: media_player.argon_radio_2i_305890754e1c
+      data: {}
+  mode: restart
+- id: '1741252873652'
+  alias: turn_on_radio
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - media_player.spisestue
+    to: playing
+    enabled: true
+  - trigger: state
+    entity_id:
+    - media_player.entre
+    to: playing
+    enabled: true
+  - trigger: state
+    entity_id:
+    - media_player.kokken
+    to: playing
+    enabled: true
+  - trigger: state
+    entity_id:
+    - media_player.stue
+    to: playing
+    enabled: true
+  conditions:
+  - condition: template
+    value_template: '{{ (state_attr(trigger.entity_id, ''group_members'') | first)
+      == trigger.entity_id }}'
+  - condition: state
+    entity_id: media_player.argon_radio_2i_305890754e1c
+    state: 'off'
+  - condition: time
+    after: 04:30:00
+  actions:
+  - variables:
+      trigger_entity_id: '{{ trigger.entity_id }}'
+  - wait_template: '{{ state_attr(trigger_entity_id, ''media_content_id'') != None
+      }}'
+    continue_on_timeout: false
+    timeout: '200'
+  - action: timer.start
+    metadata: {}
+    data: {}
+    target:
+      entity_id: timer.radio_turned_on_by_automation
+  - if:
+    - condition: template
+      value_template: '{{ state_attr(trigger_entity_id, ''media_content_id'') == ''x-rincon-stream:RINCON_804AF2CAFA8001400''
+        }}'
+    then:
+    - if:
+      - condition: state
+        entity_id: input_text.reset_radio
+        state: 'True'
+      then:
+      - action: script.play_npo_radio_2
+        metadata: {}
+        data: {}
+      - action: input_text.set_value
+        metadata: {}
+        data:
+          value: 'False'
+        target:
+          entity_id: input_text.reset_radio
+      else:
+      - action: media_player.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: media_player.argon_radio_2i_305890754e1c
+    - wait_template: '{{ state_attr(''media_player.argon_radio_2i_305890754e1c'',
+        ''source'') != None }}'
+      continue_on_timeout: false
+      timeout: '200'
+    - if:
+      - condition: and
+        conditions:
+        - condition: not
+          conditions:
+          - condition: state
+            entity_id: media_player.argon_radio_2i_305890754e1c
+            attribute: source
+            state: Internet radio
+        - condition: not
+          conditions:
+          - condition: state
+            entity_id: media_player.argon_radio_2i_305890754e1c
+            attribute: source
+            state: DAB
+      then:
+      - action: script.play_p3
+        metadata: {}
+        data: {}
+      else:
+      - if:
+        - condition: state
+          entity_id: media_player.argon_radio_2i_305890754e1c
+          attribute: source
+          state: Internet radio
+        - condition: state
+          entity_id: input_text.commercials_on_npo_radio_2
+          state: 'True'
+        - condition: state
+          entity_id: binary_sensor.npo_radio_2_is_playing
+          state: 'on'
+        then:
+        - action: media_player.shuffle_set
+          metadata: {}
+          data:
+            shuffle: true
+          target:
+            entity_id: '{{ trigger_entity_id }}'
+        - action: media_player.play_media
+          data:
+            media:
+              media_content_id: '{{ states(''input_text.npo_radio_2_filler_playlist_id'')
+                }}'
+              media_content_type: favorite_item_id
+              metadata: {}
+          target:
+            entity_id: '{{ trigger_entity_id }}'
+        - action: input_text.set_value
+          metadata: {}
+          data:
+            value: 'True'
+          target:
+            entity_id: input_text.resume_npo_radio_2_after_commercials
+        - action: media_player.shuffle_set
+          metadata: {}
+          data:
+            shuffle: true
+          target:
+            entity_id: '{{ trigger_entity_id }}'
+  mode: single
+- id: '1741254226889'
+  alias: autoplay_in_spisestue_when_radio_turns_on
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - media_player.argon_radio_2i_305890754e1c
+    to: playing
+    from: 'off'
+  - trigger: state
+    entity_id:
+    - media_player.argon_radio_2i_305890754e1c
+    from: 'off'
+    to: buffering
+  conditions:
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: media_player.spisestue
+      state: playing
+    enabled: false
+  - condition: state
+    entity_id: timer.radio_turned_on_by_automation
+    state: idle
+  actions:
+  - action: media_player.play_media
+    target:
+      entity_id: media_player.spisestue
+    data:
+      media:
+        media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
+        media_content_type: music
+        metadata: {}
+    enabled: true
+  mode: single
+- id: '1741254537447'
+  alias: autopause_when_radio_turns_off
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - media_player.argon_radio_2i_305890754e1c
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 5
+  conditions: []
+  actions:
+  - if:
+    - condition: state
+      entity_id: binary_sensor.source_in_spisestue_is_line_in
+      state: 'on'
+    then:
+    - action: media_player.media_pause
+      metadata: {}
+      data: {}
+      target:
+        entity_id: media_player.spisestue
+  - if:
+    - condition: state
+      entity_id: media_player.entre
+      attribute: media_content_id
+      state: x-rincon-stream:RINCON_804AF2CAFA8001400
+    - condition: state
+      entity_id: media_player.entre
+      state: playing
+    then:
+    - action: media_player.media_pause
+      metadata: {}
+      data: {}
+      target:
+        entity_id: media_player.entre
+  - if:
+    - condition: state
+      entity_id: media_player.stue
+      attribute: media_content_id
+      state: x-rincon-stream:RINCON_804AF2CAFA8001400
+    - condition: state
+      entity_id: media_player.stue
+      state: playing
+    then:
+    - action: media_player.media_pause
+      metadata: {}
+      data: {}
+      target:
+        entity_id: media_player.stue
+  - if:
+    - condition: state
+      entity_id: media_player.kokken
+      attribute: media_content_id
+      state: x-rincon-stream:RINCON_804AF2CAFA8001400
+    - condition: state
+      entity_id: media_player.kokken
+      state: playing
+    then:
+    - action: media_player.media_pause
+      metadata: {}
+      data: {}
+      target:
+        entity_id: media_player.kokken
+  mode: single
+- id: '1741261622126'
+  alias: mute_when_tv_turns_on
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.someone_is_watching_tv
+    to: 'on'
+  conditions: []
+  actions:
+  - action: media_player.volume_mute
+    metadata: {}
+    data:
+      is_volume_muted: true
+    target:
+      entity_id:
+      - media_player.kokken
+      - media_player.spisestue
+      - media_player.argon_radio_2i_305890754e1c
+  mode: single
+- id: '1741266815878'
+  alias: morning_sonos_routine
+  description: ''
+  triggers:
+  - trigger: time
+    at: 04:00:00
+  - trigger: homeassistant
+    event: start
+    enabled: false
+  conditions: []
+  actions:
+  - action: timer.start
+    metadata: {}
+    target:
+      entity_id: timer.sonos_morning_routine_running
+    data: {}
+  - action: media_player.volume_mute
+    metadata: {}
+    data:
+      is_volume_muted: false
+    target:
+      entity_id:
+      - media_player.entre
+      - media_player.spisestue
+      - media_player.kokken
+      - media_player.stue
+  - action: media_player.media_pause
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - media_player.entre
+      - media_player.kokken
+      - media_player.spisestue
+      - media_player.stue
+  - action: script.group_all_and_set_volume
+    metadata: {}
+    data: {}
+  - action: scene.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: scene.radio_is_playing_in_spisestue
+    enabled: true
+  - action: scene.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: scene.kokken_paused_and_media_is_70s_hits
+    enabled: false
+  - action: input_text.set_value
+    metadata: {}
+    data:
+      value: 'True'
+    target:
+      entity_id: input_text.kokken_feels_lucky
+    enabled: false
+  - action: input_text.set_value
+    metadata: {}
+    data:
+      value: 'True'
+    target:
+      entity_id: input_text.reset_radio
+  mode: single
+- id: '1741286126492'
+  alias: add_kitchen_when_airplaying_to_spisestue
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - media_player.spisestue
+    attribute: source
+    to: AirPlay
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 1
+  conditions: []
+  actions:
+  - action: script.add_kokken_to_group
+    metadata: {}
+    data: {}
+    enabled: true
+  - if:
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: binary_sensor.someone_is_watching_tv
+        state: 'on'
+    then:
+    - action: media_player.volume_mute
+      metadata: {}
+      data:
+        is_volume_muted: true
+      target:
+        entity_id: media_player.stue
+      enabled: false
+    - action: script.remove_stue_from_group
+      metadata: {}
+      data: {}
+    - action: media_player.media_pause
+      metadata: {}
+      data: {}
+      target:
+        entity_id: media_player.stue
+  mode: single
+- id: '1741362266184'
+  alias: unmute_when_tv_turns_off
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.someone_is_watching_tv
+    from: 'on'
+  conditions: []
+  actions:
+  - action: media_player.volume_mute
+    metadata: {}
+    data:
+      is_volume_muted: false
+    target:
+      entity_id:
+      - media_player.kokken
+      - media_player.spisestue
+  mode: single
+- id: '1741464304363'
+  alias: set_media_title_in_spisestue
+  description: ''
+  triggers:
+  - trigger: homeassistant
+    event: start
+  - trigger: state
+    entity_id:
+    - media_player.spisestue
+    attribute: media_title
+  conditions:
+  - condition: template
+    value_template: '{{ state_attr(''media_player.spisestue'', ''media_title'') !=
+      None }}'
+  actions:
+  - if:
+    - condition: state
+      entity_id: media_player.spisestue
+      attribute: media_title
+      state: Line-in
+    then:
+    - action: input_text.set_value
+      metadata: {}
+      data:
+        value: Line-in
+      target:
+        entity_id: input_text.media_title_in_spisestue
+    else:
+    - action: input_text.set_value
+      metadata: {}
+      data:
+        value: Other
+      target:
+        entity_id: input_text.media_title_in_spisestue
+  mode: single
+- id: '1741960678513'
+  alias: turn_off_sonos_and_lights_when_alarm_arms
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - alarm_control_panel.verisure_alarm
+    to: armed_away
+  conditions: []
+  actions:
+  - action: media_player.media_pause
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - media_player.entre
+      - media_player.kontor
+      - media_player.spisestue
+      - media_player.stue
+      - media_player.kokken
+  - action: light.turn_off
+    metadata: {}
+    target:
+      entity_id: light.entre
+    data: {}
+  mode: single
+- id: '1742300456337'
+  alias: regroup_on_pause
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.sonos_is_playing
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 5
+  conditions: []
+  actions:
+  - action: script.group_all
+    metadata: {}
+    data: {}
+    enabled: false
+  - action: script.add_kokken_to_group
+    metadata: {}
+    data: {}
+  - action: script.add_stue_to_group
+    metadata: {}
+    data: {}
+  - if:
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: binary_sensor.desktop_pc
+        state: 'on'
+    then:
+    - action: script.add_entre_to_group
+      metadata: {}
+      data: {}
+    enabled: false
+  - action: script.add_entre_to_group
+    metadata: {}
+    data: {}
+  mode: single
+- id: '1742471573592'
+  alias: regroup_entre_on_pause_when_source_is_pc_audio
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - media_player.entre
+    to:
+    - paused
+    from:
+    - playing
+    - idle
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 1
+  conditions:
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: media_player.entre
+      attribute: media_content_id
+      state: x-rincon-stream:RINCON_804AF2CAFA2401400:0
+    - condition: state
+      entity_id: media_player.entre
+      attribute: media_content_id
+      state: x-rincon-stream:RINCON_804AF2CAFA2401400
+  actions:
+  - action: script.add_entre_to_group
+    metadata: {}
+    data: {}
+  - if:
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: timer.pc_was_recently_turned_on
+        state: active
+    then:
+    - action: media_player.volume_mute
+      metadata: {}
+      data:
+        is_volume_muted: true
+      target:
+        entity_id: media_player.entre
+  mode: single
+- id: '1742824089639'
+  alias: set_variables_on_startup
+  description: ''
+  triggers:
+  - trigger: homeassistant
+    event: start
+  conditions: []
+  actions:
+  - action: input_number.set_value
+    metadata: {}
+    data_template:
+      value: '{{ [[state_attr(''climate.smart_radiator_orangerie'', ''temperature'')|float,
+        15]|max, 25]|min }}'
+    target:
+      entity_id: input_number.orangerie_temperature_helper
+  - action: input_number.set_value
+    metadata: {}
+    data_template:
+      value: '{{ [[state_attr(''climate.smart_radiator_kokken'', ''temperature'')|float,
+        15]|max, 25]|min }}'
+    target:
+      entity_id: input_number.kokken_temperature_helper
+  - action: input_number.set_value
+    metadata: {}
+    data_template:
+      value: '{{ [[state_attr(''climate.smart_radiator_spisestue'', ''temperature'')|float,
+        15]|max, 25]|min }}'
+    target:
+      entity_id: input_number.spisestue_temperature_helper
+  - action: input_number.set_value
+    metadata: {}
+    data_template:
+      value: '{{ [[state_attr(''climate.smart_radiator_stue'', ''temperature'')|float,
+        15]|max, 25]|min }}'
+    target:
+      entity_id: input_number.stue_temperature_helper
+  - action: input_number.set_value
+    metadata: {}
+    data_template:
+      value: '{{ [[state_attr(''climate.smart_radiator_toilet'', ''temperature'')|float,
+        15]|max, 25]|min }}'
+    target:
+      entity_id: input_number.toilet_temperature_helper
+  - action: input_number.set_value
+    metadata: {}
+    data_template:
+      value: '{{ [[state_attr(''climate.smart_radiator_sasha'', ''temperature'')|float,
+        15]|max, 25]|min }}'
+    target:
+      entity_id: input_number.sasha_temperature_helper
+  - action: input_number.set_value
+    metadata: {}
+    data_template:
+      value: '{{ [[state_attr(''climate.smart_radiator_kontor'', ''temperature'')|float,
+        15]|max, 25]|min }}'
+    target:
+      entity_id: input_number.kontor_temperature_helper
+  - action: input_number.set_value
+    metadata: {}
+    data_template:
+      value: '{{ [[state_attr(''climate.smart_radiator_nania'', ''temperature'')|float,
+        15]|max, 25]|min }}'
+    target:
+      entity_id: input_number.nania_temperature_helper
+  - action: input_number.set_value
+    metadata: {}
+    data_template:
+      value: '{{ [[state_attr(''climate.smart_radiator_mattias'', ''temperature'')|float,
+        15]|max, 25]|min }}'
+    target:
+      entity_id: input_number.mattias_temperature_helper
+  mode: single
+- id: '1742834228973'
+  alias: set_source_to_radio_on_idle_in_spisestue
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - media_player.spisestue
+    to: idle
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 10
+  conditions: []
+  actions:
+  - action: scene.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: scene.radio_is_playing_in_spisestue
+  mode: single
+- id: '1742892724604'
+  alias: set_sonos_helper_volume_when_volume_changes
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - media_player.kokken
+    attribute: volume_level
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 4
+  - trigger: state
+    entity_id:
+    - media_player.entre
+    attribute: volume_level
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 4
+  - trigger: state
+    entity_id:
+    - media_player.stue
+    attribute: volume_level
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 4
+  - trigger: state
+    entity_id:
+    - media_player.spisestue
+    attribute: volume_level
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 4
+  conditions: []
+  actions:
+  - wait_template: '{{state_attr(trigger.entity_id,''volume_level'') != None }}'
+    continue_on_timeout: false
+    timeout: '10'
+  - data:
+      value: '{{ [( (state_attr(trigger.entity_id,''volume_level'') | float) * 100.0)
+        | int, 20]|min }}
+
+        '
+    target:
+      entity_id: input_number.{{ trigger.entity_id.split('.')[-1] }}_volume
+    action: input_number.set_value
+  mode: queued
+- id: '1742894416844'
+  alias: set_sonos_volume_when_helper_volume_changes
+  description: ''
+  triggers:
+  - entity_id:
+    - input_number.entre_volume
+    trigger: state
+  - entity_id:
+    - input_number.stue_volume
+    trigger: state
+  - entity_id:
+    - input_number.spisestue_volume
+    trigger: state
+  - entity_id:
+    - input_number.kokken_volume
+    trigger: state
+  conditions: []
+  actions:
+  - if:
+    - condition: state
+      entity_id: binary_sensor.someone_is_watching_tv
+      state: 'on'
+    - condition: template
+      value_template: '{{ trigger.entity_id == ''input_number.stue_volume'' }}'
+    then:
+    - stop: Someone is watching TV
+    else:
+    - target:
+        entity_id: media_player.{{trigger.entity_id.split('.')[-1].split('_')[0]}}
+      data:
+        volume_level: '{{ ( (states(trigger.entity_id) | float) / 100.0) | float|round(2)
+          }}
+
+          '
+      action: media_player.volume_set
+  mode: queued
+- id: '1742900055548'
+  alias: force_autoplay_in_spisestue_when_radio_changes_to_aux_in
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - media_player.argon_radio_2i_305890754e1c
+    to: AUX in
+    attribute: source
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 3
+  conditions: []
+  actions:
+  - action: media_player.play_media
+    target:
+      entity_id: media_player.spisestue
+    data:
+      media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
+      media_content_type: music
+    enabled: true
+  mode: single
+- id: '1743707401510'
+  alias: set_home_state_to_night
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - alarm_control_panel.verisure_alarm
+    to: armed_home
+    from: disarmed
+  - trigger: state
+    entity_id:
+    - alarm_control_panel.verisure_alarm
+    from: armed_away
+    to: armed_home
+  - trigger: time
+    at: 02:00:00
+  conditions:
+  - condition: state
+    entity_id: alarm_control_panel.verisure_alarm
+    state:
+    - armed_home
+    - disarmed
+  actions:
+  - action: input_text.set_value
+    metadata: {}
+    data:
+      value: Home - Night
+    target:
+      entity_id: input_text.home_state
+  mode: single
+- id: '1743707796648'
+  alias: set_home_state_to_home
+  description: ''
+  triggers:
+  - trigger: numeric_state
+    entity_id:
+    - sensor.shellywalldisplay_0008225bc076_illuminance
+    above: 15
+  - trigger: time
+    at: 08:00:00
+  - trigger: state
+    entity_id:
+    - alarm_control_panel.verisure_alarm
+    from: armed_away
+  - trigger: time
+    at: '12:01:00'
+  - trigger: time
+    at: '17:01:00'
+  - trigger: state
+    entity_id:
+    - media_player.kokken
+    - media_player.spisestue
+    - media_player.stue
+    - media_player.entre
+    to: playing
+    from: paused
+  - trigger: state
+    entity_id:
+    - sensor.nick_s_iphone_battery_state
+    - sensor.anna_s_iphone_battery_state
+    to: Not Charging
+  conditions:
+  - condition: state
+    entity_id: alarm_control_panel.verisure_alarm
+    state: disarmed
+    enabled: true
+  - condition: time
+    after: 04:30:00
+  actions:
+  - action: pyscript.set_home_state_to_home
+    metadata: {}
+    data: {}
+  mode: restart
+- id: '1743707999117'
+  alias: set_home_state_to_away
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - alarm_control_panel.verisure_alarm
+    to: armed_away
+  conditions: []
+  actions:
+  - action: input_text.set_value
+    metadata: {}
+    data:
+      value: Away
+    target:
+      entity_id: input_text.home_state
+  mode: single
+- id: '1743796322809'
+  alias: set_duka_mode_based_on_humidity
+  description: ''
+  triggers:
+  - trigger: time_pattern
+    hours: '*'
+  conditions: []
+  actions:
+  - if:
+    - condition: template
+      value_template: '{{ (states(''sensor.kaelder_gang_humidity'')|float - state_attr(''weather.forecast_home'',''humidity'')|float)
+        >2 }}'
+    then:
+    - action: dukaone.set_mode
+      metadata: {}
+      data:
+        entity_id: fan.cykelrum
+        mode: in
+    - action: dukaone.set_mode
+      metadata: {}
+      data:
+        entity_id: fan.fryserrum
+        mode: in
+    - action: dukaone.set_mode
+      metadata: {}
+      data:
+        entity_id: fan.vaskerum
+        mode: in
+    - action: dukaone.set_mode
+      metadata: {}
+      data:
+        entity_id: fan.vaerksted
+        mode: in
+    - action: dukaone.set_mode
+      metadata: {}
+      data:
+        entity_id: fan.gang
+        mode: in
+    - action: dukaone.set_mode
+      metadata: {}
+      data:
+        entity_id: fan.toilet
+        mode: in
+    - action: dukaone.set_mode
+      metadata: {}
+      data:
+        entity_id: fan.lille_rum
+        mode: in
+    else:
+    - if:
+      - condition: template
+        value_template: '{{ (states(''sensor.kaelder_gang_humidity'')|float - state_attr(''weather.forecast_home'',''humidity'')|float)
+          < -2 }}'
+      then:
+      - action: dukaone.set_mode
+        metadata: {}
+        data:
+          entity_id: fan.cykelrum
+          mode: out
+      - action: dukaone.set_mode
+        metadata: {}
+        data:
+          entity_id: fan.fryserrum
+          mode: out
+      - action: dukaone.set_mode
+        metadata: {}
+        data:
+          entity_id: fan.vaskerum
+          mode: out
+      - action: dukaone.set_mode
+        metadata: {}
+        data:
+          entity_id: fan.vaerksted
+          mode: out
+      - action: dukaone.set_mode
+        metadata: {}
+        data:
+          entity_id: fan.gang
+          mode: out
+      - action: dukaone.set_mode
+        metadata: {}
+        data:
+          entity_id: fan.toilet
+          mode: out
+      - action: dukaone.set_mode
+        metadata: {}
+        data:
+          entity_id: fan.lille_rum
+          mode: out
+      else:
+      - action: dukaone.set_mode
+        metadata: {}
+        data:
+          entity_id: fan.cykelrum
+          mode: inout
+      - action: dukaone.set_mode
+        metadata: {}
+        data:
+          entity_id: fan.fryserrum
+          mode: inout
+      - action: dukaone.set_mode
+        metadata: {}
+        data:
+          entity_id: fan.vaskerum
+          mode: inout
+      - action: dukaone.set_mode
+        metadata: {}
+        data:
+          entity_id: fan.vaerksted
+          mode: inout
+      - action: dukaone.set_mode
+        metadata: {}
+        data:
+          entity_id: fan.gang
+          mode: inout
+      - action: dukaone.set_mode
+        metadata: {}
+        data:
+          entity_id: fan.toilet
+          mode: inout
+      - action: dukaone.set_mode
+        metadata: {}
+        data:
+          entity_id: fan.lille_rum
+          mode: inout
+  mode: single
+- id: '1744130467654'
+  alias: turn_tado_on_after_sunset
+  description: ''
+  triggers:
+  - trigger: sun
+    event: sunset
+  conditions:
+  - condition: numeric_state
+    entity_id: weather.forecast_home
+    attribute: temperature
+    below: 5
+  - condition: template
+    value_template: '{{ "Home" in states(''input_text.home_state'') }}'
+  actions:
+  - action: climate.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - climate.smart_radiator_kokken
+      - climate.smart_radiator_spisestue
+      - climate.smart_radiator_orangerie
+      - climate.smart_radiator_stue
+      - climate.smart_radiator_entre
+  - if:
+    - condition: state
+      entity_id: binary_sensor.aqara_door_and_window_sensor_sasha
+      state: 'off'
+    then:
+    - action: climate.turn_on
+      metadata: {}
+      data: {}
+      target:
+        entity_id: climate.smart_radiator_sasha
+  - if:
+    - condition: state
+      entity_id: binary_sensor.aqara_door_and_window_sensor_mattias
+      state: 'off'
+    then:
+    - action: climate.turn_on
+      metadata: {}
+      data: {}
+      target:
+        entity_id: climate.smart_radiator_mattias
+  - if:
+    - condition: state
+      entity_id: binary_sensor.aqara_door_and_window_sensor_nania
+      state: 'off'
+    then:
+    - action: climate.turn_on
+      metadata: {}
+      data: {}
+      target:
+        entity_id: climate.smart_radiator_nania
+  - if:
+    - condition: state
+      entity_id: binary_sensor.aqara_door_and_window_sensor_kontor
+      state: 'off'
+    then:
+    - action: climate.turn_on
+      metadata: {}
+      data: {}
+      target:
+        entity_id: climate.smart_radiator_kontor
+  mode: single
+- id: '1745397458857'
+  alias: refresh_tado_token
+  description: ''
+  triggers:
+  - minutes: /9
+    trigger: time_pattern
+    enabled: false
+  - trigger: homeassistant
+    event: start
+  - trigger: state
+    entity_id:
+    - timer.tado_token_expiration_timer
+    to: idle
+    from: active
+  actions:
+  - action: shell_command.get_tado_token
+    data: {}
+    enabled: false
+  - action: pyscript.refresh_tado_token
+    metadata: {}
+    data: {}
+  - action: timer.start
+    metadata: {}
+    data: {}
+    target:
+      entity_id: timer.tado_token_expiration_timer
+  - action: pyscript.check_tado_response
+    metadata: {}
+    data: {}
+  mode: single
+- id: '1750959646911'
+  alias: turn_shuffle_off_when_album_of_the_week_plays_on_sonos_in_kokken
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - media_player.kokken
+    attribute: media_playlist
+    to: Album of the week
+  conditions:
+  - condition: state
+    entity_id: binary_sensor.kokken_is_on_shuffle
+    state: 'on'
+  actions:
+  - action: media_player.shuffle_set
+    metadata: {}
+    data:
+      shuffle: false
+    target:
+      entity_id: media_player.kokken
+  - action: media_player.play_media
+    metadata:
+      title: Album of the week
+      thumbnail: https://is1-ssl.mzstatic.com/image/thumb/gen/600x600AM.PDCXS02.jpg?c1=CCCCCC&c2=FAC7AF&c3=FFAF00&c4=181333&signature=9e477dc850ff85d5081de51c1008cb56eab414553844fe2fb974d3a0403900e6&t=QWxidW0gb2YgdGhlIHdlZWs%3D&tc=FFFFFF&vkey=1
+      media_class: playlist
+      children_media_class:
+      navigateIds:
+      - {}
+      - media_content_type: favorites
+        media_content_id: ''
+      - media_content_type: favorites_folder
+        media_content_id: object.container.playlistContainer
+    data:
+      media_content_id: FV:2/44
+      media_content_type: favorite_item_id
+    target:
+      entity_id: media_player.kokken
+  mode: single
+- id: '1751961112615'
+  alias: reset_kokken_feels_lucky
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - input_text.kokken_media_header
+  conditions:
+  - condition: time
+    after: 04:30:00
+  actions:
+  - action: input_text.set_value
+    metadata: {}
+    data:
+      value: 'False'
+    target:
+      entity_id: input_text.kokken_feels_lucky
+  mode: single
+- id: '1756061389014'
+  alias: play_pc_audio_in_entre_when_pc_turns_on
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.desktop_pc
+    from: 'off'
+    to: 'on'
+  conditions:
+  - condition: time
+    after: 05:00:00
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: timer.pc_was_recently_turned_off
+      state: active
+  actions:
+  - action: script.remove_entre_from_group
+    metadata: {}
+    data: {}
+  - action: media_player.play_media
+    data:
+      media:
+        media_content_id: x-rincon-stream:RINCON_804AF2CAFA2401400
+        media_content_type: music
+        metadata: {}
+    target:
+      entity_id:
+      - media_player.entre
+  - action: timer.start
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - timer.pc_was_recently_turned_on
+  mode: single
+- id: '1756061533648'
+  alias: play_pc_audio_in_entre_when_entre_pauses
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - media_player.entre
+    from: playing
+    to: paused
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 3
+  conditions:
+  - condition: state
+    entity_id: binary_sensor.desktop_pc
+    state: 'on'
+  - condition: time
+    after: 05:00:00
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: media_player.entre
+      attribute: media_content_id
+      state: x-rincon-stream:RINCON_804AF2CAFA2401400
+  actions:
+  - action: script.remove_entre_from_group
+    metadata: {}
+    data: {}
+  - action: media_player.play_media
+    metadata: {}
+    data:
+      media_content_id: x-rincon-stream:RINCON_804AF2CAFA2401400
+      media_content_type: music
+    target:
+      entity_id: media_player.entre
+  mode: single
+- id: '1756129052322'
+  alias: pause_pc_audio_in_entre_when_pc_turns_off
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.desktop_pc
+    from: 'on'
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  conditions:
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: media_player.entre
+      attribute: media_content_id
+      state: x-rincon-stream:RINCON_804AF2CAFA2401400:0
+    - condition: state
+      entity_id: media_player.entre
+      attribute: media_content_id
+      state: x-rincon-stream:RINCON_804AF2CAFA2401400
+  actions:
+  - action: media_player.media_pause
+    metadata: {}
+    data: {}
+    target:
+      entity_id: media_player.entre
+  mode: single
+- id: '1756231797928'
+  alias: start_timer_when_pc_turns_off
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.desktop_pc
+    from: 'on'
+    to: 'off'
+  conditions: []
+  actions:
+  - action: timer.start
+    metadata: {}
+    data: {}
+    target:
+      entity_id: timer.pc_was_recently_turned_off
+  mode: single
+- id: '1758200501341'
+  alias: set_reset_radio_helper_when_radio_turns_off
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - media_player.argon_radio_2i_305890754e1c
+    to: 'off'
+    from: playing
+  conditions: []
+  actions:
+  - action: input_text.set_value
+    metadata: {}
+    data:
+      value: 'False'
+    target:
+      entity_id: input_text.reset_radio
+  mode: single
+- id: '1760031004540'
+  alias: turn_on_radio_v2
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - media_player.spisestue
+    to: playing
+    enabled: true
+  - trigger: state
+    entity_id:
+    - media_player.entre
+    to: playing
+    enabled: true
+  - trigger: state
+    entity_id:
+    - media_player.kokken
+    to: playing
+    enabled: true
+  - trigger: state
+    entity_id:
+    - media_player.stue
+    to: playing
+    enabled: true
+  conditions:
+  - condition: template
+    value_template: '{{ (state_attr(trigger.entity_id, ''group_members'') | first)
+      == trigger.entity_id }}'
+  - condition: state
+    entity_id: timer.sonos_morning_routine_running
+    state:
+    - idle
+  actions:
+  - if:
+    - condition: state
+      entity_id: media_player.argon_radio_2i_305890754e1c
+      state:
+      - unavailable
+    then:
+    - action: media_player.play_media
+      metadata: {}
+      target:
+        entity_id: '{{ trigger.entity_id }}'
+      data:
+        media:
+          media_content_id: FV:2/73
+          media_content_type: favorite_item_id
+          metadata:
+            title: Radio Vinyl
+            thumbnail: https://dtu8ldmaopof3.cloudfront.net/i/b64aHR0cHM6Ly9hc3NldHMucGxhbmV0cmFkaW8uY28udWsvaW1nL0NvbmZpZ0xvY2tTY3JlZW5JbWFnZVVybC80MjUuanBnP3Zlcj0xNTgyMDM3MTE4_640.jpg
+            media_class: genre
+            children_media_class:
+            navigateIds:
+            - {}
+            - media_content_type: favorites
+              media_content_id: ''
+            - media_content_type: favorites_folder
+              media_content_id: object.item.audioItem.audioBroadcast
+            browse_entity_id: media_player.stue
+    else:
+    - action: script.handle_radio_playback
+      data:
+        trigger_entity_id: '{{ trigger.entity_id }}'
+  mode: queued
+- id: '1760890086698'
+  alias: toggle_duka
+  description: ''
+  triggers:
+  - trigger: time_pattern
+    hours: /1
+  conditions: []
+  actions:
+  - action: dukaone.set_mode
+    metadata: {}
+    data:
+      entity_id: fan.gang
+      mode: out
+  - action: dukaone.set_mode
+    metadata: {}
+    data:
+      entity_id: fan.fryserrum
+      mode: out
+  - action: dukaone.set_mode
+    metadata: {}
+    data:
+      entity_id: fan.toilet
+      mode: out
+  - action: dukaone.set_mode
+    metadata: {}
+    data:
+      entity_id: fan.vaskerum
+      mode: in
+  - action: dukaone.set_mode
+    metadata: {}
+    data:
+      entity_id: fan.lille_rum
+      mode: in
+  - action: dukaone.set_mode
+    metadata: {}
+    data:
+      entity_id: fan.vaerksted
+      mode: in
+  - action: dukaone.set_mode
+    metadata: {}
+    data:
+      entity_id: fan.cykelrum
+      mode: in
+  - delay:
+      hours: 0
+      minutes: 30
+      seconds: 0
+      milliseconds: 0
+  - action: dukaone.set_mode
+    metadata: {}
+    data:
+      entity_id: fan.gang
+      mode: in
+  - action: dukaone.set_mode
+    metadata: {}
+    data:
+      entity_id: fan.fryserrum
+      mode: in
+  - action: dukaone.set_mode
+    metadata: {}
+    data:
+      entity_id: fan.toilet
+      mode: in
+  - action: dukaone.set_mode
+    metadata: {}
+    data:
+      entity_id: fan.vaskerum
+      mode: out
+  - action: dukaone.set_mode
+    metadata: {}
+    data:
+      entity_id: fan.lille_rum
+      mode: out
+  - action: dukaone.set_mode
+    metadata: {}
+    data:
+      entity_id: fan.vaerksted
+      mode: out
+  - action: dukaone.set_mode
+    metadata: {}
+    data:
+      entity_id: fan.cykelrum
+      mode: out
+  mode: single
+- id: '1766252874124'
+  alias: turn_holiday_mode_on
+  description: ''
+  triggers:
+  - trigger: time
+    at: 03:00:00
+  conditions:
+  - condition: state
+    entity_id: input_text.home_state
+    state:
+    - Away
+  actions:
+  - action: input_text.set_value
+    metadata: {}
+    target:
+      entity_id: input_text.on_holiday
+    data:
+      value: 'True'
+  mode: single
+- id: '1766252934900'
+  alias: turn_holiday_mode_off
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - input_text.home_state
+  conditions: []
+  actions:
+  - action: input_text.set_value
+    metadata: {}
+    target:
+      entity_id: input_text.on_holiday
+    data:
+      value: 'False'
+  mode: single
+- id: '1767702101097'
+  alias: start_sheldon
+  description: ''
+  triggers:
+  - trigger: time
+    at: '10:00:00'
+  conditions:
+  - condition: state
+    entity_id: input_text.home_state
+    state:
+    - Away
+  actions:
+  - action: vacuum.start
+    metadata: {}
+    target:
+      entity_id: vacuum.sheldon
+    data: {}
+  mode: single
+- id: '1767702250196'
+  alias: stop_sheldon
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - input_text.home_state
+    from:
+    - Away
+  conditions:
+  - condition: state
+    entity_id: vacuum.sheldon
+    state:
+    - cleaning
+    - paused
+  actions:
+  - if:
+    - condition: state
+      entity_id: vacuum.sheldon
+      state:
+      - paused
+    then:
+    - action: vacuum.stop
+      metadata: {}
+      target:
+        entity_id: vacuum.sheldon
+      data: {}
+  - if:
+    - condition: state
+      entity_id: vacuum.sheldon
+      state:
+      - cleaning
+    then:
+    - action: vacuum.return_to_base
+      metadata: {}
+      target:
+        entity_id: vacuum.sheldon
+      data: {}
+  mode: single
+- id: '1768985937378'
+  alias: show_media_player_controls_on_shelly
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - media_player.kokken
+    to:
+    - playing
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 4
+  conditions: []
+  actions:
+  - action: input_text.set_value
+    metadata: {}
+    target:
+      entity_id: input_text.show_media_player_controls_on_shelly
+    data:
+      value: 'True'
+  mode: single
+- id: '1768985991973'
+  alias: hide_media_player_controls_on_shelly
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - media_player.kokken
+    from:
+    - playing
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 2
+  conditions: []
+  actions:
+  - action: input_text.set_value
+    metadata: {}
+    target:
+      entity_id: input_text.show_media_player_controls_on_shelly
+    data:
+      value: 'False'
+  mode: single
+- id: '1769021339193'
+  alias: toggle_entre_light_when_shelly_detects_click
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.shelly1pmg3_cc8da246cdd0_input_0
+    from:
+    - 'on'
+    to:
+    - 'off'
+  - trigger: state
+    entity_id:
+    - binary_sensor.shelly1pmg3_cc8da246cdd0_input_0
+    from:
+    - 'off'
+    to:
+    - 'on'
+  conditions: []
+  actions:
+  - action: switch.turn_on
+    metadata: {}
+    target:
+      entity_id: switch.shelly1pmg3_cc8da246cdd0
+    data: {}
+    enabled: true
+  - action: script.toggle_hue
+    metadata: {}
+    data:
+      entity_id: light.entre
+      scene_entity_id: scene.entre_laes
+  mode: queued
+- id: '1769023177837'
+  alias: handle_aqara_button_press
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - event.aqara_wireless_mini_switch_t1_button
+  conditions:
+  - condition: template
+    value_template: "{{ trigger.from_state is defined\n   and trigger.to_state is
+      defined\n   and trigger.from_state.state not in ['unavailable', 'unknown']\n
+      \  and trigger.to_state.state not in ['unavailable', 'unknown'] }}\n"
+  actions:
+  - if:
+    - condition: state
+      entity_id: event.aqara_wireless_mini_switch_t1_button
+      state:
+      - 1
+      attribute: totalNumberOfPressesCounted
+    then:
+    - action: script.toggle_hue
+      metadata: {}
+      data:
+        entity_id: light.entre
+        scene_entity_id: scene.entre_laes
+    else:
+    - if:
+      - condition: state
+        entity_id: event.aqara_wireless_mini_switch_t1_button
+        state:
+        - 2
+        attribute: totalNumberOfPressesCounted
+      then:
+      - action: media_player.media_play_pause
+        metadata: {}
+        target:
+          entity_id: media_player.kokken
+        data: {}
+  mode: single
+- id: '1770923084869'
+  alias: toggle_hide_radio_vinyl_button_on_shelly_boolean
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.hide_radio_vinyl_button_on_shelly
+    from:
+    - 'off'
+    to:
+    - 'on'
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
+  - trigger: state
+    entity_id:
+    - binary_sensor.hide_radio_vinyl_button_on_shelly
+    from:
+    - 'on'
+    to:
+    - 'off'
+  conditions: []
+  actions:
+  - if:
+    - condition: state
+      entity_id: binary_sensor.hide_radio_vinyl_button_on_shelly
+      state:
+      - 'on'
+    then:
+    - action: input_boolean.turn_on
+      metadata: {}
+      target:
+        entity_id: input_boolean.hide_radio_vinyl_button_on_shelly
+      data: {}
+    else:
+    - action: input_boolean.turn_off
+      metadata: {}
+      target:
+        entity_id: input_boolean.hide_radio_vinyl_button_on_shelly
+      data: {}
+  mode: single
+- id: '1771269315483'
+  alias: reset_kokken_sonos_volume_when_muted
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.kokken_is_muted
+    to:
+    - 'on'
+    for:
+      hours: 0
+      minutes: 30
+      seconds: 0
+  conditions: []
+  actions:
+  - action: script.reset_kokken_volume
+    metadata: {}
+    data: {}
+  mode: single
+- id: '1771269368234'
+  alias: reset_spisestue_sonos_volume_when_muted
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.spisestue_is_muted
+    to:
+    - 'on'
+    for:
+      hours: 0
+      minutes: 30
+      seconds: 0
+  conditions: []
+  actions:
+  - action: script.reset_spisestue_volume
+    metadata: {}
+    data: {}
+  mode: single
+- id: '1771269470928'
+  alias: reset_sonos_volume_when_home_state_changes_to_away
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - input_text.home_state
+    to:
+    - Away
+  conditions: []
+  actions:
+  - action: script.reset_spisestue_volume
+    metadata: {}
+    data: {}
+  - action: script.reset_entre_volume
+    metadata: {}
+    data: {}
+  - action: script.reset_kokken_volume
+    metadata: {}
+    data: {}
+  - action: script.reset_stue_volume
+    metadata: {}
+    data: {}
+  mode: single
+- id: '1771357691377'
+  alias: backup_to_git
+  description: ''
+  triggers:
+  - trigger: time
+    at: 05:00:00
+  conditions: []
+  actions:
+  - action: shell_command.run_gitbackup
+    metadata: {}
+    data: {}
+  mode: single

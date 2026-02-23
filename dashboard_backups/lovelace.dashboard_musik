@@ -1,0 +1,2580 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace.dashboard_musik",
+  "data": {
+    "config": {
+      "views": [
+        {
+          "title": "Musik",
+          "sections": [
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading_style": "title",
+                  "visibility": [
+                    {
+                      "condition": "screen",
+                      "media_query": "(min-width: 768px)"
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Controls",
+                  "grid_options": {
+                    "columns": 12,
+                    "rows": 0.45
+                  },
+                  "card_layout": "normal"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "grid_options": {
+                    "columns": 12,
+                    "rows": 1
+                  },
+                  "icon": "mdi:power",
+                  "sub_button": [
+                    {
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.group_all",
+                        "target": {}
+                      },
+                      "icon": "mdi:group",
+                      "state_background": false
+                    },
+                    {
+                      "entity": "script.increase_master_volume",
+                      "icon": "mdi:volume-minus",
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.decrease_master_volume",
+                        "target": {}
+                      }
+                    },
+                    {
+                      "entity": "script.increase_master_volume",
+                      "icon": "mdi:volume-plus",
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.increase_master_volume",
+                        "target": {}
+                      }
+                    }
+                  ],
+                  "show_icon": true,
+                  "show_name": false,
+                  "show_state": false,
+                  "force_icon": false,
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "script.play_pause_all_grouped_speakers",
+                    "target": {}
+                  },
+                  "styles": "${icon.setAttribute(\"icon\", hass.states['binary_sensor.any_speaker_in_group_is_playing'].state === 'on' ? 'mdi:power' : 'mdi:play')}\n",
+                  "entity": "binary_sensor.any_speaker_in_group_is_playing",
+                  "modules": [
+                    "default"
+                  ],
+                  "button_action": {
+                    "tap_action": {
+                      "action": "none"
+                    }
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "input_number.spisestue_volume",
+                  "button_type": "slider",
+                  "name": "Spisestue",
+                  "icon": "mdi:speaker-play",
+                  "grid_options": {
+                    "rows": 1
+                  },
+                  "show_attribute": false,
+                  "show_last_changed": false,
+                  "slider_live_update": false,
+                  "force_icon": false,
+                  "show_state": true,
+                  "tap_action": {
+                    "action": "perform-action",
+                    "target": {
+                      "entity_id": "media_player.spisestue"
+                    },
+                    "perform_action": "media_player.media_play_pause"
+                  },
+                  "styles": ".bubble-range-fill {\n  background: ${hass.states['media_player.spisestue'].attributes.is_volume_muted ? 'rgba(255, 152, 0, 0.2)' : ''} !important;\n} ${icon.setAttribute(\"icon\", hass.states['media_player.spisestue'].state === 'playing' ? 'mdi:power' : 'mdi:play')} ${subButtonIcon[0].setAttribute(\"icon\", hass.states['media_player.spisestue'].attributes.is_volume_muted ? 'mdi:volume-mute' : 'mdi:volume-high') }\n",
+                  "sub_button": [
+                    {
+                      "entity": "media_player.spisestue",
+                      "icon": "mdi:volume-off",
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.mute_or_unmute_spisestue",
+                        "target": {}
+                      },
+                      "show_state": false,
+                      "show_attribute": false,
+                      "attribute": "is_volume_muted",
+                      "state_background": false,
+                      "show_background": false
+                    }
+                  ],
+                  "modules": [
+                    "default"
+                  ],
+                  "button_action": {
+                    "tap_action": {
+                      "action": "none"
+                    }
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "input_number.kokken_volume",
+                  "button_type": "slider",
+                  "name": "Køkken",
+                  "icon": "mdi:speaker",
+                  "grid_options": {
+                    "columns": 12,
+                    "rows": 1
+                  },
+                  "show_state": true,
+                  "tap_action": {
+                    "action": "perform-action",
+                    "target": {
+                      "entity_id": "media_player.kokken"
+                    },
+                    "perform_action": "media_player.media_play_pause"
+                  },
+                  "styles": ".bubble-range-fill {\n  background: ${hass.states['binary_sensor.kokken_is_grouped'].state != 'on' ? 'rgb(168, 168, 168)' : hass.states['media_player.kokken'].attributes.is_volume_muted ? 'rgba(255, 152, 0, 0.2)' : ''} !important;\n} ${icon.setAttribute(\"icon\", hass.states['media_player.kokken'].state === 'playing' ? 'mdi:power' : 'mdi:play')} ${subButtonIcon[0].setAttribute(\"icon\", hass.states['binary_sensor.kokken_is_grouped'].state === 'on' ? 'mdi:check-circle' : 'mdi:checkbox-marked-circle-plus-outline')} ${subButtonIcon[1].setAttribute(\"icon\", hass.states['media_player.kokken'].attributes.is_volume_muted ? 'mdi:volume-mute' : 'mdi:volume-high') }\n",
+                  "sub_button": [
+                    {
+                      "icon": "mdi:check-circle-outline",
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.toggle_kokken_in_group",
+                        "target": {}
+                      },
+                      "state_background": false,
+                      "show_background": false,
+                      "show_attribute": false
+                    },
+                    {
+                      "entity": "media_player.kokken",
+                      "icon": "mdi:volume-off",
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.mute_or_unmute_kokken",
+                        "target": {}
+                      },
+                      "show_state": false,
+                      "show_attribute": false,
+                      "attribute": "is_volume_muted",
+                      "state_background": false,
+                      "show_background": false
+                    }
+                  ],
+                  "modules": [
+                    "default"
+                  ],
+                  "button_action": {
+                    "tap_action": {
+                      "action": "none"
+                    }
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "input_number.entre_volume",
+                  "button_type": "slider",
+                  "name": "Entré",
+                  "icon": "mdi:speaker",
+                  "grid_options": {
+                    "columns": 12,
+                    "rows": 1
+                  },
+                  "show_state": true,
+                  "tap_action": {
+                    "action": "perform-action",
+                    "target": {
+                      "entity_id": "media_player.entre"
+                    },
+                    "perform_action": "media_player.media_play_pause"
+                  },
+                  "styles": ".bubble-range-fill {\n  background: ${hass.states['binary_sensor.entre_is_grouped'].state != 'on' ? 'rgb(168, 168, 168)' : hass.states['media_player.entre'].attributes.is_volume_muted ? 'rgba(255, 152, 0, 0.2)' : ''} !important;\n} ${icon.setAttribute(\"icon\", hass.states['media_player.entre'].state === 'playing' ? 'mdi:power' : 'mdi:play')} ${subButtonIcon[0].setAttribute(\"icon\", hass.states['binary_sensor.entre_is_grouped'].state === 'on' ? 'mdi:check-circle' : 'mdi:checkbox-marked-circle-plus-outline')} ${subButtonIcon[1].setAttribute(\"icon\", hass.states['media_player.entre'].attributes.is_volume_muted ? 'mdi:volume-mute' : 'mdi:volume-high') }\n",
+                  "sub_button": [
+                    {
+                      "icon": "mdi:check-circle-outline",
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.toggle_entre_in_group",
+                        "target": {}
+                      },
+                      "state_background": false,
+                      "show_background": false,
+                      "show_attribute": false
+                    },
+                    {
+                      "entity": "media_player.entre",
+                      "icon": "mdi:volume-off",
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.mute_or_unmute_entre",
+                        "target": {}
+                      },
+                      "show_state": false,
+                      "show_attribute": false,
+                      "attribute": "is_volume_muted",
+                      "state_background": false,
+                      "show_background": false
+                    }
+                  ],
+                  "modules": [
+                    "default"
+                  ],
+                  "button_action": {
+                    "tap_action": {
+                      "action": "none"
+                    }
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "input_number.stue_volume",
+                  "button_type": "slider",
+                  "name": "Stue",
+                  "icon": "mdi:speaker",
+                  "grid_options": {
+                    "columns": 12,
+                    "rows": 1
+                  },
+                  "show_state": true,
+                  "tap_action": {
+                    "action": "perform-action",
+                    "target": {
+                      "entity_id": "media_player.stue"
+                    },
+                    "perform_action": "media_player.media_play_pause"
+                  },
+                  "styles": ".bubble-range-fill {\n  background: ${hass.states['binary_sensor.stue_is_grouped'].state != 'on' ? 'rgb(168, 168, 168)' : hass.states['media_player.stue'].attributes.is_volume_muted ? 'rgba(255, 152, 0, 0.2)' : ''} !important;\n} ${icon.setAttribute(\"icon\", hass.states['media_player.stue'].state === 'playing' ? 'mdi:power' : 'mdi:play')} ${subButtonIcon[0].setAttribute(\"icon\", hass.states['binary_sensor.stue_is_grouped'].state === 'on' ? 'mdi:check-circle' : 'mdi:checkbox-marked-circle-plus-outline')} ${subButtonIcon[1].setAttribute(\"icon\", hass.states['media_player.stue'].attributes.is_volume_muted ? 'mdi:volume-mute' : 'mdi:volume-high') }\n",
+                  "sub_button": [
+                    {
+                      "icon": "mdi:check-circle-outline",
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.toggle_stue_in_group",
+                        "target": {}
+                      },
+                      "state_background": false,
+                      "show_background": false,
+                      "show_attribute": false
+                    },
+                    {
+                      "entity": "media_player.stue",
+                      "icon": "mdi:volume-off",
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.mute_or_unmute_stue",
+                        "target": {}
+                      },
+                      "show_state": false,
+                      "show_attribute": false,
+                      "attribute": "is_volume_muted",
+                      "state_background": false,
+                      "show_background": false
+                    }
+                  ],
+                  "visibility": [
+                    {
+                      "condition": "state",
+                      "entity": "binary_sensor.someone_is_watching_tv",
+                      "state_not": "on"
+                    }
+                  ],
+                  "modules": [
+                    "default"
+                  ],
+                  "button_action": {
+                    "tap_action": {
+                      "action": "none"
+                    }
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "media-player",
+                  "entity": "media_player.spisestue",
+                  "hide": {
+                    "play_pause_button": true,
+                    "volume_button": true,
+                    "power_button": true,
+                    "previous_button": true,
+                    "next_button": true
+                  },
+                  "show_attribute": false,
+                  "show_state": false,
+                  "attribute": "group_members",
+                  "visibility": [
+                    {
+                      "condition": "state",
+                      "entity": "binary_sensor.source_in_spisestue_is_line_in",
+                      "state_not": "on"
+                    },
+                    {
+                      "condition": "state",
+                      "entity": "media_player.spisestue",
+                      "state": "playing"
+                    }
+                  ],
+                  "show_name": false,
+                  "show_icon": true,
+                  "scrolling_effect": true,
+                  "tap_action": {
+                    "action": "none"
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "media-player",
+                  "entity": "media_player.argon_radio_2i_305890754e1c",
+                  "hide": {
+                    "next_button": true,
+                    "previous_button": true,
+                    "volume_button": true,
+                    "play_pause_button": true,
+                    "power_button": true
+                  },
+                  "show_last_changed": false,
+                  "show_state": true,
+                  "show_attribute": true,
+                  "force_icon": false,
+                  "attribute": "media_title",
+                  "visibility": [
+                    {
+                      "condition": "state",
+                      "entity": "binary_sensor.source_in_spisestue_is_line_in",
+                      "state": "on"
+                    },
+                    {
+                      "condition": "state",
+                      "entity": "binary_sensor.source_of_radio_is_aux_in",
+                      "state_not": "on"
+                    }
+                  ],
+                  "modules": [
+                    "default"
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "media_player.entre",
+                  "button_type": "state",
+                  "show_attribute": true,
+                  "attribute": "media_title",
+                  "visibility": [
+                    {
+                      "condition": "state",
+                      "entity": "binary_sensor.entre_is_grouped",
+                      "state_not": "on"
+                    },
+                    {
+                      "condition": "state",
+                      "entity": "media_player.entre",
+                      "state": "playing"
+                    }
+                  ],
+                  "tap_action": {
+                    "action": "none"
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "media-player",
+                  "entity": "media_player.argon_radio_2i_305890754e1c",
+                  "hide": {
+                    "next_button": true,
+                    "previous_button": true,
+                    "volume_button": true,
+                    "play_pause_button": true,
+                    "power_button": true
+                  },
+                  "show_last_changed": false,
+                  "show_state": true,
+                  "show_attribute": true,
+                  "force_icon": false,
+                  "attribute": "source",
+                  "visibility": [
+                    {
+                      "condition": "state",
+                      "entity": "binary_sensor.source_in_spisestue_is_line_in",
+                      "state": "on"
+                    },
+                    {
+                      "condition": "state",
+                      "entity": "binary_sensor.source_of_radio_is_aux_in",
+                      "state": "on"
+                    }
+                  ],
+                  "modules": [
+                    "default"
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "media_player.kokken",
+                  "button_type": "state",
+                  "show_attribute": true,
+                  "attribute": "media_title",
+                  "visibility": [
+                    {
+                      "condition": "state",
+                      "entity": "binary_sensor.kokken_is_grouped",
+                      "state_not": "on"
+                    },
+                    {
+                      "condition": "state",
+                      "entity": "media_player.kokken",
+                      "state": "playing"
+                    }
+                  ],
+                  "tap_action": {
+                    "action": "none"
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "media_player.stue",
+                  "button_type": "state",
+                  "show_attribute": true,
+                  "attribute": "media_title",
+                  "visibility": [
+                    {
+                      "condition": "state",
+                      "entity": "binary_sensor.stue_is_grouped",
+                      "state_not": "on"
+                    },
+                    {
+                      "condition": "state",
+                      "entity": "media_player.stue",
+                      "state": "playing"
+                    }
+                  ],
+                  "tap_action": {
+                    "action": "none"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading_style": "title",
+                  "visibility": [
+                    {
+                      "condition": "screen",
+                      "media_query": "(min-width: 768px)"
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "DAB",
+                  "grid_options": {
+                    "columns": 12,
+                    "rows": 0.45
+                  },
+                  "card_layout": "normal"
+                },
+                {
+                  "type": "custom:button-card",
+                  "show_name": false,
+                  "show_icon": true,
+                  "aspect_ratio": "1/1",
+                  "tap_action": {
+                    "action": "call-service",
+                    "target": {},
+                    "perform_action": "script.play_p3_on_sonos"
+                  },
+                  "name": "P3 (DAB)",
+                  "entity_picture": "https://upload.wikimedia.org/wikipedia/en/thumb/c/c4/DR_P3_logo_2020.svg/1200px-DR_P3_logo_2020.svg.png",
+                  "show_entity_picture": true,
+                  "grid_options": {
+                    "columns": 3
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "border-radius": "10%"
+                      },
+                      {
+                        "padding": "0%"
+                      },
+                      {
+                        "margin-left": "2%"
+                      },
+                      {
+                        "margin-right": "0.5%"
+                      }
+                    ],
+                    "img_cell": [
+                      {
+                        "justify-content": "start"
+                      },
+                      {
+                        "align-items": "start"
+                      },
+                      {
+                        "margin": "none"
+                      }
+                    ],
+                    "icon": [
+                      {
+                        "width": "100%"
+                      },
+                      {
+                        "margin-top": "0%"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "show_name": false,
+                  "show_icon": true,
+                  "aspect_ratio": "1/1",
+                  "tap_action": {
+                    "action": "call-service",
+                    "target": {},
+                    "perform_action": "script.play_p4_on_sonos"
+                  },
+                  "name": "P3 (DAB)",
+                  "entity_picture": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/DR_P4_2017_logo.png/800px-DR_P4_2017_logo.png",
+                  "show_entity_picture": true,
+                  "grid_options": {
+                    "columns": 3
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "border-radius": "10%"
+                      },
+                      {
+                        "padding": "0%"
+                      },
+                      {
+                        "margin-left": "0.5%"
+                      },
+                      {
+                        "margin-right": "0.5%"
+                      }
+                    ],
+                    "img_cell": [
+                      {
+                        "justify-content": "start"
+                      },
+                      {
+                        "align-items": "start"
+                      },
+                      {
+                        "margin": "none"
+                      }
+                    ],
+                    "icon": [
+                      {
+                        "width": "100%"
+                      },
+                      {
+                        "margin-top": "0%"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "show_name": false,
+                  "show_icon": true,
+                  "aspect_ratio": "1/1",
+                  "tap_action": {
+                    "action": "call-service",
+                    "target": {},
+                    "perform_action": "script.play_p6_on_sonos"
+                  },
+                  "name": "P3 (DAB)",
+                  "entity_picture": "https://upload.wikimedia.org/wikipedia/commons/9/91/DR_P6_Beat_2017_logo.png",
+                  "show_entity_picture": true,
+                  "grid_options": {
+                    "columns": 3
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "border-radius": "10%"
+                      },
+                      {
+                        "padding": "0%"
+                      },
+                      {
+                        "margin-left": "0.5%"
+                      },
+                      {
+                        "margin-right": "0.5%"
+                      }
+                    ],
+                    "img_cell": [
+                      {
+                        "justify-content": "start"
+                      },
+                      {
+                        "align-items": "start"
+                      },
+                      {
+                        "margin": "none"
+                      }
+                    ],
+                    "icon": [
+                      {
+                        "width": "100%"
+                      },
+                      {
+                        "margin-top": "0%"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "show_name": false,
+                  "show_icon": true,
+                  "aspect_ratio": "1/1",
+                  "tap_action": {
+                    "action": "call-service",
+                    "target": {},
+                    "perform_action": "script.play_p8_on_sonos"
+                  },
+                  "name": "P3 (DAB)",
+                  "entity_picture": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/DR_P8_2017_Jazz_logo.png/640px-DR_P8_2017_Jazz_logo.png",
+                  "show_entity_picture": true,
+                  "grid_options": {
+                    "columns": 3
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "border-radius": "10%"
+                      },
+                      {
+                        "padding": "0%"
+                      },
+                      {
+                        "margin-left": "0.5%"
+                      },
+                      {
+                        "margin-right": "2%"
+                      }
+                    ],
+                    "img_cell": [
+                      {
+                        "justify-content": "start"
+                      },
+                      {
+                        "align-items": "start"
+                      },
+                      {
+                        "margin": "none"
+                      }
+                    ],
+                    "icon": [
+                      {
+                        "width": "100%"
+                      },
+                      {
+                        "margin-top": "0%"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Internet",
+                  "grid_options": {
+                    "columns": 12,
+                    "rows": 0.45
+                  },
+                  "card_layout": "normal"
+                },
+                {
+                  "type": "custom:sonos-card",
+                  "sections": [
+                    "media browser"
+                  ],
+                  "favoritesItemsPerRow": 4,
+                  "favoritesToIgnore": [
+                    "NPO Radio 2",
+                    "Radio Vinyl",
+                    "Rainy Morning Mix",
+                    "Crazy Train",
+                    "Karaoke"
+                  ],
+                  "topFavorites": [
+                    ""
+                  ],
+                  "customFavoriteThumbnails": {
+                    "NPO Radio 2": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/NPO_Radio_2_logo.svg/1200px-NPO_Radio_2_logo.svg.png"
+                  },
+                  "hideBrowseMediaButton": true,
+                  "favoritesHideTitleForThumbnailIcons": true,
+                  "showAudioInputFormat": false,
+                  "startSection": "media browser",
+                  "mediaBrowserTitle": " ",
+                  "entityId": "media_player.spisestue",
+                  "entities": [
+                    "media_player.spisestue"
+                  ],
+                  "heightPercentage": 400,
+                  "card_mod": {
+                    "debug": true,
+                    "style": {
+                      "sonos-media-browser$": {
+                        ".": "sonos-media-browser-header {\n  display: none;\n}  \n",
+                        "sonos-media-browser-icons$": {
+                          "ha-control-button$": ".button {\n  --control-button-padding: 0;\n  --control-button-border-radius: 10px;\n  --control-button-background-color: rgb(246,246,246);\n  --control-button-background-opacity: 1;\n}\n",
+                          "ha-control-button": ".thumbnail {\n  margin: 0px !important;\n}\n"
+                        }
+                      },
+                      ".": "ha-card {\n  background: rgba(0, 0, 0, 0);\n  border: 0px;\n  padding: 0px;\n  margin: 0%;\n}\n"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "type": "sections",
+          "max_columns": 4,
+          "cards": [],
+          "icon": "mdi:music"
+        },
+        {
+          "type": "sections",
+          "max_columns": 4,
+          "path": "",
+          "icon": "mdi:fan",
+          "sections": [
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading_style": "title",
+                  "visibility": [
+                    {
+                      "condition": "screen",
+                      "media_query": "(min-width: 768px)"
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "DUKA",
+                  "grid_options": {
+                    "columns": 12,
+                    "rows": 0.45
+                  },
+                  "card_layout": "normal"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "fan.all_fans",
+                  "show_icon": true,
+                  "scrolling_effect": false,
+                  "show_name": true,
+                  "show_last_changed": false,
+                  "show_state": false,
+                  "sub_button": [
+                    {
+                      "entity": "weather.forecast_home",
+                      "show_attribute": true,
+                      "attribute": "humidity",
+                      "icon": "mdi:cloud-percent",
+                      "state_background": false,
+                      "show_background": false
+                    },
+                    {
+                      "entity": "sensor.max_filter_alarm",
+                      "icon": "mdi:air-filter",
+                      "show_attribute": false,
+                      "show_state": true,
+                      "show_background": false,
+                      "tap_action": {
+                        "action": "none"
+                      }
+                    },
+                    {
+                      "entity": "sensor.kaelder_gang_humidity",
+                      "icon": "mdi:water-percent",
+                      "show_background": false,
+                      "show_state": true
+                    }
+                  ],
+                  "name": " ",
+                  "modules": [
+                    "default"
+                  ],
+                  "icon": "mdi:power",
+                  "tap_action": {
+                    "action": "call-service",
+                    "target": {
+                      "entity_id": "entity"
+                    },
+                    "service": "fan.toggle"
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "fan.gang",
+                  "show_last_changed": false,
+                  "show_attribute": true,
+                  "attribute": "percentage",
+                  "force_icon": false,
+                  "sub_button": [
+                    {
+                      "entity": "fan.gang",
+                      "show_attribute": true,
+                      "attribute": "mode",
+                      "show_background": false,
+                      "show_icon": true,
+                      "name": "",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "none"
+                      }
+                    },
+                    {
+                      "entity": "sensor.gang",
+                      "tap_action": {
+                        "action": "more-info"
+                      },
+                      "show_attribute": false,
+                      "icon": "mdi:water-percent",
+                      "state_background": false,
+                      "show_background": false,
+                      "name": "",
+                      "show_state": true,
+                      "show_name": false,
+                      "attribute": "friendly_name"
+                    }
+                  ],
+                  "show_state": true,
+                  "styles": ".bubble-button-card-container {\n  background: ${hass.states['fan.gang'].attributes.percentage > 60 ? 'rgba(200, 80, 40,0.6)' : hass.states['fan.gang'].attributes.percentage > 30 ? 'rgba(200, 80, 40, 0.4)' : hass.states['fan.gang'].attributes.percentage > 5 ? 'rgba(200, 80, 40,0.2)' : ''} !important;\n}",
+                  "grid_options": {
+                    "columns": 12,
+                    "rows": 1
+                  },
+                  "modules": [
+                    "default"
+                  ],
+                  "icon": "mdi:power",
+                  "tap_action": {
+                    "action": "call-service",
+                    "target": {
+                      "entity_id": "entity"
+                    },
+                    "service": "fan.toggle"
+                  },
+                  "show_icon": true
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "fan.toilet",
+                  "show_last_changed": false,
+                  "show_attribute": true,
+                  "attribute": "percentage",
+                  "force_icon": false,
+                  "sub_button": [
+                    {
+                      "entity": "fan.toilet",
+                      "show_attribute": true,
+                      "attribute": "mode",
+                      "show_background": false,
+                      "show_icon": true,
+                      "name": "",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "none"
+                      }
+                    },
+                    {
+                      "entity": "sensor.toilet",
+                      "tap_action": {
+                        "action": "more-info"
+                      },
+                      "show_attribute": false,
+                      "icon": "mdi:water-percent",
+                      "state_background": false,
+                      "show_background": false,
+                      "name": "",
+                      "show_state": true
+                    }
+                  ],
+                  "show_state": true,
+                  "styles": ".bubble-button-card-container {\n  background: ${hass.states['fan.toilet'].attributes.percentage > 60 ? 'rgba(200, 80, 40,0.6)' : hass.states['fan.toilet'].attributes.percentage > 30 ? 'rgba(200, 80, 40, 0.4)' : hass.states['fan.toilet'].attributes.percentage > 5 ? 'rgba(200, 80, 40,0.2)' : ''} !important;\n}",
+                  "modules": [
+                    "default"
+                  ],
+                  "icon": "mdi:power",
+                  "tap_action": {
+                    "action": "call-service",
+                    "target": {
+                      "entity_id": "entity"
+                    },
+                    "service": "fan.toggle"
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "fan.fryserrum",
+                  "show_last_changed": false,
+                  "show_attribute": true,
+                  "attribute": "percentage",
+                  "force_icon": false,
+                  "sub_button": [
+                    {
+                      "entity": "fan.fryserrum",
+                      "show_attribute": true,
+                      "attribute": "mode",
+                      "show_background": false,
+                      "show_icon": true,
+                      "name": "",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "none"
+                      }
+                    },
+                    {
+                      "entity": "sensor.fryserrum",
+                      "tap_action": {
+                        "action": "more-info"
+                      },
+                      "show_attribute": false,
+                      "icon": "mdi:water-percent",
+                      "state_background": false,
+                      "show_background": false,
+                      "name": "",
+                      "show_state": true
+                    }
+                  ],
+                  "show_state": true,
+                  "styles": ".bubble-button-card-container {\n  background: ${hass.states['fan.fryserrum'].attributes.percentage > 60 ? 'rgba(200, 80, 40,0.6)' : hass.states['fan.fryserrum'].attributes.percentage > 30 ? 'rgba(200, 80, 40, 0.4)' : hass.states['fan.fryserrum'].attributes.percentage > 5 ? 'rgba(200, 80, 40,0.2)' : ''} !important;\n}",
+                  "modules": [
+                    "default"
+                  ],
+                  "icon": "mdi:power",
+                  "tap_action": {
+                    "action": "call-service",
+                    "target": {
+                      "entity_id": "entity"
+                    },
+                    "service": "fan.toggle"
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "fan.cykelrum",
+                  "show_last_changed": false,
+                  "show_attribute": true,
+                  "attribute": "percentage",
+                  "force_icon": false,
+                  "sub_button": [
+                    {
+                      "entity": "fan.cykelrum",
+                      "show_attribute": true,
+                      "attribute": "mode",
+                      "show_background": false,
+                      "show_icon": true,
+                      "name": "",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "none"
+                      }
+                    },
+                    {
+                      "entity": "sensor.cykelrum",
+                      "tap_action": {
+                        "action": "more-info"
+                      },
+                      "show_attribute": false,
+                      "icon": "mdi:water-percent",
+                      "state_background": false,
+                      "show_background": false,
+                      "name": "",
+                      "show_state": true
+                    }
+                  ],
+                  "show_state": true,
+                  "styles": ".bubble-button-card-container {\n  background: ${hass.states['fan.cykelrum'].attributes.percentage > 60 ? 'rgba(200, 80, 40,0.6)' : hass.states['fan.cykelrum'].attributes.percentage > 30 ? 'rgba(200, 80, 40, 0.4)' : hass.states['fan.cykelrum'].attributes.percentage > 5 ? 'rgba(200, 80, 40,0.2)' : ''} !important;\n}",
+                  "grid_options": {
+                    "columns": 12,
+                    "rows": 1
+                  },
+                  "modules": [
+                    "default"
+                  ],
+                  "tap_action": {
+                    "action": "call-service",
+                    "target": {
+                      "entity_id": "entity"
+                    },
+                    "service": "fan.toggle"
+                  },
+                  "icon": "mdi:power"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "fan.vaskerum",
+                  "show_last_changed": false,
+                  "show_attribute": true,
+                  "attribute": "percentage",
+                  "force_icon": false,
+                  "sub_button": [
+                    {
+                      "entity": "fan.vaskerum",
+                      "show_attribute": true,
+                      "attribute": "mode",
+                      "show_background": false,
+                      "show_icon": true,
+                      "name": "",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "none"
+                      }
+                    },
+                    {
+                      "entity": "sensor.vaskerum",
+                      "tap_action": {
+                        "action": "more-info"
+                      },
+                      "show_attribute": false,
+                      "icon": "mdi:water-percent",
+                      "state_background": false,
+                      "show_background": false,
+                      "name": "",
+                      "show_state": true
+                    }
+                  ],
+                  "show_state": true,
+                  "styles": ".bubble-button-card-container {\n  background: ${hass.states['fan.vaskerum'].attributes.percentage > 60 ? 'rgba(200, 80, 40,0.6)' : hass.states['fan.vaskerum'].attributes.percentage > 30 ? 'rgba(200, 80, 40, 0.4)' : hass.states['fan.vaskerum'].attributes.percentage > 5 ? 'rgba(200, 80, 40,0.2)' : ''} !important;\n}",
+                  "modules": [
+                    "default"
+                  ],
+                  "icon": "mdi:power",
+                  "tap_action": {
+                    "action": "call-service",
+                    "target": {
+                      "entity_id": "entity"
+                    },
+                    "service": "fan.toggle"
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "fan.vaerksted",
+                  "show_last_changed": false,
+                  "show_attribute": true,
+                  "attribute": "percentage",
+                  "force_icon": false,
+                  "sub_button": [
+                    {
+                      "entity": "fan.vaerksted",
+                      "show_attribute": true,
+                      "attribute": "mode",
+                      "show_background": false,
+                      "show_icon": true,
+                      "name": "",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "none"
+                      }
+                    },
+                    {
+                      "entity": "sensor.vaerksted",
+                      "tap_action": {
+                        "action": "more-info"
+                      },
+                      "show_attribute": false,
+                      "icon": "mdi:water-percent",
+                      "state_background": false,
+                      "show_background": false,
+                      "name": "",
+                      "show_state": true
+                    }
+                  ],
+                  "show_state": true,
+                  "styles": ".bubble-button-card-container {\n  background: ${hass.states['fan.vaerksted'].attributes.percentage > 60 ? 'rgba(200, 80, 40,0.6)' : hass.states['fan.vaerksted'].attributes.percentage > 30 ? 'rgba(200, 80, 40, 0.4)' : hass.states['fan.vaerksted'].attributes.percentage > 5 ? 'rgba(200, 80, 40,0.2)' : ''} !important;\n}",
+                  "modules": [
+                    "default"
+                  ],
+                  "icon": "mdi:power",
+                  "tap_action": {
+                    "action": "call-service",
+                    "target": {
+                      "entity_id": "entity"
+                    },
+                    "service": "fan.toggle"
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "fan.lille_rum",
+                  "show_last_changed": false,
+                  "show_attribute": true,
+                  "attribute": "percentage",
+                  "force_icon": false,
+                  "sub_button": [
+                    {
+                      "entity": "fan.lille_rum",
+                      "show_attribute": true,
+                      "attribute": "mode",
+                      "show_background": false,
+                      "show_icon": true,
+                      "name": "",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "none"
+                      }
+                    },
+                    {
+                      "entity": "sensor.lille_rum",
+                      "tap_action": {
+                        "action": "more-info"
+                      },
+                      "show_attribute": false,
+                      "icon": "mdi:water-percent",
+                      "state_background": false,
+                      "show_background": false,
+                      "name": "",
+                      "show_state": true
+                    }
+                  ],
+                  "show_state": true,
+                  "styles": ".bubble-button-card-container {\n  background: ${hass.states['fan.lille_rum'].attributes.percentage > 60 ? 'rgba(200, 80, 40,0.6)' : hass.states['fan.lille_rum'].attributes.percentage > 30 ? 'rgba(200, 80, 40, 0.4)' : hass.states['fan.lille_rum'].attributes.percentage > 5 ? 'rgba(200, 80, 40,0.2)' : ''} !important;\n}",
+                  "modules": [
+                    "default"
+                  ],
+                  "icon": "mdi:power",
+                  "tap_action": {
+                    "action": "call-service",
+                    "target": {
+                      "entity_id": "entity"
+                    },
+                    "service": "fan.toggle"
+                  }
+                }
+              ]
+            }
+          ],
+          "title": "Duka",
+          "cards": []
+        },
+        {
+          "type": "sections",
+          "max_columns": 4,
+          "icon": "mdi:radiator",
+          "path": "tado",
+          "title": "Tado",
+          "sections": [
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading_style": "title",
+                  "visibility": [
+                    {
+                      "condition": "screen",
+                      "media_query": "(min-width: 768px)"
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Tado - stue etage",
+                  "grid_options": {
+                    "columns": 12,
+                    "rows": 0.45
+                  },
+                  "card_layout": "normal"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "climate.spisestue",
+                  "show_name": false,
+                  "show_icon": true,
+                  "show_state": false,
+                  "icon": "mdi:power",
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "script.toggle_tado_on_ground_floor",
+                    "target": {}
+                  },
+                  "sub_button": [
+                    {
+                      "entity": "climate.spisestue",
+                      "icon": "mdi:calendar-end-outline",
+                      "state_background": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "pyscript.set_tado_temperature_according_to_schedule",
+                        "target": {}
+                      },
+                      "name": "",
+                      "show_name": true
+                    },
+                    {
+                      "entity": "climate.spisestue",
+                      "icon": "mdi:thermometer-minus",
+                      "state_background": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.decrease_tado_temperature_on_ground_floor",
+                        "target": {}
+                      }
+                    },
+                    {
+                      "entity": "climate.spisestue",
+                      "icon": "mdi:thermometer-plus",
+                      "state_background": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.increase_tado_temperature_on_ground_floor",
+                        "target": {}
+                      }
+                    }
+                  ],
+                  "modules": [
+                    "default"
+                  ],
+                  "button_action": {
+                    "tap_action": {
+                      "action": "none"
+                    }
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "slider",
+                  "icon": "mdi:power",
+                  "tap_action": {
+                    "action": "perform-action",
+                    "target": {
+                      "entity_id": "climate.smart_radiator_spisestue"
+                    },
+                    "perform_action": "climate.toggle"
+                  },
+                  "show_state": true,
+                  "name": "spisestue",
+                  "sub_button": [
+                    {
+                      "entity": "input_number.spisestue_temperature_helper",
+                      "icon": "mdi:thermometer-minus",
+                      "state_background": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "target": {},
+                        "perform_action": "script.decrease_tado_temperature",
+                        "data": {
+                          "entity": "input_number.spisestue_temperature_helper"
+                        }
+                      }
+                    },
+                    {
+                      "entity": "input_number.spisestue_temperature_helper",
+                      "icon": "mdi:thermometer-plus",
+                      "state_background": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "target": {},
+                        "perform_action": "script.increase_tado_temperature",
+                        "data": {
+                          "entity": "input_number.spisestue_temperature_helper"
+                        }
+                      }
+                    }
+                  ],
+                  "styles": ".bubble-range-fill {\n  background: ${hass.states['climate.smart_radiator_spisestue'].state ===\n'off' ? 'rgba(255, 152, 0, 0.2)' : ''} !important; } ${icon.setAttribute(\"icon\", hass.states['climate.smart_radiator_spisestue'].state === 'heat' ? 'mdi:power' : 'mdi:power-off')} ${card.querySelector('.bubble-state').innerText = hass.states['climate.smart_radiator_spisestue'].state === 'heat' ? hass.states['input_number.spisestue_temperature_helper'].state + \" °C\" : \"off\"}\n",
+                  "entity": "input_number.spisestue_temperature_helper",
+                  "modules": [
+                    "default"
+                  ],
+                  "button_action": {
+                    "tap_action": {
+                      "action": "none"
+                    }
+                  },
+                  "show_attribute": false,
+                  "attribute": "mode"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "slider",
+                  "icon": "mdi:power",
+                  "tap_action": {
+                    "action": "perform-action",
+                    "target": {
+                      "entity_id": "climate.smart_radiator_stue"
+                    },
+                    "perform_action": "climate.toggle"
+                  },
+                  "show_state": true,
+                  "name": "stue",
+                  "sub_button": [
+                    {
+                      "entity": "input_number.stue_temperature_helper",
+                      "icon": "mdi:thermometer-minus",
+                      "state_background": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "target": {},
+                        "perform_action": "script.decrease_tado_temperature",
+                        "data": {
+                          "entity": "input_number.stue_temperature_helper"
+                        }
+                      }
+                    },
+                    {
+                      "entity": "input_number.stue_temperature_helper",
+                      "icon": "mdi:thermometer-plus",
+                      "state_background": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "target": {},
+                        "perform_action": "script.increase_tado_temperature",
+                        "data": {
+                          "entity": "input_number.stue_temperature_helper"
+                        }
+                      }
+                    }
+                  ],
+                  "styles": ".bubble-range-fill {\n  background: ${hass.states['climate.smart_radiator_stue'].state ===\n'off' ? 'rgba(255, 152, 0, 0.2)' : ''} !important; } ${icon.setAttribute(\"icon\", hass.states['climate.smart_radiator_stue'].state === 'heat' ? 'mdi:power' : 'mdi:power-off')} ${card.querySelector('.bubble-state').innerText = hass.states['climate.smart_radiator_stue'].state === 'heat' ? hass.states['input_number.stue_temperature_helper'].state + \" °C\" : \"off\"}\n",
+                  "entity": "input_number.stue_temperature_helper",
+                  "modules": [
+                    "default"
+                  ],
+                  "button_action": {
+                    "tap_action": {
+                      "action": "none"
+                    }
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "slider",
+                  "icon": "mdi:power",
+                  "tap_action": {
+                    "action": "perform-action",
+                    "target": {
+                      "entity_id": "climate.smart_radiator_kokken"
+                    },
+                    "perform_action": "climate.toggle"
+                  },
+                  "show_state": true,
+                  "name": "kokken",
+                  "sub_button": [
+                    {
+                      "entity": "input_number.kokken_temperature_helper",
+                      "icon": "mdi:thermometer-minus",
+                      "state_background": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "target": {},
+                        "perform_action": "script.decrease_tado_temperature",
+                        "data": {
+                          "entity": "input_number.kokken_temperature_helper"
+                        }
+                      }
+                    },
+                    {
+                      "entity": "input_number.kokken_temperature_helper",
+                      "icon": "mdi:thermometer-plus",
+                      "state_background": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "target": {},
+                        "perform_action": "script.increase_tado_temperature",
+                        "data": {
+                          "entity": "input_number.kokken_temperature_helper"
+                        }
+                      }
+                    }
+                  ],
+                  "styles": ".bubble-range-fill {\n  background: ${hass.states['climate.smart_radiator_kokken'].state ===\n'off' ? 'rgba(255, 152, 0, 0.2)' : ''} !important; } ${icon.setAttribute(\"icon\", hass.states['climate.smart_radiator_kokken'].state === 'heat' ? 'mdi:power' : 'mdi:power-off')} ${card.querySelector('.bubble-state').innerText = hass.states['climate.smart_radiator_kokken'].state === 'heat' ? hass.states['input_number.kokken_temperature_helper'].state + \" °C\" : \"off\"}\n",
+                  "entity": "input_number.kokken_temperature_helper",
+                  "modules": [
+                    "default"
+                  ],
+                  "button_action": {
+                    "tap_action": {
+                      "action": "none"
+                    }
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "slider",
+                  "icon": "mdi:power",
+                  "tap_action": {
+                    "action": "perform-action",
+                    "target": {
+                      "entity_id": "climate.smart_radiator_orangerie"
+                    },
+                    "perform_action": "climate.toggle"
+                  },
+                  "show_state": true,
+                  "name": "Orangerie",
+                  "sub_button": [
+                    {
+                      "entity": "input_number.orangerie_temperature_helper",
+                      "icon": "mdi:thermometer-minus",
+                      "state_background": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "target": {},
+                        "perform_action": "script.decrease_tado_temperature",
+                        "data": {
+                          "entity": "input_number.orangerie_temperature_helper"
+                        }
+                      }
+                    },
+                    {
+                      "entity": "input_number.orangerie_temperature_helper",
+                      "icon": "mdi:thermometer-plus",
+                      "state_background": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "target": {},
+                        "perform_action": "script.increase_tado_temperature",
+                        "data": {
+                          "entity": "input_number.orangerie_temperature_helper"
+                        }
+                      }
+                    }
+                  ],
+                  "styles": ".bubble-range-fill {\n  background: ${hass.states['climate.smart_radiator_orangerie'].state ===\n'off' ? 'rgba(255, 152, 0, 0.2)' : ''} !important; } ${icon.setAttribute(\"icon\", hass.states['climate.smart_radiator_orangerie'].state === 'heat' ? 'mdi:power' : 'mdi:power-off')} ${card.querySelector('.bubble-state').innerText = hass.states['climate.smart_radiator_orangerie'].state === 'heat' ? hass.states['input_number.orangerie_temperature_helper'].state + \" °C\" : \"off\"}\n",
+                  "entity": "input_number.orangerie_temperature_helper",
+                  "modules": [
+                    "default"
+                  ],
+                  "button_action": {
+                    "tap_action": {
+                      "action": "none"
+                    }
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "slider",
+                  "icon": "mdi:power",
+                  "tap_action": {
+                    "action": "perform-action",
+                    "target": {
+                      "entity_id": "climate.smart_radiator_toilet"
+                    },
+                    "perform_action": "climate.toggle"
+                  },
+                  "show_state": true,
+                  "name": "toilet",
+                  "sub_button": [
+                    {
+                      "entity": "input_number.toilet_temperature_helper",
+                      "icon": "mdi:thermometer-minus",
+                      "state_background": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "target": {},
+                        "perform_action": "script.decrease_tado_temperature",
+                        "data": {
+                          "entity": "input_number.toilet_temperature_helper"
+                        }
+                      }
+                    },
+                    {
+                      "entity": "input_number.toilet_temperature_helper",
+                      "icon": "mdi:thermometer-plus",
+                      "state_background": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "target": {},
+                        "perform_action": "script.increase_tado_temperature",
+                        "data": {
+                          "entity": "input_number.toilet_temperature_helper"
+                        }
+                      }
+                    }
+                  ],
+                  "styles": ".bubble-range-fill {\n  background: ${hass.states['climate.smart_radiator_toilet'].state ===\n'off' ? 'rgba(255, 152, 0, 0.2)' : ''} !important; } ${icon.setAttribute(\"icon\", hass.states['climate.smart_radiator_toilet'].state === 'heat' ? 'mdi:power' : 'mdi:power-off')} ${card.querySelector('.bubble-state').innerText = hass.states['climate.smart_radiator_toilet'].state === 'heat' ? hass.states['input_number.toilet_temperature_helper'].state + \" °C\" : \"off\"}\n",
+                  "entity": "input_number.toilet_temperature_helper",
+                  "modules": [
+                    "default"
+                  ],
+                  "button_action": {
+                    "tap_action": {
+                      "action": "none"
+                    }
+                  },
+                  "visibility": [
+                    {
+                      "condition": "state",
+                      "entity": "input_text.show_toilet_temperature_helper",
+                      "state": "True"
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "slider",
+                  "icon": "mdi:power",
+                  "tap_action": {
+                    "action": "perform-action",
+                    "target": {
+                      "entity_id": [
+                        "climate.smart_radiator_entre"
+                      ]
+                    },
+                    "perform_action": "climate.toggle",
+                    "data": {}
+                  },
+                  "show_state": true,
+                  "name": "Entre",
+                  "sub_button": {
+                    "main": [
+                      {
+                        "entity": "input_number.entre_temperature_helper",
+                        "icon": "mdi:thermometer-minus",
+                        "state_background": false,
+                        "tap_action": {
+                          "action": "perform-action",
+                          "target": {},
+                          "perform_action": "script.decrease_tado_temperature",
+                          "data": {
+                            "entity": "input_number.entre_temperature_helper"
+                          }
+                        }
+                      },
+                      {
+                        "entity": "input_number.entre_temperature_helper",
+                        "icon": "mdi:thermometer-plus",
+                        "state_background": false,
+                        "tap_action": {
+                          "action": "perform-action",
+                          "target": {},
+                          "perform_action": "script.increase_tado_temperature",
+                          "data": {
+                            "entity": "input_number.entre_temperature_helper"
+                          }
+                        }
+                      }
+                    ],
+                    "bottom": []
+                  },
+                  "styles": ".bubble-range-fill {\n  background: ${hass.states['climate.smart_radiator_entre'].state ===\n'off' ? 'rgba(255, 152, 0, 0.2)' : ''} !important; } ${icon.setAttribute(\"icon\", hass.states['climate.smart_radiator_entre'].state === 'heat' ? 'mdi:power' : 'mdi:power-off')} ${card.querySelector('.bubble-state').innerText = hass.states['climate.smart_radiator_entre'].state === 'heat' ? hass.states['input_number.entre_temperature_helper'].state + \" °C\" : \"off\"}\n",
+                  "entity": "input_number.entre_temperature_helper",
+                  "modules": [
+                    "default"
+                  ],
+                  "button_action": {
+                    "tap_action": {
+                      "action": "none"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading_style": "title",
+                  "visibility": [
+                    {
+                      "condition": "screen",
+                      "media_query": "(min-width: 768px)"
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Tado - 1. sal",
+                  "grid_options": {
+                    "columns": 12,
+                    "rows": 0.45
+                  },
+                  "card_layout": "normal"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "climate.nania",
+                  "show_name": false,
+                  "show_icon": true,
+                  "show_state": false,
+                  "icon": "mdi:power",
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "script.toggle_tado_on_first_floor",
+                    "target": {}
+                  },
+                  "sub_button": [
+                    {
+                      "entity": "climate.spisestue",
+                      "icon": "mdi:thermometer-minus",
+                      "state_backfirst": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.decrease_tado_temperature_on_first_floor",
+                        "target": {}
+                      },
+                      "show_icon": true,
+                      "state_background": false
+                    },
+                    {
+                      "entity": "climate.spisestue",
+                      "icon": "mdi:thermometer-plus",
+                      "state_backfirst": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.increase_tado_temperature_on_first_floor",
+                        "target": {}
+                      },
+                      "state_background": false
+                    }
+                  ],
+                  "modules": [
+                    "default"
+                  ],
+                  "button_action": {
+                    "tap_action": {
+                      "action": "none"
+                    }
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "slider",
+                  "icon": "mdi:power",
+                  "tap_action": {
+                    "action": "perform-action",
+                    "target": {
+                      "entity_id": "climate.smart_radiator_sasha"
+                    },
+                    "perform_action": "climate.toggle"
+                  },
+                  "show_state": true,
+                  "name": "sasha",
+                  "sub_button": [
+                    {
+                      "entity": "input_number.sasha_temperature_helper",
+                      "icon": "mdi:thermometer-minus",
+                      "state_background": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "target": {},
+                        "perform_action": "script.decrease_tado_temperature",
+                        "data": {
+                          "entity": "input_number.sasha_temperature_helper"
+                        }
+                      }
+                    },
+                    {
+                      "entity": "input_number.sasha_temperature_helper",
+                      "icon": "mdi:thermometer-plus",
+                      "state_background": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "target": {},
+                        "perform_action": "script.increase_tado_temperature",
+                        "data": {
+                          "entity": "input_number.sasha_temperature_helper"
+                        }
+                      }
+                    }
+                  ],
+                  "styles": ".bubble-range-fill {\n  background: ${hass.states['climate.smart_radiator_sasha'].state ===\n'off' ? 'rgba(255, 152, 0, 0.2)' : ''} !important; } ${icon.setAttribute(\"icon\", hass.states['climate.smart_radiator_sasha'].state === 'heat' ? 'mdi:power' : 'mdi:power-off')} ${card.querySelector('.bubble-state').innerText = hass.states['climate.smart_radiator_sasha'].state === 'heat' ? hass.states['input_number.sasha_temperature_helper'].state + \" °C\" : \"off\"}\n",
+                  "entity": "input_number.sasha_temperature_helper",
+                  "modules": [
+                    "default"
+                  ],
+                  "button_action": {
+                    "tap_action": {
+                      "action": "none"
+                    }
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "slider",
+                  "icon": "mdi:power",
+                  "tap_action": {
+                    "action": "perform-action",
+                    "target": {
+                      "entity_id": "climate.smart_radiator_mattias"
+                    },
+                    "perform_action": "climate.toggle"
+                  },
+                  "show_state": true,
+                  "name": "mattias",
+                  "sub_button": [
+                    {
+                      "entity": "input_number.mattias_temperature_helper",
+                      "icon": "mdi:thermometer-minus",
+                      "state_background": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "target": {},
+                        "perform_action": "script.decrease_tado_temperature",
+                        "data": {
+                          "entity": "input_number.mattias_temperature_helper"
+                        }
+                      }
+                    },
+                    {
+                      "entity": "input_number.mattias_temperature_helper",
+                      "icon": "mdi:thermometer-plus",
+                      "state_background": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "target": {},
+                        "perform_action": "script.increase_tado_temperature",
+                        "data": {
+                          "entity": "input_number.mattias_temperature_helper"
+                        }
+                      }
+                    }
+                  ],
+                  "styles": ".bubble-range-fill {\n  background: ${hass.states['climate.smart_radiator_mattias'].state ===\n'off' ? 'rgba(255, 152, 0, 0.2)' : ''} !important; } ${icon.setAttribute(\"icon\", hass.states['climate.smart_radiator_mattias'].state === 'heat' ? 'mdi:power' : 'mdi:power-off')} ${card.querySelector('.bubble-state').innerText = hass.states['climate.smart_radiator_mattias'].state === 'heat' ? hass.states['input_number.mattias_temperature_helper'].state + \" °C\" : \"off\"}\n",
+                  "entity": "input_number.mattias_temperature_helper",
+                  "modules": [
+                    "default"
+                  ],
+                  "button_action": {
+                    "tap_action": {
+                      "action": "none"
+                    }
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "slider",
+                  "icon": "mdi:power",
+                  "tap_action": {
+                    "action": "perform-action",
+                    "target": {
+                      "entity_id": "climate.smart_radiator_kontor"
+                    },
+                    "perform_action": "climate.toggle"
+                  },
+                  "show_state": true,
+                  "name": "kontor",
+                  "sub_button": [
+                    {
+                      "entity": "input_number.kontor_temperature_helper",
+                      "icon": "mdi:thermometer-minus",
+                      "state_background": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "target": {},
+                        "perform_action": "script.decrease_tado_temperature",
+                        "data": {
+                          "entity": "input_number.kontor_temperature_helper"
+                        }
+                      }
+                    },
+                    {
+                      "entity": "input_number.kontor_temperature_helper",
+                      "icon": "mdi:thermometer-plus",
+                      "state_background": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "target": {},
+                        "perform_action": "script.increase_tado_temperature",
+                        "data": {
+                          "entity": "input_number.kontor_temperature_helper"
+                        }
+                      }
+                    }
+                  ],
+                  "styles": ".bubble-range-fill {\n  background: ${hass.states['climate.smart_radiator_kontor'].state ===\n'off' ? 'rgba(255, 152, 0, 0.2)' : ''} !important; } ${icon.setAttribute(\"icon\", hass.states['climate.smart_radiator_kontor'].state === 'heat' ? 'mdi:power' : 'mdi:power-off')} ${card.querySelector('.bubble-state').innerText = hass.states['climate.smart_radiator_kontor'].state === 'heat' ? hass.states['input_number.kontor_temperature_helper'].state + \" °C\" : \"off\"}\n",
+                  "entity": "input_number.kontor_temperature_helper",
+                  "modules": [
+                    "default"
+                  ],
+                  "button_action": {
+                    "tap_action": {
+                      "action": "none"
+                    }
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "slider",
+                  "icon": "mdi:power",
+                  "tap_action": {
+                    "action": "perform-action",
+                    "target": {
+                      "entity_id": "climate.smart_radiator_nania"
+                    },
+                    "perform_action": "climate.toggle"
+                  },
+                  "show_state": true,
+                  "name": "nania",
+                  "sub_button": [
+                    {
+                      "entity": "input_number.nania_temperature_helper",
+                      "icon": "mdi:thermometer-minus",
+                      "state_background": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "target": {},
+                        "perform_action": "script.decrease_tado_temperature",
+                        "data": {
+                          "entity": "input_number.nania_temperature_helper"
+                        }
+                      }
+                    },
+                    {
+                      "entity": "input_number.nania_temperature_helper",
+                      "icon": "mdi:thermometer-plus",
+                      "state_background": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "target": {},
+                        "perform_action": "script.increase_tado_temperature",
+                        "data": {
+                          "entity": "input_number.nania_temperature_helper"
+                        }
+                      }
+                    }
+                  ],
+                  "styles": ".bubble-range-fill {\n  background: ${hass.states['climate.smart_radiator_nania'].state ===\n'off' ? 'rgba(255, 152, 0, 0.2)' : ''} !important; } ${icon.setAttribute(\"icon\", hass.states['climate.smart_radiator_nania'].state === 'heat' ? 'mdi:power' : 'mdi:power-off')} ${card.querySelector('.bubble-state').innerText = hass.states['climate.smart_radiator_nania'].state === 'heat' ? hass.states['input_number.nania_temperature_helper'].state + \" °C\" : \"off\"}\n",
+                  "entity": "input_number.nania_temperature_helper",
+                  "modules": [
+                    "default"
+                  ],
+                  "button_action": {
+                    "tap_action": {
+                      "action": "none"
+                    }
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "grid_options": {
+                    "columns": 4
+                  },
+                  "name": "Start Oauth flow",
+                  "icon": "mdi:security",
+                  "show_name": true,
+                  "show_state": false,
+                  "color": "rgba(235,213,191,255)",
+                  "visibility": [
+                    {
+                      "condition": "state",
+                      "entity": "input_text.tado_api_status",
+                      "state_not": "ok"
+                    }
+                  ],
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "pyscript.authorize_tado_api"
+                  },
+                  "styles": {
+                    "icon": [
+                      {
+                        "width": "24px"
+                      },
+                      {
+                        "height": "24px"
+                      }
+                    ],
+                    "name": [
+                      {
+                        "font-size": "12px"
+                      },
+                      {
+                        "font-weight": "bold"
+                      },
+                      {
+                        "margin-top": "4px"
+                      },
+                      {
+                        "text-align": "center"
+                      }
+                    ],
+                    "card": [
+                      {
+                        "background-color": "rgba(229,229,229,1)"
+                      },
+                      {
+                        "box-shadow": "none"
+                      },
+                      {
+                        "outline": "none"
+                      },
+                      {
+                        "border": "none"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "grid_options": {
+                    "columns": 4
+                  },
+                  "name": "Validate",
+                  "icon": "mdi:web-check",
+                  "show_name": true,
+                  "show_state": false,
+                  "color": "rgba(235,213,191,255)",
+                  "tap_action": {
+                    "action": "url",
+                    "url_path": "[[[\n  return states['input_text.tado_verification_uri_complete'].state\n]]]\n"
+                  },
+                  "visibility": [
+                    {
+                      "condition": "state",
+                      "entity": "binary_sensor.tado_verification_in_progress",
+                      "state": "on"
+                    }
+                  ],
+                  "styles": {
+                    "icon": [
+                      {
+                        "width": "24px"
+                      },
+                      {
+                        "height": "24px"
+                      }
+                    ],
+                    "name": [
+                      {
+                        "font-size": "12px"
+                      },
+                      {
+                        "font-weight": "bold"
+                      },
+                      {
+                        "margin-top": "4px"
+                      },
+                      {
+                        "text-align": "center"
+                      }
+                    ],
+                    "card": [
+                      {
+                        "background-color": "rgba(229,229,229,1)"
+                      },
+                      {
+                        "box-shadow": "none"
+                      },
+                      {
+                        "outline": "none"
+                      },
+                      {
+                        "border": "none"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ],
+          "visible": [
+            {
+              "user": "9b780ba66a134f9fb0d170bd99d80708"
+            },
+            {
+              "user": "69a9d40edfde409e923e57639a7a0552"
+            },
+            {
+              "user": "27ce53f5c2ba40aa998b01e6340a5fc7"
+            }
+          ],
+          "cards": []
+        },
+        {
+          "type": "sections",
+          "max_columns": 4,
+          "title": "Altmulig",
+          "path": "altmulig",
+          "sections": [
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading_style": "title",
+                  "visibility": [
+                    {
+                      "condition": "screen",
+                      "media_query": "(min-width: 768px)"
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "iRobot",
+                  "grid_options": {
+                    "columns": 12,
+                    "rows": 0.45
+                  },
+                  "card_layout": "normal"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "vacuum.sheldon",
+                  "icon": "mdi:robot-vacuum",
+                  "sub_button": [
+                    {
+                      "entity": "vacuum.sheldon",
+                      "name": "Clean now",
+                      "show_name": true,
+                      "icon": "",
+                      "tap_action": {
+                        "action": "call-service",
+                        "target": {
+                          "entity_id": "entity"
+                        },
+                        "service": "vacuum.start"
+                      },
+                      "state_background": false,
+                      "show_icon": true
+                    },
+                    {
+                      "entity": "vacuum.sheldon",
+                      "icon": "mdi:pause",
+                      "tap_action": {
+                        "action": "call-service",
+                        "target": {
+                          "entity_id": "entity"
+                        },
+                        "service": "vacuum.pause"
+                      },
+                      "state_background": false,
+                      "show_icon": true
+                    },
+                    {
+                      "entity": "vacuum.sheldon",
+                      "icon": "mdi:home-import-outline",
+                      "tap_action": {
+                        "action": "call-service",
+                        "target": {
+                          "entity_id": "entity"
+                        },
+                        "service": "vacuum.return_to_base"
+                      },
+                      "state_background": false,
+                      "show_icon": true
+                    }
+                  ],
+                  "show_last_changed": true
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "vacuum.muis",
+                  "icon": "mdi:robot-vacuum",
+                  "sub_button": [
+                    {
+                      "entity": "vacuum.muis",
+                      "name": "Clean now",
+                      "show_name": true,
+                      "icon": "",
+                      "tap_action": {
+                        "action": "call-service",
+                        "target": {
+                          "entity_id": "entity"
+                        },
+                        "service": "vacuum.start"
+                      },
+                      "state_background": false,
+                      "show_icon": true
+                    },
+                    {
+                      "entity": "vacuum.muis",
+                      "icon": "mdi:pause",
+                      "tap_action": {
+                        "action": "call-service",
+                        "target": {
+                          "entity_id": "entity"
+                        },
+                        "service": "vacuum.pause"
+                      },
+                      "state_background": false,
+                      "show_icon": true
+                    },
+                    {
+                      "entity": "vacuum.muis",
+                      "icon": "mdi:home-import-outline",
+                      "tap_action": {
+                        "action": "call-service",
+                        "target": {
+                          "entity_id": "entity"
+                        },
+                        "service": "vacuum.return_to_base"
+                      },
+                      "state_background": false,
+                      "show_icon": true
+                    }
+                  ],
+                  "show_last_changed": true
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Printer",
+                  "grid_options": {
+                    "columns": 12,
+                    "rows": 0.45
+                  },
+                  "card_layout": "normal"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "sensor.hp_deskjet_3630_series",
+                  "show_last_changed": false,
+                  "icon": "mdi:printer",
+                  "sub_button": [
+                    {
+                      "entity": "sensor.hp_deskjet_3630_series_black_ink",
+                      "icon": "mdi:sprinkler-fire",
+                      "state_background": false,
+                      "show_background": false,
+                      "show_attribute": false,
+                      "attribute": "state_class",
+                      "show_state": true,
+                      "show_name": true,
+                      "name": "Sort-hvid",
+                      "tap_action": {
+                        "action": "none"
+                      }
+                    },
+                    {
+                      "entity": "sensor.hp_deskjet_3630_series_tri_color_ink",
+                      "icon": "mdi:sprinkler-fire",
+                      "state_background": false,
+                      "show_background": false,
+                      "show_attribute": false,
+                      "attribute": "state_class",
+                      "show_state": true,
+                      "show_name": true,
+                      "name": "farve",
+                      "tap_action": {
+                        "action": "none"
+                      }
+                    }
+                  ],
+                  "name": "Printer"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Netværk",
+                  "grid_options": {
+                    "columns": 12,
+                    "rows": 0.45
+                  },
+                  "card_layout": "normal"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "binary_sensor.icotera_router_wan_status",
+                  "name": "Router",
+                  "show_last_changed": false
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Verisure",
+                  "grid_options": {
+                    "columns": 12,
+                    "rows": 0.45
+                  },
+                  "card_layout": "normal"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "alarm_control_panel.verisure_alarm"
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading_style": "title",
+                  "visibility": [
+                    {
+                      "condition": "screen",
+                      "media_query": "(min-width: 768px)"
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Batterier",
+                  "grid_options": {
+                    "columns": 12,
+                    "rows": 0.45
+                  },
+                  "card_layout": "normal"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "sensor.anna_ipad_battery_level",
+                  "name": "iPad",
+                  "show_attribute": false,
+                  "attribute": "device_class",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "sensor.sheldon_battery",
+                  "name": "Sheldon",
+                  "show_attribute": false,
+                  "attribute": "device_class",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "sensor.muis_battery",
+                  "name": "Muis",
+                  "show_attribute": false,
+                  "attribute": "device_class",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1
+                  },
+                  "sub_button": {
+                    "main": [],
+                    "bottom": []
+                  },
+                  "slider_fill_orientation": "left",
+                  "slider_value_position": "right"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Batterier (Aqara temperature sensors)",
+                  "grid_options": {
+                    "columns": 12,
+                    "rows": 0.45
+                  },
+                  "card_layout": "normal"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "sensor.temperature_humidity_sensor_toilet_battery",
+                  "name": "Toilet",
+                  "show_attribute": false,
+                  "attribute": "device_class",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "sensor.aqara_temp_humidity_sensor_sasha_battery",
+                  "name": "Sasha",
+                  "show_attribute": false,
+                  "attribute": "device_class",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "sensor.temperature_humidity_sensor_orangerie_battery",
+                  "name": "Orangerie",
+                  "show_attribute": false,
+                  "attribute": "device_class",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "sensor.aqara_temp_humidity_sensor_t1_temperature_nania_battery",
+                  "name": "Nania",
+                  "show_attribute": false,
+                  "attribute": "device_class",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "sensor.temperature_humidity_sensor_kontor_battery",
+                  "name": "Kontor",
+                  "show_attribute": false,
+                  "attribute": "device_class",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "sensor.temperature_humidity_sensor_kokken_battery",
+                  "name": "Køkken",
+                  "show_attribute": false,
+                  "attribute": "device_class",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "sensor.temperature_humidity_sensor_mattias_battery",
+                  "name": "Mattias",
+                  "show_attribute": false,
+                  "attribute": "device_class",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "sensor.aqara_temp_humidity_sensor_t1_battery_2",
+                  "name": "TV Stue",
+                  "show_attribute": false,
+                  "attribute": "device_class",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "sensor.aqara_temp_humidity_sensor_spisestue_battery",
+                  "name": "Spisestue",
+                  "show_attribute": false,
+                  "attribute": "device_class",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Batterier (Aqara window sensors)",
+                  "grid_options": {
+                    "columns": 12,
+                    "rows": 0.45
+                  },
+                  "card_layout": "normal"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "sensor.nania_window_battery",
+                  "name": "Nania",
+                  "show_attribute": false,
+                  "attribute": "device_class",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "sensor.mattias_window_battery",
+                  "name": "Mattias",
+                  "show_attribute": false,
+                  "attribute": "device_class",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "sensor.kontor_window_battery",
+                  "name": "Kontor (left)",
+                  "show_attribute": false,
+                  "attribute": "device_class",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "sensor.kontor_window_battery_right",
+                  "name": "Kontor (right)",
+                  "show_attribute": false,
+                  "attribute": "device_class",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "sensor.sasha_window_battery",
+                  "name": "Sasha",
+                  "show_attribute": false,
+                  "attribute": "device_class",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Batterier (Aqara buttons)",
+                  "grid_options": {
+                    "columns": 12,
+                    "rows": 0.45
+                  },
+                  "card_layout": "normal",
+                  "sub_button": {
+                    "main": [],
+                    "bottom": []
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "sensor.aqara_wireless_mini_switch_t1_battery",
+                  "name": "Køkken",
+                  "show_attribute": false,
+                  "attribute": "device_class",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 1
+                  },
+                  "sub_button": {
+                    "main": [],
+                    "bottom": []
+                  }
+                }
+              ]
+            }
+          ],
+          "icon": "mdi:chevron-triple-right",
+          "cards": []
+        }
+      ]
+    }
+  }
+}

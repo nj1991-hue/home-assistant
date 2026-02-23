@@ -1,0 +1,4240 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace.dashboard_shelly",
+  "data": {
+    "config": {
+      "kiosk_mode": {
+        "non_admin_settings": {
+          "hide_header": true
+        }
+      },
+      "button_card_templates": {
+        "square_button": {
+          "aspect_ratio": "1/1",
+          "grid_options": {
+            "columns": 4
+          },
+          "color": "rgba(249,159,40,255)",
+          "styles": {
+            "card": [
+              {
+                "--button-card-ripple-color": "grey"
+              },
+              {
+                "--button-card-ripple-press-opacity": 0.5
+              },
+              {
+                "border-radius": "10%"
+              },
+              {
+                "padding": "0%"
+              },
+              {
+                "margin-left": "0%"
+              },
+              {
+                "margin-right": "0%"
+              },
+              {
+                "margin-top": "0%"
+              },
+              {
+                "margin-bottom": "0%"
+              },
+              {
+                "font-size": "26px"
+              },
+              {
+                "font-weight": "bold"
+              },
+              {
+                "position": "relative"
+              },
+              {
+                "overflow": "hidden"
+              }
+            ],
+            "img_cell": [
+              {
+                "justify-content": "start"
+              },
+              {
+                "align-items": "start"
+              },
+              {
+                "margin": "none"
+              }
+            ],
+            "icon": [
+              {
+                "width": "100%"
+              },
+              {
+                "margin-top": "0%"
+              }
+            ],
+            "state": [
+              {
+                "color": "var(--secondary-text-color)"
+              },
+              {
+                "font-size": "16px"
+              }
+            ]
+          }
+        },
+        "square_tado_button": {
+          "template": "square_button",
+          "styles": {
+            "card": [
+              {
+                "padding": "14%"
+              },
+              {
+                "font-size": "12px"
+              }
+            ]
+          }
+        },
+        "tado_label": {
+          "color_type": "card",
+          "color": "var(--paper-item-icon-active-color)",
+          "styles": {
+            "card": [
+              {
+                "font-size": "12px"
+              },
+              {
+                "transform": "rotate(-40deg)"
+              },
+              {
+                "transform-origin": "middle top"
+              },
+              {
+                "position": "absolute"
+              },
+              {
+                "bottom": 0
+              },
+              {
+                "left": 0
+              },
+              {
+                "border": "none"
+              },
+              {
+                "overflow": "visible"
+              }
+            ],
+            "name": [
+              {
+                "justify-self": "start"
+              },
+              {
+                "padding-left": "2px"
+              },
+              {
+                "font-weight": "bold"
+              }
+            ]
+          }
+        },
+        "hue_label": {
+          "color_type": "card",
+          "color": "var(--paper-item-icon-active-color)",
+          "styles": {
+            "card": [
+              {
+                "font-size": "12px"
+              },
+              {
+                "transform-origin": "middle top"
+              },
+              {
+                "position": "absolute"
+              },
+              {
+                "bottom": 0
+              },
+              {
+                "left": 0
+              },
+              {
+                "transform": "translate(0px, 12px)"
+              },
+              {
+                "border": "none"
+              },
+              {
+                "overflow": "visible"
+              },
+              {
+                "text-align": "center"
+              },
+              {
+                "display": "flex"
+              },
+              {
+                "align-items": "center"
+              },
+              {
+                "justify-content": "center"
+              },
+              {
+                "text-align": "center"
+              }
+            ],
+            "name": [
+              {
+                "font-weight": "bold"
+              }
+            ]
+          }
+        },
+        "tado_temperature_button": {
+          "template": "square_button",
+          "show_name": false,
+          "show_icon": false,
+          "variables": {
+            "room": "[[[\n  return entity.entity_id.split('_').pop()\n]]]\n",
+            "temperature": "[[[\n  return +states['input_number.' + variables.room + '_temperature_helper'].state\n]]]\n"
+          },
+          "state_display": "[[[\n  if (entity.state === 'heat') \n    return states['input_number.' + variables.room + '_temperature_helper'].state\n  else\n    return 'Off'\n]]]\n",
+          "show_state": true,
+          "color_type": "card",
+          "styles": {
+            "state": [
+              {
+                "color": "[[[\n  if (entity.state === 'off')\n    return 'grey';\n  else\n    return hass.themes.darkMode \n      ? 'var(--primary-text-color)'\n      : '#ffffff';\n]]]\n"
+              }
+            ],
+            "card": [
+              {
+                "background-color": "[[[\n  const temp = parseFloat(variables.temperature);\n\n  if (entity.state === 'off')\n    return 'var(--card-background-color)';\n  else if (temp <= 15)\n    return 'rgba(0,122,255,1)';       // Deep Apple-style blue\n  else if (temp <= 16)\n    return 'rgba(29,155,240,1)';      // Home Assistant logo tone\n  else if (temp <= 17)\n    return 'rgba(65,189,245,1)';      // Light sky blue\n  else if (temp <= 18)\n    return 'rgba(100,170,225,1)';     // Warmer transition\n  else if (temp <= 19)\n    return 'rgba(140,145,90,1)';\n  else if (temp <= 20)\n    return 'rgba(249,159,40,1)';\n  else if (temp <= 21)\n    return 'rgba(252,120,35,1)';\n  else if (temp <= 22)\n    return 'rgba(254,90,30,1)';\n  else if (temp <= 23)\n    return 'rgba(255,60,30,1)';\n  else if (temp <= 24)\n    return 'rgba(255,40,30,1)';\n  else\n    return 'rgba(255,30,30,1)';\n]]]\n"
+              }
+            ]
+          }
+        }
+      },
+      "views": [
+        {
+          "type": "sections",
+          "max_columns": 1,
+          "title": "V2",
+          "sections": [
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "entity": "media_player.kokken",
+                  "aspect_ratio": "2.05/1",
+                  "entity_picture": "[[[\n  return states['input_text.sonos_art_url_kokken'].state\n]]]\n",
+                  "show_entity_picture": true,
+                  "show_name": true,
+                  "layout": "icon_name_state2nd",
+                  "name": "[[[\n  return states['input_text.kokken_media_header'].state \n]]]\n",
+                  "state_display": "[[[\n  return states['input_text.kokken_media_title'].state + '<br>' + states['input_text.kokken_media_subtitle'].state\n]]]\n",
+                  "show_state": true,
+                  "grid_options": {
+                    "columns": 8
+                  },
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "#sonos-controls"
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "font-size": "16px"
+                      },
+                      {
+                        "border-radius": "4%"
+                      }
+                    ],
+                    "img_cell": [
+                      {
+                        "border-radius": "10%"
+                      },
+                      {
+                        "width": "100px"
+                      },
+                      {
+                        "height": "100px"
+                      }
+                    ],
+                    "grid": [
+                      {
+                        "position": "relative"
+                      }
+                    ],
+                    "custom_fields": {
+                      "cog": [
+                        {
+                          "border-radius": "0%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "90%"
+                        },
+                        {
+                          "top": "5%"
+                        },
+                        {
+                          "height": "20px"
+                        },
+                        {
+                          "width": "20px"
+                        },
+                        {
+                          "font-size": "2px"
+                        },
+                        {
+                          "line-height": "10px"
+                        }
+                      ],
+                      "equalizer": [
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "top": 0
+                        },
+                        {
+                          "left": 0
+                        },
+                        {
+                          "width": "165%"
+                        },
+                        {
+                          "height": "22%"
+                        },
+                        {
+                          "display": "flex"
+                        },
+                        {
+                          "justify-content": "center"
+                        },
+                        {
+                          "align-items": "center"
+                        },
+                        {
+                          "gap": "3px"
+                        },
+                        {
+                          "z-index": 1
+                        }
+                      ],
+                      "lucky": [
+                        {
+                          "border-radius": "0%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "68%"
+                        },
+                        {
+                          "top": "5%"
+                        },
+                        {
+                          "height": "20px"
+                        },
+                        {
+                          "width": "20px"
+                        },
+                        {
+                          "font-size": "2px"
+                        },
+                        {
+                          "line-height": "10px"
+                        }
+                      ],
+                      "volume": [
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "right": "4%"
+                        },
+                        {
+                          "bottom": "5%"
+                        },
+                        {
+                          "display": "flex"
+                        },
+                        {
+                          "align-items": "center"
+                        },
+                        {
+                          "gap": "4px"
+                        },
+                        {
+                          "color": "rgba(249,159,40,255)"
+                        },
+                        {
+                          "font-size": "19px"
+                        },
+                        {
+                          "line-height": "0px"
+                        }
+                      ]
+                    }
+                  },
+                  "custom_fields": {
+                    "cog": "[[[\n  return `<ha-icon\n    icon=\"mdi:cog\"\n    style=\"width: 20px; height: 20px; color: rgba(249,159,40,255);\">\n    </ha-icon>`\n]]]\n",
+                    "equalizer": "[[[\n  if (\n    entity.state === 'playing'\n  ) {\n    return `\n      <div class=\"eq-bar\"></div>\n      <div class=\"eq-bar\"></div>\n      <div class=\"eq-bar\"></div>\n    `;\n  }\n  return '';\n]]]\n",
+                    "lucky": "[[[\n  if (\n    states['input_text.kokken_feels_lucky'].state === 'True'\n  ) {\n  return `<ha-icon\n    icon=\"mdi:clover\"\n    style=\"width: 20px; height: 20px; color: rgba(249,159,40,255);\">\n    </ha-icon>`\n  }\n  return '';\n]]]\n",
+                    "volume": "[[[\n  const vol = Math.round(\n    parseFloat(states['input_number.kokken_volume'].state)\n  );\n\n  let icon = 'mdi:volume-mute';\n  if (vol > 12) icon = 'mdi:volume-high';\n  else if (vol >= 5) icon = 'mdi:volume-medium';\n  else if (vol >= 1) icon = 'mdi:volume-low';\n\n  return `\n    <ha-icon\n      icon=\"${icon}\"\n      style=\"width: 18px; height: 18px; color: rgba(249,159,40,255);\">\n    </ha-icon>\n    <span>${vol}%</span>\n  `;\n]]]    \n"
+                  },
+                  "extra_styles": ".eq-bar {\n  width: 5px;\n  height: 20px;\n  background: rgba(249,159,40,255);\n  animation: eq-bounce 1s infinite ease-in-out;\n  transform-origin: bottom;\n}    \n\n.eq-bar:nth-child(1) { animation-delay: 0s; }\n.eq-bar:nth-child(2) { animation-delay: 0.3s; }\n.eq-bar:nth-child(3) { animation-delay: 0.2s; }\n\n@keyframes eq-bounce {\n  0%, 100% { transform: scaleY(0.3); }\n  50% { transform: scaleY(1); }\n}\n"
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "icon": "mdi:thermometer",
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "#tado-controls"
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  },
+                  "entity_picture": "/local/hue_tado_logo.png?v1",
+                  "show_entity_picture": true,
+                  "show_name": false,
+                  "show_icon": false,
+                  "styles": {
+                    "grid": [
+                      {
+                        "position": "relative"
+                      }
+                    ],
+                    "custom_fields": {
+                      "kokken": [
+                        {
+                          "background-color": "[[[\n  if (!window.tempToColor) {\n    window.tempToColor = function(temp) {\n      if (temp == null || isNaN(temp)) return 'black';\n    \n      // Smooth palette: deep blue → blue → light blue → soft cyan → yellow → orange → deep red\n    \n      if (temp <= 16) return 'rgba(1, 106, 154)';      // Deep blue\n      else if (temp <= 19) return 'rgba(0, 132, 157)'; // Bright blue\n      else if (temp <= 20) return 'rgba(255,235,70,1)';// Yellow \n      else if (temp <= 22) return 'rgba(235, 66, 34)';// Red \n      else return 'rgba(215,0,0,1)';                 // Deep red \n    };\n  }\n\n  const ent = states['climate.smart_radiator_kokken'];\n  if (!ent || ent.state === 'unavailable') return 'black';\n  if (ent.state === 'heat') {\n    return window.tempToColor(ent.attributes.temperature);\n  }\n  return 'lightgrey';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "8%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "stue": [
+                        {
+                          "background-color": "[[[\n  const ent = states['climate.smart_radiator_stue'];\n  if (!ent || ent.state === 'unavailable') return 'black';\n  if (ent.state === 'heat')\n    return window.tempToColor(ent.attributes.temperature);\n  return 'lightgrey';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "18%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "spisestue": [
+                        {
+                          "background-color": "[[[\n  const ent = states['climate.smart_radiator_spisestue'];\n  if (!ent || ent.state === 'unavailable') return 'black';\n  if (ent.state === 'heat')\n    return window.tempToColor(ent.attributes.temperature);\n  return 'lightgrey';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "28%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "orangerie": [
+                        {
+                          "background-color": "[[[\n  const ent = states['climate.smart_radiator_orangerie'];\n  if (!ent || ent.state === 'unavailable') return 'black';\n  if (ent.state === 'heat')\n    return window.tempToColor(ent.attributes.temperature);\n  return 'lightgrey';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "38%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "entre": [
+                        {
+                          "background-color": "[[[\n  const ent = states['climate.smart_radiator_entre'];\n  if (!ent || ent.state === 'unavailable') return 'black';\n  if (ent.state === 'heat')\n    return window.tempToColor(ent.attributes.temperature);\n  return 'lightgrey';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "48%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "nania": [
+                        {
+                          "background-color": "[[[\n  const ent = states['climate.smart_radiator_nania'];\n  if (!ent || ent.state === 'unavailable') return 'black';\n  if (ent.state === 'heat')\n    return window.tempToColor(ent.attributes.temperature);\n  return 'lightgrey';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "58%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "sasha": [
+                        {
+                          "background-color": "[[[\n  const ent = states['climate.smart_radiator_sasha'];\n  if (!ent || ent.state === 'unavailable') return 'black';\n  if (ent.state === 'heat')\n    return window.tempToColor(ent.attributes.temperature);\n  return 'lightgrey';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "68%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "mattias": [
+                        {
+                          "background-color": "[[[\n  const ent = states['climate.smart_radiator_mattias'];\n  if (!ent || ent.state === 'unavailable') return 'black';\n  if (ent.state === 'heat')\n    return window.tempToColor(ent.attributes.temperature);\n  return 'lightgrey';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "78%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "kontor": [
+                        {
+                          "background-color": "[[[\n  const ent = states['climate.smart_radiator_kontor'];\n  if (!ent || ent.state === 'unavailable') return 'black';\n  if (ent.state === 'heat')\n    return window.tempToColor(ent.attributes.temperature);\n  return 'lightgrey';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "88%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "tado_api_status": [
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "50%"
+                        },
+                        {
+                          "top": "70%"
+                        },
+                        {
+                          "color": "red"
+                        },
+                        {
+                          "font-style": "bold"
+                        },
+                        {
+                          "font-size": "30px"
+                        }
+                      ]
+                    }
+                  },
+                  "custom_fields": {
+                    "kokken": "",
+                    "stue": "",
+                    "spisestue": "",
+                    "orangerie": "",
+                    "entre": "",
+                    "sasha": "",
+                    "mattias": "",
+                    "nania": "",
+                    "kontor": "",
+                    "tado_api_status": "[[[\n  if (states['input_text.tado_api_status'].state == 'ok')\n    return \"\";\n  return \"!\";\n]]]\n"
+                  }
+                },
+                {
+                  "type": "vertical-stack",
+                  "cards": [
+                    {
+                      "type": "custom:bubble-card",
+                      "card_type": "pop-up",
+                      "modules": [
+                        "default"
+                      ],
+                      "slide_to_close_distance": "40000",
+                      "close_on_click": true,
+                      "background_update": true,
+                      "close_by_clicking_outside": true,
+                      "show_header": false,
+                      "hash": "#more-media",
+                      "margin": "0px",
+                      "bg_opacity": "0",
+                      "bg_blur": "9",
+                      "margin_top_desktop": "-56px",
+                      "margin_top_mobile": "-56px",
+                      "hide_backdrop": true,
+                      "button_type": "name",
+                      "sub_button": {
+                        "main": [],
+                        "bottom": []
+                      },
+                      "slider_fill_orientation": "left",
+                      "slider_value_position": "right"
+                    },
+                    {
+                      "type": "custom:sonos-card",
+                      "sections": [
+                        "media browser"
+                      ],
+                      "favoritesItemsPerRow": 3,
+                      "favoritesToIgnore": [
+                        "NPO Radio 2",
+                        "Radio Vinyl",
+                        "Rainy Morning Mix",
+                        "Crazy Train",
+                        "Karaoke",
+                        "Radio 100"
+                      ],
+                      "topFavorites": [
+                        "The Voice",
+                        "Radio Klassisk",
+                        "New Music Daily",
+                        "Album of the week",
+                        "myROCK Legends Of Rock",
+                        "Weekend Warriors",
+                        "Power Metal Essentials",
+                        "Optimus Metallum",
+                        "Metal Workout"
+                      ],
+                      "customFavoriteThumbnails": {
+                        "NPO Radio 2": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/NPO_Radio_2_logo.svg/1200px-NPO_Radio_2_logo.svg.png"
+                      },
+                      "hideBrowseMediaButton": true,
+                      "favoritesHideTitleForThumbnailIcons": true,
+                      "showAudioInputFormat": false,
+                      "startSection": "media browser",
+                      "mediaBrowserTitle": " ",
+                      "entityId": "media_player.kokken",
+                      "entities": [
+                        "media_player.kokken"
+                      ],
+                      "heightPercentage": 65,
+                      "card_mod": {
+                        "style": {
+                          "sonos-media-browser$": {
+                            ".": "sonos-media-browser-header {\n  display: none;\n}  \n",
+                            "sonos-media-browser-icons$": {
+                              "ha-control-button$": ".button {\n  --control-button-padding: 0;\n  --control-button-border-radius: 10px;\n  --control-button-background-color: rgb(246,246,246);\n  --control-button-background-opacity: 1;\n}\n",
+                              "ha-control-button": ".thumbnail {\n  margin: 0px !important;\n}\n"
+                            }
+                          },
+                          ".": "ha-card {\n  background: rgba(0, 0, 0, 0);\n  border: 0px;\n  padding: 0px;\n  margin: 0%;\n}\n"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "vertical-stack",
+                  "cards": [
+                    {
+                      "type": "custom:bubble-card",
+                      "card_type": "pop-up",
+                      "hash": "#sonos-controls",
+                      "button_type": "name",
+                      "modules": [
+                        "default"
+                      ],
+                      "slide_to_close_distance": "40000",
+                      "close_on_click": false,
+                      "background_update": true,
+                      "close_by_clicking_outside": true,
+                      "show_header": true,
+                      "margin": "0px",
+                      "bg_opacity": "0",
+                      "bg_blur": "9",
+                      "margin_top_desktop": "-56px",
+                      "margin_top_mobile": "-56px",
+                      "hide_backdrop": true,
+                      "name": "",
+                      "show_icon": false,
+                      "card_layout": "large",
+                      "auto_close": "300000",
+                      "sub_button": {
+                        "main": [],
+                        "bottom": []
+                      }
+                    },
+                    {
+                      "type": "horizontal-stack",
+                      "cards": [
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_button",
+                          "entity": "input_number.kokken_volume",
+                          "icon": "mdi:volume-minus",
+                          "show_name": false,
+                          "grid_options": {
+                            "columns": 4
+                          },
+                          "styles": {
+                            "card": [
+                              {
+                                "padding": "12%"
+                              }
+                            ]
+                          },
+                          "tap_action": {
+                            "action": "perform-action",
+                            "perform_action": "input_number.decrement",
+                            "target": {
+                              "entity_id": "input_number.kokken_volume"
+                            }
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_button",
+                          "entity": "input_number.kokken_volume",
+                          "show_name": false,
+                          "show_state": true,
+                          "state_display": "[[[\n  return parseInt(entity.state) + '%'\n]]]\n",
+                          "show_icon": false,
+                          "grid_options": {
+                            "columns": 4
+                          },
+                          "styles": {
+                            "state": [
+                              {
+                                "font-size": "60px"
+                              }
+                            ],
+                            "card": [
+                              {
+                                "--button-card-ripple-press-opacity": 0
+                              }
+                            ]
+                          },
+                          "tap_action": {
+                            "action": "none"
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_button",
+                          "entity": "input_number.kokken_volume",
+                          "icon": "mdi:volume-plus",
+                          "show_name": false,
+                          "grid_options": {
+                            "columns": 4
+                          },
+                          "styles": {
+                            "card": [
+                              {
+                                "padding": "12%"
+                              }
+                            ]
+                          },
+                          "tap_action": {
+                            "action": "perform-action",
+                            "perform_action": "input_number.increment",
+                            "target": {
+                              "entity_id": "input_number.kokken_volume"
+                            }
+                          }
+                        }
+                      ],
+                      "visibility": [
+                        {
+                          "condition": "state",
+                          "entity": "input_text.show_media_player_controls_on_shelly",
+                          "state": "False"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "horizontal-stack",
+                      "cards": [
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_button",
+                          "entity": "binary_sensor.entre_is_grouped_with_kokken",
+                          "name": "Entré",
+                          "show_name": true,
+                          "show_state": true,
+                          "state_display": "[[[\n  if (entity.state === 'on')\n    return \"Grouped\"\n  else\n    return \"Not grouped\"\n]]]\n",
+                          "state": [
+                            {
+                              "value": "off",
+                              "color": "rgba(249,159,40,255)",
+                              "icon": "mdi:checkbox-marked-circle-plus-outline"
+                            },
+                            {
+                              "value": "on",
+                              "icon": "mdi:check-circle"
+                            }
+                          ],
+                          "styles": {
+                            "card": [
+                              {
+                                "padding": "7%"
+                              },
+                              {
+                                "font-size": "12px"
+                              }
+                            ]
+                          },
+                          "tap_action": {
+                            "action": "perform-action",
+                            "perform_action": "script.toggle_entre_in_group"
+                          },
+                          "grid_options": {
+                            "columns": 4
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_button",
+                          "entity": "media_player.kokken",
+                          "name": "[[[ \n  return states['input_text.kokken_media_header'].state \n]]]\n",
+                          "show_state": true,
+                          "state": [
+                            {
+                              "value": "playing",
+                              "icon": "mdi:pause"
+                            },
+                            {
+                              "value": "paused",
+                              "icon": "mdi:play"
+                            }
+                          ],
+                          "styles": {
+                            "card": [
+                              {
+                                "padding": "7%"
+                              },
+                              {
+                                "font-size": "12px"
+                              }
+                            ]
+                          },
+                          "hold_action": {
+                            "action": "more-info"
+                          },
+                          "tap_action": {
+                            "action": "perform-action",
+                            "perform_action": "media_player.media_play_pause",
+                            "target": {
+                              "entity_id": "media_player.kokken"
+                            }
+                          },
+                          "grid_options": {
+                            "columns": 4
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_button",
+                          "entity": "binary_sensor.kokken_is_on_shuffle",
+                          "name": "Entré",
+                          "show_name": false,
+                          "show_state": true,
+                          "state_display": "[[[\n  if (entity.state === 'on')\n    return \"Shuffling\"\n  else\n    return \"No shuffle\"\n]]]\n",
+                          "state": [
+                            {
+                              "value": "off",
+                              "color": "rgba(249,159,40,255)",
+                              "icon": "mdi:shuffle-disabled"
+                            },
+                            {
+                              "value": "on",
+                              "icon": "mdi:shuffle-variant"
+                            }
+                          ],
+                          "styles": {
+                            "card": [
+                              {
+                                "padding": "7%"
+                              },
+                              {
+                                "font-size": "12px"
+                              }
+                            ]
+                          },
+                          "tap_action": {
+                            "action": "perform-action",
+                            "perform_action": "script.toggle_shuffle_kokken"
+                          },
+                          "grid_options": {
+                            "columns": 4
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_button",
+                          "entity": "input_text.kokken_feels_lucky",
+                          "name": "Entré",
+                          "show_name": false,
+                          "show_state": true,
+                          "state_display": "[[[\n  if (entity.state === 'True')\n    return \"Lucky\"\n  else\n    return \"Not lucky\"\n]]]\n",
+                          "state": [
+                            {
+                              "value": "True",
+                              "color": "rgba(249,159,40,255)",
+                              "icon": "mdi:clover"
+                            },
+                            {
+                              "value": "False",
+                              "icon": "mdi:clover-outline"
+                            }
+                          ],
+                          "styles": {
+                            "card": [
+                              {
+                                "padding": "7%"
+                              },
+                              {
+                                "font-size": "12px"
+                              }
+                            ]
+                          },
+                          "tap_action": {
+                            "action": "perform-action",
+                            "perform_action": "script.toggle_kokken_feels_lucky"
+                          },
+                          "grid_options": {
+                            "columns": 4
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "custom:home-feed-card",
+                      "show_empty": false,
+                      "scrollbars_enabled": true,
+                      "more_info_on_tap": false,
+                      "state_color": false,
+                      "compact_mode": true,
+                      "show_icons": false,
+                      "id_filter": "^input_text_.*",
+                      "entities": [
+                        {
+                          "entity": "input_text.kokken_song_history",
+                          "include_history": true,
+                          "max_history": 10,
+                          "format": "time",
+                          "content_template": "{{state}}"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "vertical-stack",
+                  "cards": [
+                    {
+                      "type": "custom:bubble-card",
+                      "card_type": "pop-up",
+                      "hash": "#tado-controls",
+                      "button_type": "name",
+                      "modules": [
+                        "default"
+                      ],
+                      "slide_to_close_distance": "40000",
+                      "close_on_click": false,
+                      "background_update": true,
+                      "close_by_clicking_outside": true,
+                      "show_header": true,
+                      "margin": "0px",
+                      "bg_opacity": "0",
+                      "bg_blur": "9",
+                      "margin_top_desktop": "-56px",
+                      "margin_top_mobile": "-56px",
+                      "hide_backdrop": true,
+                      "name": "",
+                      "show_icon": false,
+                      "card_layout": "large",
+                      "auto_close": "300000",
+                      "sub_button": {
+                        "main": [],
+                        "bottom": []
+                      },
+                      "slider_fill_orientation": "left",
+                      "slider_value_position": "right"
+                    },
+                    {
+                      "type": "horizontal-stack",
+                      "cards": [
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_label",
+                          "name": "Køkken"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_label",
+                          "name": "Stue"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_label",
+                          "name": "Spisestue"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_label",
+                          "name": "Orangerie"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_label",
+                          "name": "Entre"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_label",
+                          "name": "Nania"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_label",
+                          "name": "Sasha"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_label",
+                          "name": "Mattias"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_label",
+                          "name": "Kontor"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "horizontal-stack",
+                      "cards": [
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_temperature_button",
+                          "entity": "climate.smart_radiator_kokken",
+                          "triggers_update": [
+                            "input_number.kokken_temperature_helper"
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_temperature_button",
+                          "entity": "climate.smart_radiator_stue",
+                          "triggers_update": [
+                            "input_number.stue_temperature_helper"
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_temperature_button",
+                          "entity": "climate.smart_radiator_spisestue",
+                          "triggers_update": [
+                            "input_number.spisestue_temperature_helper"
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_temperature_button",
+                          "entity": "climate.smart_radiator_orangerie",
+                          "triggers_update": [
+                            "input_number.orangerie_temperature_helper"
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_temperature_button",
+                          "entity": "climate.smart_radiator_entre",
+                          "triggers_update": [
+                            "input_number.entre_temperature_helper"
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_temperature_button",
+                          "entity": "climate.smart_radiator_nania",
+                          "triggers_update": [
+                            "input_number.nania_temperature_helper"
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_temperature_button",
+                          "entity": "climate.smart_radiator_sasha",
+                          "triggers_update": [
+                            "input_number.sasha_temperature_helper"
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_temperature_button",
+                          "entity": "climate.smart_radiator_mattias",
+                          "triggers_update": [
+                            "input_number.mattias_temperature_helper"
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_temperature_button",
+                          "entity": "climate.smart_radiator_kontor",
+                          "triggers_update": [
+                            "input_number.kontor_temperature_helper"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "horizontal-stack",
+                      "cards": [
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_tado_button",
+                          "icon": "mdi:calendar-end-outline",
+                          "name": "Resume schedule",
+                          "tap_action": {
+                            "action": "perform-action",
+                            "perform_action": "pyscript.set_tado_temperature_according_to_schedule",
+                            "target": {}
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_tado_button",
+                          "visibility": [
+                            {
+                              "condition": "state",
+                              "entity": "input_text.home_state",
+                              "state": "Home - Night"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_tado_button",
+                          "icon": "mdi:home",
+                          "name": "Go to sleep",
+                          "tap_action": {
+                            "action": "perform-action",
+                            "perform_action": "automation.trigger",
+                            "target": {
+                              "entity_id": "automation.set_home_state_to_night"
+                            },
+                            "data": {
+                              "skip_condition": true
+                            }
+                          },
+                          "visibility": [
+                            {
+                              "condition": "state",
+                              "entity": "input_text.home_state",
+                              "state_not": "Home - Night"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_tado_button",
+                          "entity": "light.entre",
+                          "icon": "mdi:lightbulb",
+                          "show_icon": true,
+                          "color": "auto",
+                          "color_type": "card",
+                          "tap_action": {
+                            "action": "toggle"
+                          },
+                          "name": "Entré",
+                          "show_state": false,
+                          "show_name": true
+                        }
+                      ]
+                    },
+                    {
+                      "type": "horizontal-stack",
+                      "cards": [
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_tado_button",
+                          "icon": "mdi:power",
+                          "tap_action": {
+                            "action": "perform-action",
+                            "perform_action": "script.toggle_tado_on_ground_floor",
+                            "target": {}
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_tado_button",
+                          "icon": "mdi:thermometer-minus",
+                          "tap_action": {
+                            "action": "perform-action",
+                            "perform_action": "script.decrease_tado_temperature_on_ground_floor",
+                            "target": {}
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_tado_button",
+                          "icon": "mdi:thermometer-plus",
+                          "tap_action": {
+                            "action": "perform-action",
+                            "perform_action": "script.increase_tado_temperature_on_ground_floor",
+                            "target": {}
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "entity": "media_player.kokken",
+                  "show_name": false,
+                  "show_icon": false,
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "script.force_play_media_in_kokken",
+                    "service_data": {
+                      "media_content_id": "FV:2/82",
+                      "media_content_type": "favorite_item_id"
+                    }
+                  },
+                  "name": "Radio 100",
+                  "entity_picture": "https://media.bauerradio.com/image/upload/c_crop,g_custom/v1671007312/brand_manager/stations/zmmxfieeuyahlygz0pge.jpg",
+                  "show_entity_picture": true,
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "entity": "media_player.kokken",
+                  "show_name": false,
+                  "show_icon": false,
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "script.play_radio_vinyl_and_disable_resume"
+                  },
+                  "name": "Radio Vinyl",
+                  "entity_picture": "https://assets.planetradio.co.uk/pi2/1KQ3PeBmcx_u7ffwsvOj8DmX2Y1AgOAjt_320.jpg",
+                  "show_entity_picture": true,
+                  "grid_options": {
+                    "columns": 4
+                  },
+                  "visibility": [
+                    {
+                      "condition": "state",
+                      "entity": "input_boolean.hide_radio_vinyl_button_on_shelly",
+                      "state": "off"
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "entity": "media_player.kokken",
+                  "show_name": false,
+                  "show_icon": false,
+                  "tap_action": {
+                    "action": "call-service",
+                    "target": {},
+                    "perform_action": "script.play_npo_radio_2_on_sonos_in_kokken"
+                  },
+                  "entity_picture": "https://play-lh.googleusercontent.com/YuECiV7reuwIxovYWfkKnfVzcwuDx3sVYe1SUQkFAcwIBDOcDJVkM94uleIVcyAStw=w240-h480-rw",
+                  "show_entity_picture": true,
+                  "grid_options": {
+                    "columns": 4
+                  },
+                  "visibility": [
+                    {
+                      "condition": "state",
+                      "entity": "input_boolean.hide_radio_vinyl_button_on_shelly",
+                      "state": "on"
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "entity": "media_player.kokken",
+                  "show_name": false,
+                  "show_icon": false,
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "#more-media"
+                  },
+                  "entity_picture": "/local/more_music2.png?v1",
+                  "show_entity_picture": true,
+                  "grid_options": {
+                    "columns": 4
+                  }
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "entity": "media_player.kokken",
+                  "show_name": false,
+                  "show_icon": false,
+                  "tap_action": {
+                    "action": "call-service",
+                    "target": {},
+                    "perform_action": "script.play_p3_on_sonos_in_kokken"
+                  },
+                  "name": "P3 (DAB)",
+                  "entity_picture": "https://upload.wikimedia.org/wikipedia/en/thumb/c/c4/DR_P3_logo_2020.svg/1200px-DR_P3_logo_2020.svg.png",
+                  "show_entity_picture": true,
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "entity": "media_player.kokken",
+                  "show_name": false,
+                  "show_icon": false,
+                  "tap_action": {
+                    "action": "call-service",
+                    "target": {},
+                    "perform_action": "script.play_npo_radio_2_on_sonos_in_kokken"
+                  },
+                  "entity_picture": "https://play-lh.googleusercontent.com/YuECiV7reuwIxovYWfkKnfVzcwuDx3sVYe1SUQkFAcwIBDOcDJVkM94uleIVcyAStw=w240-h480-rw",
+                  "show_entity_picture": true,
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "entity": "media_player.kokken",
+                  "show_name": false,
+                  "show_icon": false,
+                  "tap_action": {
+                    "action": "call-service",
+                    "perform_action": "pyscript.play_lucky_station_in_kokken"
+                  },
+                  "entity_picture": "/local/buddha_lucky.png?v1",
+                  "show_entity_picture": true,
+                  "grid_options": {
+                    "columns": 4
+                  }
+                }
+              ],
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "input_text.show_media_player_controls_on_shelly",
+                  "state": "False"
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "entity": "input_number.kokken_volume",
+                  "icon": "mdi:volume-minus",
+                  "show_name": false,
+                  "grid_options": {
+                    "columns": 4
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "padding": "12%"
+                      }
+                    ]
+                  },
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "input_number.decrement",
+                    "target": {
+                      "entity_id": "input_number.kokken_volume"
+                    }
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "entity": "media_player.kokken",
+                  "show_name": false,
+                  "show_state": false,
+                  "icon": "mdi:pause",
+                  "styles": {
+                    "card": [
+                      {
+                        "padding": "7%"
+                      },
+                      {
+                        "font-size": "12px"
+                      }
+                    ]
+                  },
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "script.pause_kokken_and_show_media_player_controls_on_shelly"
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "entity": "input_number.kokken_volume",
+                  "icon": "mdi:volume-plus",
+                  "show_name": false,
+                  "grid_options": {
+                    "columns": 4
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "padding": "12%"
+                      }
+                    ]
+                  },
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "input_number.increment",
+                    "target": {
+                      "entity_id": "input_number.kokken_volume"
+                    }
+                  }
+                }
+              ],
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "input_text.show_media_player_controls_on_shelly",
+                  "state": "True"
+                }
+              ]
+            }
+          ],
+          "cards": [],
+          "theme": "shelly",
+          "visible": [
+            {
+              "user": "9b780ba66a134f9fb0d170bd99d80708"
+            },
+            {
+              "user": "fc0349e683a1483c8f19af305ac0d079"
+            }
+          ]
+        },
+        {
+          "title": "V1",
+          "sections": [
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "climate.smart_radiator_kokken",
+                  "show_name": true,
+                  "show_icon": true,
+                  "show_state": false,
+                  "icon": "mdi:power",
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "script.turn_off_tado_on_ground_floor",
+                    "target": {}
+                  },
+                  "sub_button": [
+                    {
+                      "entity": "climate.spisestue",
+                      "icon": "mdi:calendar-end-outline",
+                      "state_background": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.resume_tado_schedule_on_ground_floor",
+                        "target": {}
+                      }
+                    },
+                    {
+                      "entity": "climate.spisestue",
+                      "icon": "mdi:thermometer-minus",
+                      "state_background": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.decrease_tado_temperature_on_ground_floor",
+                        "target": {}
+                      }
+                    },
+                    {
+                      "entity": "climate.spisestue",
+                      "icon": "mdi:thermometer-plus",
+                      "state_background": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.increase_tado_temperature_on_ground_floor",
+                        "target": {}
+                      }
+                    }
+                  ],
+                  "modules": [
+                    "default"
+                  ],
+                  "button_action": {
+                    "tap_action": {
+                      "action": "none"
+                    }
+                  },
+                  "name": "Tado - stue etage",
+                  "show_attribute": true,
+                  "attribute": "temperature"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "climate.nania",
+                  "show_name": true,
+                  "show_icon": true,
+                  "show_state": false,
+                  "icon": "mdi:power",
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "script.turn_off_tado_on_first_floor",
+                    "target": {}
+                  },
+                  "sub_button": [
+                    {
+                      "entity": "climate.spisestue",
+                      "icon": "mdi:calendar-end-outline",
+                      "state_backfirst": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.resume_tado_schedule_on_first_floor",
+                        "target": {}
+                      },
+                      "state_background": false
+                    },
+                    {
+                      "entity": "climate.spisestue",
+                      "icon": "mdi:thermometer-minus",
+                      "state_backfirst": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.decrease_tado_temperature_on_first_floor",
+                        "target": {}
+                      },
+                      "show_icon": true,
+                      "state_background": false
+                    },
+                    {
+                      "entity": "climate.spisestue",
+                      "icon": "mdi:thermometer-plus",
+                      "state_backfirst": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.increase_tado_temperature_on_first_floor",
+                        "target": {}
+                      },
+                      "state_background": false
+                    }
+                  ],
+                  "modules": [
+                    "default"
+                  ],
+                  "button_action": {
+                    "tap_action": {
+                      "action": "none"
+                    }
+                  },
+                  "name": "Tado - 1. sal",
+                  "show_attribute": true,
+                  "attribute": "temperature"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "modules": [
+                    "default"
+                  ],
+                  "entity": "media_player.kokken",
+                  "grid_options": {
+                    "columns": 12,
+                    "rows": 1
+                  },
+                  "button_action": {
+                    "tap_action": {
+                      "action": "call-service",
+                      "target": {
+                        "entity_id": "entity"
+                      },
+                      "service": "media_player.media_play_pause"
+                    }
+                  },
+                  "force_icon": true,
+                  "show_icon": true,
+                  "show_state": true,
+                  "icon": "mdi:play-pause",
+                  "card_layout": "large",
+                  "tap_action": {
+                    "action": "call-service",
+                    "target": {
+                      "entity_id": "entity"
+                    },
+                    "service": "media_player.media_play_pause"
+                  },
+                  "show_name": true,
+                  "button_type": "slider",
+                  "name": "Sonos",
+                  "max_value": 20,
+                  "slider_live_update": false,
+                  "read_only_slider": true,
+                  "sub_button": [
+                    {
+                      "entity": "media_player.spisestue",
+                      "icon": "mdi:volume-minus",
+                      "state_background": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "input_number.decrement",
+                        "target": {
+                          "entity_id": "input_number.kokken_volume"
+                        }
+                      }
+                    },
+                    {
+                      "entity": "media_player.spisestue",
+                      "icon": "mdi:volume-plus",
+                      "state_background": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "input_number.increment",
+                        "target": {
+                          "entity_id": "input_number.kokken_volume"
+                        }
+                      }
+                    }
+                  ],
+                  "show_attribute": true,
+                  "attribute": "volume_level"
+                },
+                {
+                  "type": "custom:button-card",
+                  "show_name": false,
+                  "show_icon": true,
+                  "aspect_ratio": "1/1",
+                  "tap_action": {
+                    "action": "call-service",
+                    "target": {},
+                    "perform_action": "script.play_p3_on_sonos"
+                  },
+                  "name": "P3 (DAB)",
+                  "entity_picture": "https://upload.wikimedia.org/wikipedia/en/thumb/c/c4/DR_P3_logo_2020.svg/1200px-DR_P3_logo_2020.svg.png",
+                  "show_entity_picture": true,
+                  "grid_options": {
+                    "columns": 3
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "border-radius": "10%"
+                      },
+                      {
+                        "padding": "0%"
+                      },
+                      {
+                        "margin-left": "2%"
+                      },
+                      {
+                        "margin-right": "0.5%"
+                      }
+                    ],
+                    "img_cell": [
+                      {
+                        "justify-content": "start"
+                      },
+                      {
+                        "align-items": "start"
+                      },
+                      {
+                        "margin": "none"
+                      }
+                    ],
+                    "icon": [
+                      {
+                        "width": "100%"
+                      },
+                      {
+                        "margin-top": "0%"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "show_name": false,
+                  "show_icon": true,
+                  "aspect_ratio": "1/1",
+                  "tap_action": {
+                    "action": "call-service",
+                    "target": {},
+                    "perform_action": "script.play_p4_on_sonos"
+                  },
+                  "name": "P3 (DAB)",
+                  "entity_picture": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/DR_P4_2017_logo.png/800px-DR_P4_2017_logo.png",
+                  "show_entity_picture": true,
+                  "grid_options": {
+                    "columns": 3
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "border-radius": "10%"
+                      },
+                      {
+                        "padding": "0%"
+                      },
+                      {
+                        "margin-left": "0.5%"
+                      },
+                      {
+                        "margin-right": "0.5%"
+                      }
+                    ],
+                    "img_cell": [
+                      {
+                        "justify-content": "start"
+                      },
+                      {
+                        "align-items": "start"
+                      },
+                      {
+                        "margin": "none"
+                      }
+                    ],
+                    "icon": [
+                      {
+                        "width": "100%"
+                      },
+                      {
+                        "margin-top": "0%"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "show_name": false,
+                  "show_icon": true,
+                  "aspect_ratio": "1/1",
+                  "tap_action": {
+                    "action": "call-service",
+                    "target": {},
+                    "perform_action": "script.play_p6_on_sonos"
+                  },
+                  "name": "P3 (DAB)",
+                  "entity_picture": "https://upload.wikimedia.org/wikipedia/commons/9/91/DR_P6_Beat_2017_logo.png",
+                  "show_entity_picture": true,
+                  "grid_options": {
+                    "columns": 3
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "border-radius": "10%"
+                      },
+                      {
+                        "padding": "0%"
+                      },
+                      {
+                        "margin-left": "0.5%"
+                      },
+                      {
+                        "margin-right": "0.5%"
+                      }
+                    ],
+                    "img_cell": [
+                      {
+                        "justify-content": "start"
+                      },
+                      {
+                        "align-items": "start"
+                      },
+                      {
+                        "margin": "none"
+                      }
+                    ],
+                    "icon": [
+                      {
+                        "width": "100%"
+                      },
+                      {
+                        "margin-top": "0%"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "show_name": false,
+                  "show_icon": true,
+                  "aspect_ratio": "1/1",
+                  "tap_action": {
+                    "action": "call-service",
+                    "target": {},
+                    "perform_action": "script.play_p8_on_sonos"
+                  },
+                  "name": "P3 (DAB)",
+                  "entity_picture": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/DR_P8_2017_Jazz_logo.png/640px-DR_P8_2017_Jazz_logo.png",
+                  "show_entity_picture": true,
+                  "grid_options": {
+                    "columns": 3
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "border-radius": "10%"
+                      },
+                      {
+                        "padding": "0%"
+                      },
+                      {
+                        "margin-left": "0.5%"
+                      },
+                      {
+                        "margin-right": "2%"
+                      }
+                    ],
+                    "img_cell": [
+                      {
+                        "justify-content": "start"
+                      },
+                      {
+                        "align-items": "start"
+                      },
+                      {
+                        "margin": "none"
+                      }
+                    ],
+                    "icon": [
+                      {
+                        "width": "100%"
+                      },
+                      {
+                        "margin-top": "0%"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "custom:sonos-card",
+                  "sections": [
+                    "media browser"
+                  ],
+                  "favoritesItemsPerRow": 4,
+                  "topFavorites": [
+                    ""
+                  ],
+                  "customFavoriteThumbnails": {
+                    "NPO Radio 2": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/NPO_Radio_2_logo.svg/1200px-NPO_Radio_2_logo.svg.png"
+                  },
+                  "hideBrowseMediaButton": true,
+                  "favoritesHideTitleForThumbnailIcons": true,
+                  "showAudioInputFormat": false,
+                  "startSection": "media browser",
+                  "mediaBrowserTitle": " ",
+                  "entityId": "media_player.spisestue",
+                  "entities": [
+                    "media_player.spisestue"
+                  ],
+                  "heightPercentage": 25,
+                  "numberOfFavoritesToShow": 4,
+                  "card_mod": {
+                    "debug": true,
+                    "style": {
+                      "sonos-media-browser$": {
+                        ".": "sonos-media-browser-header {\n  display: none;\n}  \n",
+                        "sonos-media-browser-icons$": {
+                          "ha-control-button$": ".button {\n  --control-button-padding: 0;\n  --control-button-border-radius: 10px;\n  --control-button-background-color: rgb(246,246,246);\n  --control-button-background-opacity: 1;\n}\n",
+                          "ha-control-button": ".thumbnail {\n  margin: 0px !important;\n}\n"
+                        }
+                      },
+                      ".": "ha-card {\n  background: rgba(0, 0, 0, 0);\n  border: 0px;\n  padding: 0px;\n  margin: 0%;\n}\n"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "type": "sections",
+          "max_columns": 1,
+          "subview": true,
+          "cards": [],
+          "visible": [
+            {
+              "user": "9b780ba66a134f9fb0d170bd99d80708"
+            },
+            {
+              "user": "fc0349e683a1483c8f19af305ac0d079"
+            }
+          ]
+        },
+        {
+          "type": "sections",
+          "max_columns": 4,
+          "title": "test",
+          "path": "test",
+          "sections": [
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "New section"
+                },
+                {
+                  "type": "custom:sonos-card"
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "entity": "media_player.kokken",
+                  "show_name": false,
+                  "show_icon": false,
+                  "tap_action": {
+                    "action": "call-service",
+                    "target": {},
+                    "perform_action": "script.play_p6_on_sonos"
+                  },
+                  "name": "P3 (DAB)",
+                  "entity_picture": "https://upload.wikimedia.org/wikipedia/commons/9/91/DR_P6_Beat_2017_logo.png",
+                  "show_entity_picture": true,
+                  "grid_options": {
+                    "columns": 4
+                  },
+                  "styles": {
+                    "icon": [
+                      {
+                        "color": "orange"
+                      },
+                      {
+                        "animation": "[[[\n  if (entity.state === 'playing' && states['sensor.kokken_now_playing'].state == 'DR P6') return 'equalizer 1s linear infinite;';\n  return 'none';\n]]]\n"
+                      }
+                    ]
+                  },
+                  "extra_styles": "@keyframes equalizer {\n  0%, 100% {\n    clip-path: polygon(\n      /* Bar 1 */\n      0% 0%, 0% 60%, 10% 60%, 10% 0%,\n\n      /* Gap */\n      10% 0%, 10% 0%, 20% 0%, 20% 0%,\n\n      /* Bar 2 */\n      20% 0%, 20% 30%, 30% 30%, 30% 0%,\n\n      /* Gap */\n      30% 0%, 30% 0%, 40% 0%, 40% 0%,\n\n      /* Bar 3 */\n      40% 0%, 40% 50%, 50% 50%, 50% 0%,\n\n      /* Gap */\n      50% 0%, 50% 0%, 60% 0%, 60% 0%,\n\n      /* Bar 4 */\n      60% 0%, 60% 40%, 70% 40%, 70% 0%,\n\n      /* Gap */\n      70% 0%, 70% 0%, 80% 0%, 80% 0%,\n\n      /* Bar 5 */\n      80% 0%, 80% 20%, 90% 20%, 90% 0%,\n\n      /* Gap */\n      90% 0%, 90% 0%, 100% 0%, 100% 0%\n    );\n  }\n\n  50% {\n    clip-path: polygon(\n      /* Bar 1 */\n      0% 0%, 0% 30%, 10% 30%, 10% 0%,\n\n      /* Gap */\n      10% 0%, 10% 0%, 20% 0%, 20% 0%,\n\n      /* Bar 2 */\n      20% 0%, 20% 70%, 30% 70%, 30% 0%,\n\n      /* Gap */\n      30% 0%, 30% 0%, 40% 0%, 40% 0%,\n\n      /* Bar 3 */\n      40% 0%, 40% 40%, 50% 40%, 50% 0%,\n\n      /* Gap */\n      50% 0%, 50% 0%, 60% 0%, 60% 0%,\n\n      /* Bar 4 */\n      60% 0%, 60% 60%, 70% 60%, 70% 0%,\n\n      /* Gap */\n      70% 0%, 70% 0%, 80% 0%, 80% 0%,\n\n      /* Bar 5 */\n      80% 0%, 80% 50%, 90% 50%, 90% 0%,\n\n      /* Gap */\n      90% 0%, 90% 0%, 100% 0%, 100% 0%\n    );\n  }\n}\n"
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "entity": "media_player.kokken",
+                  "show_name": false,
+                  "show_icon": false,
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "script.play_p6_on_sonos"
+                  },
+                  "name": "P6 (DAB)",
+                  "entity_picture": "https://upload.wikimedia.org/wikipedia/commons/9/91/DR_P6_Beat_2017_logo.png",
+                  "show_entity_picture": true,
+                  "grid_options": {
+                    "columns": 4
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "position": "relative"
+                      },
+                      {
+                        "overflow": "hidden"
+                      }
+                    ],
+                    "custom_fields": {
+                      "equalizer": [
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "top": 0
+                        },
+                        {
+                          "left": 0
+                        },
+                        {
+                          "width": "100%"
+                        },
+                        {
+                          "height": "100%"
+                        },
+                        {
+                          "display": "flex"
+                        },
+                        {
+                          "justify-content": "center"
+                        },
+                        {
+                          "align-items": "center"
+                        },
+                        {
+                          "gap": "3px"
+                        },
+                        {
+                          "z-index": 5
+                        }
+                      ]
+                    }
+                  },
+                  "custom_fields": {
+                    "equalizer": "[[[\n  if (\n    entity.state === 'playing' &&\n    states['sensor.kokken_now_playing'].state === 'DR P6'\n  ) {\n    return `\n      <div class=\"eq-bar\"></div>\n      <div class=\"eq-bar\"></div>\n      <div class=\"eq-bar\"></div>\n      <div class=\"eq-bar\"></div>\n      <div class=\"eq-bar\"></div>\n    `;\n  }\n  return '';\n]]]\n"
+                  },
+                  "extra_styles": ".eq-bar {\n  width: 28px;\n  height: 160px;\n  background: rgba(0, 0, 0, 0.2);\n  animation: eq-bounce 1s infinite ease-in-out;\n  transform-origin: bottom;\n}\n\n.eq-bar:nth-child(1) { animation-delay: 0s; }\n.eq-bar:nth-child(2) { animation-delay: 0.1s; }\n.eq-bar:nth-child(3) { animation-delay: 0.2s; }\n.eq-bar:nth-child(4) { animation-delay: 0.1s; }\n.eq-bar:nth-child(5) { animation-delay: 0.4s; }\n\n@keyframes eq-bounce {\n  0%, 100% { transform: scaleY(0.3); }\n  50% { transform: scaleY(1); }\n}\n"
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "entity": "media_player.kokken",
+                  "show_name": false,
+                  "show_icon": false,
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "script.play_p6_on_sonos"
+                  },
+                  "name": "P6 (DAB)",
+                  "entity_picture": "https://upload.wikimedia.org/wikipedia/commons/9/91/DR_P6_Beat_2017_logo.png",
+                  "show_entity_picture": true,
+                  "grid_options": {
+                    "columns": 4
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "position": "relative"
+                      },
+                      {
+                        "overflow": "hidden"
+                      }
+                    ],
+                    "custom_fields": {
+                      "equalizer": [
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "top": 0
+                        },
+                        {
+                          "left": 0
+                        },
+                        {
+                          "width": "100%"
+                        },
+                        {
+                          "height": "100%"
+                        },
+                        {
+                          "display": "flex"
+                        },
+                        {
+                          "justify-content": "center"
+                        },
+                        {
+                          "align-items": "center"
+                        },
+                        {
+                          "gap": "3px"
+                        },
+                        {
+                          "z-index": 5
+                        }
+                      ]
+                    }
+                  },
+                  "custom_fields": {
+                    "equalizer": "[[[\n  if (\n    entity.state === 'playing' &&\n    states['sensor.kokken_now_playing'].state === 'DR P6'\n  ) {\n    return `\n      <div class=\"eq-bar\"></div>\n      <div class=\"eq-bar\"></div>\n      <div class=\"eq-bar\"></div>\n      <div class=\"eq-bar\"></div>\n      <div class=\"eq-bar\"></div>\n    `;\n  }\n  return '';\n]]]\n"
+                  },
+                  "extra_styles": ".eq-bar {\n  width: 14px;\n  height: 80px;\n  background: rgba(0, 0, 0, 0.2);\n  animation: eq-bounce 1s infinite ease-in-out;\n  transform-origin: bottom;\n}\n\n.eq-bar:nth-child(1) { animation-delay: 0s; }\n.eq-bar:nth-child(2) { animation-delay: 0.1s; }\n.eq-bar:nth-child(3) { animation-delay: 0.2s; }\n.eq-bar:nth-child(4) { animation-delay: 0.1s; }\n.eq-bar:nth-child(5) { animation-delay: 0.4s; }\n\n@keyframes eq-bounce {\n  0%, 100% { transform: scaleY(0.3); }\n  50% { transform: scaleY(1); }\n}\n"
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "entity": "binary_sensor.entre_is_grouped_with_kokken",
+                  "name": "Entré is grouped",
+                  "show_name": true,
+                  "show_state": false,
+                  "styles": {
+                    "card": [
+                      {
+                        "padding": "7%"
+                      },
+                      {
+                        "font-size": "16px"
+                      }
+                    ]
+                  },
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "script.toggle_entre_in_group"
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "aspect_ratio": "2/1",
+                  "template": "square_button",
+                  "entity": "media_player.kokken",
+                  "entity_picture": "[[[\n  return entity.attributes.entity_picture\n]]]\n",
+                  "show_entity_picture": true,
+                  "show_name": true,
+                  "name": "[[[\n  return states['sensor.kokken_now_playing'].state \n]]]\n",
+                  "state_display": "[[[\n  return entity.attributes.media_artist + '<br>' +entity.attributes.media_title\n]]]\n",
+                  "show_state": true,
+                  "layout": "icon_name_state2nd",
+                  "grid_options": {
+                    "columns": 8
+                  },
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "#sonos-controls"
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "font-size": "16px"
+                      },
+                      {
+                        "border-radius": "4%"
+                      },
+                      {
+                        "display": "flex"
+                      },
+                      {
+                        "justify-content": "flex-start"
+                      }
+                    ],
+                    "img_cell": [
+                      {
+                        "border-radius": "50%"
+                      },
+                      {
+                        "overflow": "hidden"
+                      },
+                      {
+                        "width": "70px"
+                      },
+                      {
+                        "height": "70px"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "aspect_ratio": "2/1",
+                  "template": "square_button",
+                  "entity": "media_player.kokken",
+                  "entity_picture": "[[[\n  return entity.attributes.entity_picture\n]]]\n",
+                  "show_entity_picture": true,
+                  "show_name": true,
+                  "name": "[[[\n  return states['sensor.kokken_now_playing'].state \n]]]\n",
+                  "state_display": "[[[\n  return entity.attributes.media_artist + '<br>' +entity.attributes.media_title\n]]]\n",
+                  "show_state": true,
+                  "layout": "icon_name_state2nd",
+                  "grid_options": {
+                    "columns": 8
+                  },
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "#sonos-controls"
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "font-size": "16px"
+                      },
+                      {
+                        "border-radius": "4%"
+                      }
+                    ],
+                    "img_cell": [
+                      {
+                        "border-radius": "50%"
+                      },
+                      {
+                        "width": "100px"
+                      },
+                      {
+                        "height": "100px"
+                      }
+                    ],
+                    "grid": [
+                      {
+                        "position": "relative"
+                      }
+                    ],
+                    "custom_fields": {
+                      "wheel": [
+                        {
+                          "border-radius": "0%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "90%"
+                        },
+                        {
+                          "top": "5%"
+                        },
+                        {
+                          "height": "20px"
+                        },
+                        {
+                          "width": "20px"
+                        },
+                        {
+                          "font-size": "2px"
+                        },
+                        {
+                          "line-height": "10px"
+                        }
+                      ]
+                    }
+                  },
+                  "custom_fields": {
+                    "wheel": "[[[\n  return `<ha-icon\n    icon=\"mdi:cog\"\n    style=\"width: 20px; height: 20px; color: black;\">\n    </ha-icon>`\n]]]\n"
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "entity": "input_number.kokken_volume",
+                  "icon": "mdi:cog",
+                  "name": "Controls",
+                  "styles": {
+                    "card": [
+                      {
+                        "padding": "7%"
+                      }
+                    ]
+                  },
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "#sonos-controls"
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "aspect_ratio": "2/1",
+                  "template": "square_button",
+                  "entity": "media_player.kokken",
+                  "entity_picture": "[[[\n  return \"/local/sonos_art.png?v7={{ now().timestamp()|int }}\";\n]]]\n",
+                  "show_entity_picture": true,
+                  "show_name": true,
+                  "layout": "icon_name_state2nd",
+                  "name": "[[[\n  return states['input_text.kokken_media_header'].state \n]]]\n",
+                  "state_display": "[[[\n  return states['input_text.kokken_media_title'].state + '<br>' + states['input_text.kokken_media_subtitle'].state\n]]]\n",
+                  "show_state": true,
+                  "grid_options": {
+                    "columns": 8
+                  },
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "#sonos-controls"
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "font-size": "16px"
+                      },
+                      {
+                        "border-radius": "4%"
+                      }
+                    ],
+                    "img_cell": [
+                      {
+                        "border-radius": "50%"
+                      },
+                      {
+                        "width": "100px"
+                      },
+                      {
+                        "height": "100px"
+                      }
+                    ],
+                    "grid": [
+                      {
+                        "position": "relative"
+                      }
+                    ],
+                    "custom_fields": {
+                      "cog": [
+                        {
+                          "border-radius": "0%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "90%"
+                        },
+                        {
+                          "top": "5%"
+                        },
+                        {
+                          "height": "20px"
+                        },
+                        {
+                          "width": "20px"
+                        },
+                        {
+                          "font-size": "2px"
+                        },
+                        {
+                          "line-height": "10px"
+                        }
+                      ],
+                      "equalizer": [
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "top": 0
+                        },
+                        {
+                          "left": 0
+                        },
+                        {
+                          "width": "165%"
+                        },
+                        {
+                          "height": "22%"
+                        },
+                        {
+                          "display": "flex"
+                        },
+                        {
+                          "justify-content": "center"
+                        },
+                        {
+                          "align-items": "center"
+                        },
+                        {
+                          "gap": "3px"
+                        },
+                        {
+                          "z-index": 1
+                        }
+                      ]
+                    }
+                  },
+                  "custom_fields": {
+                    "cog": "[[[\n  return `<ha-icon\n    icon=\"mdi:cog\"\n    style=\"width: 20px; height: 20px; color: orange;\">\n    </ha-icon>`\n]]]\n",
+                    "equalizer": "[[[\n  if (\n    entity.state === 'playing'\n  ) {\n    return `\n      <div class=\"eq-bar\"></div>\n      <div class=\"eq-bar\"></div>\n      <div class=\"eq-bar\"></div>\n    `;\n  }\n  return '';\n]]]\n"
+                  },
+                  "extra_styles": ".eq-bar {\n  width: 5px;\n  height: 20px;\n  background: rgba(249,159,40,255);\n  animation: eq-bounce 1s infinite ease-in-out;\n  transform-origin: bottom;\n}    \n\n.eq-bar:nth-child(1) { animation-delay: 0s; }\n.eq-bar:nth-child(2) { animation-delay: 0.3s; }\n.eq-bar:nth-child(3) { animation-delay: 0.2s; }\n\n@keyframes eq-bounce {\n  0%, 100% { transform: scaleY(0.3); }\n  50% { transform: scaleY(1); }\n}\n"
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "icon": "mdi:thermometer",
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "#tado-controls"
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  },
+                  "entity_picture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdJKTP2j5ajvZRiBIcCXpBanBAEcVrnQDfWQ&s",
+                  "show_entity_picture": true,
+                  "show_name": false,
+                  "show_icon": false,
+                  "styles": {
+                    "grid": [
+                      {
+                        "position": "relative"
+                      }
+                    ],
+                    "custom_fields": {
+                      "kokken": [
+                        {
+                          "background-color": "[[[\n  if (states['climate.smart_radiator_kokken'].state == 'heat')\n    return \"green\";\n  return \"red\";\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "10%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "stue": [
+                        {
+                          "background-color": "[[[\n  if (states['climate.smart_radiator_stue'].state == 'heat')\n    return \"green\";\n  return \"red\";\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "20%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "spisestue": [
+                        {
+                          "background-color": "[[[\n  if (states['climate.smart_radiator_spisestue'].state == 'heat')\n    return \"green\";\n  return \"red\";\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "30%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "orangerie": [
+                        {
+                          "background-color": "[[[\n  if (states['climate.smart_radiator_orangerie'].state == 'heat')\n    return \"green\";\n  return \"red\";\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "40%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "toilet": [
+                        {
+                          "background-color": "[[[\n  if (states['climate.smart_radiator_toilet'].state == 'heat')\n    return \"green\";\n  return \"red\";\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "50%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "nania": [
+                        {
+                          "background-color": "[[[\n  if (states['climate.smart_radiator_nania'].state == 'heat')\n    return \"green\";\n  return \"red\";\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "60%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "sasha": [
+                        {
+                          "background-color": "[[[\n  if (states['climate.smart_radiator_sasha'].state == 'heat')\n    return \"green\";\n  return \"red\";\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "70%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "mattias": [
+                        {
+                          "background-color": "[[[\n  if (states['climate.smart_radiator_mattias'].state == 'heat')\n    return \"green\";\n  return \"red\";\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "80%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "kontor": [
+                        {
+                          "background-color": "[[[\n  if (states['climate.smart_radiator_kontor'].state == 'heat')\n    return \"green\";\n  return \"red\";\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "90%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ]
+                    }
+                  },
+                  "custom_fields": {
+                    "kokken": "",
+                    "stue": "",
+                    "spisestue": "",
+                    "toilet": "",
+                    "orangerie": "",
+                    "sasha": "",
+                    "mattias": "",
+                    "nania": "",
+                    "kontor": ""
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "entity": "media_player.kokken",
+                  "aspect_ratio": "2.05/1",
+                  "entity_picture": "[[[\n  return states['input_text.sonos_art_url_kokken'].state\n]]]\n",
+                  "show_entity_picture": true,
+                  "show_name": true,
+                  "layout": "icon_name_state2nd",
+                  "name": "[[[\n  return states['input_text.kokken_media_header'].state \n]]]\n",
+                  "state_display": "[[[\n  return states['input_text.kokken_media_title'].state + '<br>' + states['input_text.kokken_media_subtitle'].state\n]]]\n",
+                  "show_state": true,
+                  "grid_options": {
+                    "columns": 8
+                  },
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "#sonos-controls"
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "font-size": "16px"
+                      },
+                      {
+                        "border-radius": "4%"
+                      }
+                    ],
+                    "img_cell": [
+                      {
+                        "border-radius": "10%"
+                      },
+                      {
+                        "width": "100px"
+                      },
+                      {
+                        "height": "100px"
+                      }
+                    ],
+                    "grid": [
+                      {
+                        "position": "relative"
+                      }
+                    ],
+                    "custom_fields": {
+                      "cog": [
+                        {
+                          "border-radius": "0%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "90%"
+                        },
+                        {
+                          "top": "5%"
+                        },
+                        {
+                          "height": "20px"
+                        },
+                        {
+                          "width": "20px"
+                        },
+                        {
+                          "font-size": "2px"
+                        },
+                        {
+                          "line-height": "10px"
+                        }
+                      ],
+                      "equalizer": [
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "top": 0
+                        },
+                        {
+                          "left": 0
+                        },
+                        {
+                          "width": "165%"
+                        },
+                        {
+                          "height": "22%"
+                        },
+                        {
+                          "display": "flex"
+                        },
+                        {
+                          "justify-content": "center"
+                        },
+                        {
+                          "align-items": "center"
+                        },
+                        {
+                          "gap": "3px"
+                        },
+                        {
+                          "z-index": 1
+                        }
+                      ],
+                      "lucky": [
+                        {
+                          "border-radius": "0%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "68%"
+                        },
+                        {
+                          "top": "5%"
+                        },
+                        {
+                          "height": "20px"
+                        },
+                        {
+                          "width": "20px"
+                        },
+                        {
+                          "font-size": "2px"
+                        },
+                        {
+                          "line-height": "10px"
+                        }
+                      ],
+                      "volume": [
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "right": "4%"
+                        },
+                        {
+                          "bottom": "5%"
+                        },
+                        {
+                          "display": "flex"
+                        },
+                        {
+                          "align-items": "center"
+                        },
+                        {
+                          "gap": "4px"
+                        },
+                        {
+                          "color": "rgba(249,159,40,255)"
+                        },
+                        {
+                          "font-size": "19px"
+                        },
+                        {
+                          "line-height": "0px"
+                        }
+                      ]
+                    }
+                  },
+                  "custom_fields": {
+                    "cog": "[[[\n  return `<ha-icon\n    icon=\"mdi:cog\"\n    style=\"width: 20px; height: 20px; color: rgba(249,159,40,255);\">\n    </ha-icon>`\n]]]\n",
+                    "equalizer": "[[[\n  if (\n    entity.state === 'playing'\n  ) {\n    return `\n      <div class=\"eq-bar\"></div>\n      <div class=\"eq-bar\"></div>\n      <div class=\"eq-bar\"></div>\n    `;\n  }\n  return '';\n]]]\n",
+                    "lucky": "[[[\n  if (\n    states['input_text.kokken_feels_lucky'].state === 'True'\n  ) {\n  return `<ha-icon\n    icon=\"mdi:clover\"\n    style=\"width: 20px; height: 20px; color: rgba(249,159,40,255);\">\n    </ha-icon>`\n  }\n  return '';\n]]]\n",
+                    "volume": "[[[\n  const vol = Math.round(\n    parseFloat(states['input_number.kokken_volume'].state)\n  );\n\n  let icon = 'mdi:volume-mute';\n  if (vol > 12) icon = 'mdi:volume-high';\n  else if (vol >= 5) icon = 'mdi:volume-medium';\n  else if (vol >= 1) icon = 'mdi:volume-low';\n\n  return `\n    <ha-icon\n      icon=\"${icon}\"\n      style=\"width: 18px; height: 18px; color: rgba(249,159,40,255);\">\n    </ha-icon>\n    <span>${vol}</span>\n  `;\n]]]    \n"
+                  },
+                  "extra_styles": ".eq-bar {\n  width: 5px;\n  height: 20px;\n  background: rgba(249,159,40,255);\n  animation: eq-bounce 1s infinite ease-in-out;\n  transform-origin: bottom;\n}    \n\n.eq-bar:nth-child(1) { animation-delay: 0s; }\n.eq-bar:nth-child(2) { animation-delay: 0.3s; }\n.eq-bar:nth-child(3) { animation-delay: 0.2s; }\n\n@keyframes eq-bounce {\n  0%, 100% { transform: scaleY(0.3); }\n  50% { transform: scaleY(1); }\n}\n"
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "heading",
+                  "heading": "Backup",
+                  "heading_style": "title"
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "entity": "media_player.kokken",
+                  "show_name": false,
+                  "show_icon": false,
+                  "tap_action": {
+                    "action": "call-service",
+                    "target": {},
+                    "perform_action": "script.play_p6_on_sonos"
+                  },
+                  "name": "P3 (DAB)",
+                  "entity_picture": "https://upload.wikimedia.org/wikipedia/commons/9/91/DR_P6_Beat_2017_logo.png",
+                  "show_entity_picture": true,
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "entity": "media_player.kokken",
+                  "show_name": false,
+                  "show_icon": false,
+                  "tap_action": {
+                    "action": "call-service",
+                    "perform_action": "pyscript.play_lucky_station_in_kokken"
+                  },
+                  "entity_picture": "/local/buddha_lucky.png?v1",
+                  "show_entity_picture": true,
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "entity": "media_player.kokken",
+                  "show_name": false,
+                  "show_icon": false,
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "#more-media"
+                  },
+                  "entity_picture": "/local/more_music2.png?v1",
+                  "show_entity_picture": true,
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "entity": "media_player.kokken",
+                  "aspect_ratio": "2.05/1",
+                  "entity_picture": "[[[\n  return states['input_text.sonos_art_url_kokken'].state\n]]]\n",
+                  "show_entity_picture": true,
+                  "show_name": true,
+                  "layout": "icon_name_state2nd",
+                  "name": "[[[\n  return states['input_text.kokken_media_header'].state \n]]]\n",
+                  "state_display": "[[[\n  return states['input_text.kokken_media_title'].state + '<br>' + states['input_text.kokken_media_subtitle'].state\n]]]\n",
+                  "show_state": true,
+                  "grid_options": {
+                    "columns": 8
+                  },
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "#sonos-controls"
+                  },
+                  "styles": {
+                    "card": [
+                      {
+                        "font-size": "16px"
+                      },
+                      {
+                        "border-radius": "4%"
+                      }
+                    ],
+                    "img_cell": [
+                      {
+                        "border-radius": "10%"
+                      },
+                      {
+                        "width": "100px"
+                      },
+                      {
+                        "height": "100px"
+                      }
+                    ],
+                    "grid": [
+                      {
+                        "position": "relative"
+                      }
+                    ],
+                    "custom_fields": {
+                      "cog": [
+                        {
+                          "border-radius": "0%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "90%"
+                        },
+                        {
+                          "top": "5%"
+                        },
+                        {
+                          "height": "20px"
+                        },
+                        {
+                          "width": "20px"
+                        },
+                        {
+                          "font-size": "2px"
+                        },
+                        {
+                          "line-height": "10px"
+                        }
+                      ],
+                      "equalizer": [
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "top": 0
+                        },
+                        {
+                          "left": 0
+                        },
+                        {
+                          "width": "165%"
+                        },
+                        {
+                          "height": "22%"
+                        },
+                        {
+                          "display": "flex"
+                        },
+                        {
+                          "justify-content": "center"
+                        },
+                        {
+                          "align-items": "center"
+                        },
+                        {
+                          "gap": "3px"
+                        },
+                        {
+                          "z-index": 1
+                        }
+                      ],
+                      "lucky": [
+                        {
+                          "border-radius": "0%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "68%"
+                        },
+                        {
+                          "top": "5%"
+                        },
+                        {
+                          "height": "20px"
+                        },
+                        {
+                          "width": "20px"
+                        },
+                        {
+                          "font-size": "2px"
+                        },
+                        {
+                          "line-height": "10px"
+                        }
+                      ]
+                    }
+                  },
+                  "custom_fields": {
+                    "cog": "[[[\n  return `<ha-icon\n    icon=\"mdi:cog\"\n    style=\"width: 20px; height: 20px; color: rgba(249,159,40,255);\">\n    </ha-icon>`\n]]]\n",
+                    "equalizer": "[[[\n  if (\n    entity.state === 'playing'\n  ) {\n    return `\n      <div class=\"eq-bar\"></div>\n      <div class=\"eq-bar\"></div>\n      <div class=\"eq-bar\"></div>\n    `;\n  }\n  return '';\n]]]\n",
+                    "lucky": "[[[\n  if (\n    states['input_text.kokken_feels_lucky'].state === 'True'\n  ) {\n  return `<ha-icon\n    icon=\"mdi:clover\"\n    style=\"width: 20px; height: 20px; color: rgba(249,159,40,255);\">\n    </ha-icon>`\n  }\n  return '';\n]]]\n"
+                  },
+                  "extra_styles": ".eq-bar {\n  width: 5px;\n  height: 20px;\n  background: rgba(249,159,40,255);\n  animation: eq-bounce 1s infinite ease-in-out;\n  transform-origin: bottom;\n}    \n\n.eq-bar:nth-child(1) { animation-delay: 0s; }\n.eq-bar:nth-child(2) { animation-delay: 0.3s; }\n.eq-bar:nth-child(3) { animation-delay: 0.2s; }\n\n@keyframes eq-bounce {\n  0%, 100% { transform: scaleY(0.3); }\n  50% { transform: scaleY(1); }\n}\n"
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "icon": "mdi:thermometer",
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "#tado-controls"
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  },
+                  "entity_picture": "/local/hue_tado_logo.png?v1",
+                  "show_entity_picture": true,
+                  "show_name": false,
+                  "show_icon": false,
+                  "styles": {
+                    "grid": [
+                      {
+                        "position": "relative"
+                      }
+                    ],
+                    "custom_fields": {
+                      "kokken": [
+                        {
+                          "background-color": "[[[\n  if (!window.tempToColor) {\n    window.tempToColor = function(temp) {\n      if (temp == null || isNaN(temp)) return '#e01913';\n    \n      // Hue palette: deep blue → cyan → green → yellow → orange → Hue red\n    \n      if (temp <= 15) return 'rgba(0,85,255,1)';      // Deep Hue blue (coldest)\n      else if (temp <= 16) return 'rgba(0,140,255,1)'; // Hue blue\n      else if (temp <= 17) return 'rgba(0,190,255,1)'; // Cyan-blue\n      else if (temp <= 18) return 'rgba(0,210,170,1)'; // Hue aqua / teal\n      else if (temp <= 19) return 'rgba(120,220,70,1)';// Hue green\n      else if (temp <= 20) return 'rgba(255,230,60,1)';// Hue yellow\n      else if (temp <= 21) return 'rgba(255,170,40,1)';// Hue warm yellow-orange\n      else if (temp <= 22) return 'rgba(255,110,30,1)';// Hue orange\n      else if (temp <= 23) return 'rgba(255,60,30,1)'; // Hue warm red-orange\n      else if (temp <= 24) return 'rgba(255,20,20,1)'; // Hue red\n      else return 'rgba(215,0,0,1)';                   // Deepest Hue red (warmest)\n    };\n  }\n\n  const ent = states['climate.smart_radiator_kokken'];\n  if (!ent || ent.state === 'unavailable') return 'grey';\n  if (ent.state === 'heat')\n    return window.tempToColor(ent.attributes.temperature);\n  return '#e01913';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "8%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "stue": [
+                        {
+                          "background-color": "[[[\n  const ent = states['climate.smart_radiator_stue'];\n  if (!ent || ent.state === 'unavailable') return 'grey';\n  if (ent.state === 'heat')\n    return window.tempToColor(ent.attributes.temperature);\n  return '#e01913';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "18%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "spisestue": [
+                        {
+                          "background-color": "[[[\n  const ent = states['climate.smart_radiator_spisestue'];\n  if (!ent || ent.state === 'unavailable') return 'grey';\n  if (ent.state === 'heat')\n    return window.tempToColor(ent.attributes.temperature);\n  return '#e01913';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "28%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "orangerie": [
+                        {
+                          "background-color": "[[[\n  const ent = states['climate.smart_radiator_orangerie'];\n  if (!ent || ent.state === 'unavailable') return 'grey';\n  if (ent.state === 'heat')\n    return window.tempToColor(ent.attributes.temperature);\n  return '#e01913';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "38%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "entre": [
+                        {
+                          "background-color": "[[[\n  const ent = states['climate.smart_radiator_entre'];\n  if (!ent || ent.state === 'unavailable') return 'grey';\n  if (ent.state === 'heat')\n    return window.tempToColor(ent.attributes.temperature);\n  return '#e01913';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "48%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "nania": [
+                        {
+                          "background-color": "[[[\n  const ent = states['climate.smart_radiator_nania'];\n  if (!ent || ent.state === 'unavailable') return 'grey';\n  if (ent.state === 'heat')\n    return window.tempToColor(ent.attributes.temperature);\n  return '#e01913';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "58%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "sasha": [
+                        {
+                          "background-color": "[[[\n  const ent = states['climate.smart_radiator_sasha'];\n  if (!ent || ent.state === 'unavailable') return 'grey';\n  if (ent.state === 'heat')\n    return window.tempToColor(ent.attributes.temperature);\n  return '#e01913';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "68%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "mattias": [
+                        {
+                          "background-color": "[[[\n  const ent = states['climate.smart_radiator_mattias'];\n  if (!ent || ent.state === 'unavailable') return 'grey';\n  if (ent.state === 'heat')\n    return window.tempToColor(ent.attributes.temperature);\n  return '#e01913';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "78%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "kontor": [
+                        {
+                          "background-color": "[[[\n  const ent = states['climate.smart_radiator_kontor'];\n  if (!ent || ent.state === 'unavailable') return 'grey';\n  if (ent.state === 'heat')\n    return window.tempToColor(ent.attributes.temperature);\n  return '#e01913';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "88%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "tado_api_status": [
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "50%"
+                        },
+                        {
+                          "top": "70%"
+                        },
+                        {
+                          "color": "red"
+                        },
+                        {
+                          "font-style": "bold"
+                        },
+                        {
+                          "font-size": "30px"
+                        }
+                      ]
+                    }
+                  },
+                  "custom_fields": {
+                    "kokken": "",
+                    "stue": "",
+                    "spisestue": "",
+                    "orangerie": "",
+                    "entre": "",
+                    "sasha": "",
+                    "mattias": "",
+                    "nania": "",
+                    "kontor": "",
+                    "tado_api_status": "[[[\n  if (states['input_text.tado_api_status'].state == 'ok')\n    return \"\";\n  return \"!\";\n]]]\n"
+                  }
+                }
+              ]
+            }
+          ],
+          "visible": [
+            {
+              "user": "9b780ba66a134f9fb0d170bd99d80708"
+            },
+            {
+              "user": "fc0349e683a1483c8f19af305ac0d079"
+            }
+          ],
+          "cards": []
+        },
+        {
+          "type": "sections",
+          "max_columns": 4,
+          "title": "archive",
+          "path": "archive",
+          "sections": [
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "entity": "media_player.kokken",
+                  "show_name": false,
+                  "show_icon": false,
+                  "tap_action": {
+                    "action": "call-service",
+                    "target": {},
+                    "perform_action": "script.play_p6_on_sonos_in_kokken"
+                  },
+                  "name": "P3 (DAB)",
+                  "entity_picture": "https://upload.wikimedia.org/wikipedia/commons/9/91/DR_P6_Beat_2017_logo.png",
+                  "show_entity_picture": true,
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "entity": "media_player.kokken",
+                  "icon": "mdi:list-box",
+                  "name": "More",
+                  "styles": {
+                    "card": [
+                      {
+                        "padding": "7%"
+                      }
+                    ]
+                  },
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "#more-media"
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "entity": "media_player.kokken",
+                  "show_name": false,
+                  "show_icon": false,
+                  "tap_action": {
+                    "action": "call-service",
+                    "target": {},
+                    "perform_action": "script.play_p4_on_sonos_in_kokken"
+                  },
+                  "name": "P3 (DAB)",
+                  "entity_picture": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/DR_P4_2017_logo.png/800px-DR_P4_2017_logo.png",
+                  "show_entity_picture": true,
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "vertical-stack",
+                  "cards": [
+                    {
+                      "type": "custom:bubble-card",
+                      "card_type": "pop-up",
+                      "hash": "#tado-controls",
+                      "button_type": "name",
+                      "modules": [
+                        "default"
+                      ],
+                      "slide_to_close_distance": "40000",
+                      "close_on_click": false,
+                      "background_update": true,
+                      "close_by_clicking_outside": true,
+                      "show_header": true,
+                      "margin": "0px",
+                      "bg_opacity": "0",
+                      "bg_blur": "9",
+                      "margin_top_desktop": "-56px",
+                      "margin_top_mobile": "-56px",
+                      "hide_backdrop": true,
+                      "name": "",
+                      "show_icon": false,
+                      "card_layout": "large",
+                      "auto_close": "300000",
+                      "sub_button": {
+                        "main": [],
+                        "bottom": []
+                      }
+                    },
+                    {
+                      "type": "horizontal-stack",
+                      "cards": [
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_label",
+                          "name": "Køkken"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_label",
+                          "name": "Stue"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_label",
+                          "name": "Spisestue"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_label",
+                          "name": "Orangerie"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_label",
+                          "name": "Entre"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_label",
+                          "name": "Nania"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_label",
+                          "name": "Sasha"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_label",
+                          "name": "Mattias"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_label",
+                          "name": "Kontor"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "horizontal-stack",
+                      "cards": [
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_temperature_button",
+                          "entity": "climate.smart_radiator_kokken",
+                          "triggers_update": [
+                            "input_number.kokken_temperature_helper"
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_temperature_button",
+                          "entity": "climate.smart_radiator_stue",
+                          "triggers_update": [
+                            "input_number.stue_temperature_helper"
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_temperature_button",
+                          "entity": "climate.smart_radiator_spisestue",
+                          "triggers_update": [
+                            "input_number.spisestue_temperature_helper"
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_temperature_button",
+                          "entity": "climate.smart_radiator_orangerie",
+                          "triggers_update": [
+                            "input_number.orangerie_temperature_helper"
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_temperature_button",
+                          "entity": "climate.smart_radiator_entre",
+                          "triggers_update": [
+                            "input_number.entre_temperature_helper"
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_temperature_button",
+                          "entity": "climate.smart_radiator_nania",
+                          "triggers_update": [
+                            "input_number.nania_temperature_helper"
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_temperature_button",
+                          "entity": "climate.smart_radiator_sasha",
+                          "triggers_update": [
+                            "input_number.sasha_temperature_helper"
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_temperature_button",
+                          "entity": "climate.smart_radiator_mattias",
+                          "triggers_update": [
+                            "input_number.mattias_temperature_helper"
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_temperature_button",
+                          "entity": "climate.smart_radiator_kontor",
+                          "triggers_update": [
+                            "input_number.kontor_temperature_helper"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "horizontal-stack",
+                      "cards": [
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_tado_button",
+                          "icon": "mdi:calendar-end-outline",
+                          "name": "Resume schedule",
+                          "tap_action": {
+                            "action": "perform-action",
+                            "perform_action": "pyscript.set_tado_temperature_according_to_schedule",
+                            "target": {}
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_tado_button",
+                          "icon": "mdi:power",
+                          "name": "First floor",
+                          "tap_action": {
+                            "action": "perform-action",
+                            "perform_action": "script.toggle_tado_on_first_floor",
+                            "target": {}
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_tado_button",
+                          "icon": "mdi:thermometer-minus",
+                          "tap_action": {
+                            "action": "perform-action",
+                            "perform_action": "script.decrease_tado_temperature_on_first_floor",
+                            "target": {}
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_tado_button",
+                          "icon": "mdi:thermometer-plus",
+                          "tap_action": {
+                            "action": "perform-action",
+                            "perform_action": "script.increase_tado_temperature_on_first_floor",
+                            "target": {}
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "horizontal-stack",
+                      "cards": [
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_tado_button",
+                          "visibility": [
+                            {
+                              "condition": "state",
+                              "entity": "input_text.home_state",
+                              "state": "Home - Night"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_tado_button",
+                          "icon": "mdi:home",
+                          "name": "Go to sleep",
+                          "tap_action": {
+                            "action": "perform-action",
+                            "perform_action": "automation.trigger",
+                            "target": {
+                              "entity_id": "automation.set_home_state_to_night"
+                            },
+                            "data": {
+                              "skip_condition": true
+                            }
+                          },
+                          "visibility": [
+                            {
+                              "condition": "state",
+                              "entity": "input_text.home_state",
+                              "state_not": "Home - Night"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_tado_button",
+                          "icon": "mdi:power",
+                          "name": "ground floor",
+                          "tap_action": {
+                            "action": "perform-action",
+                            "perform_action": "script.toggle_tado_on_ground_floor",
+                            "target": {}
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_tado_button",
+                          "icon": "mdi:thermometer-minus",
+                          "tap_action": {
+                            "action": "perform-action",
+                            "perform_action": "script.decrease_tado_temperature_on_ground_floor",
+                            "target": {}
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_tado_button",
+                          "icon": "mdi:thermometer-plus",
+                          "tap_action": {
+                            "action": "perform-action",
+                            "perform_action": "script.increase_tado_temperature_on_ground_floor",
+                            "target": {}
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "icon": "mdi:thermometer",
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "#tado-controls"
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  },
+                  "entity_picture": "/local/hue_tado_logo.png?v1",
+                  "show_entity_picture": true,
+                  "show_name": false,
+                  "show_icon": false,
+                  "styles": {
+                    "grid": [
+                      {
+                        "position": "relative"
+                      }
+                    ],
+                    "custom_fields": {
+                      "kokken": [
+                        {
+                          "background-color": "[[[\n  if (states['climate.smart_radiator_kokken'].state === 'unavailable')\n    return 'grey';\n  if (states['climate.smart_radiator_kokken'].state === 'heat')\n    return '#93ba28';\n  return '#e01913';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "8%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "stue": [
+                        {
+                          "background-color": "[[[\n  if (states['climate.smart_radiator_stue'].state === 'unavailable')\n    return 'grey';\n  if (states['climate.smart_radiator_stue'].state === 'heat')\n    return '#93ba28';\n  return '#e01913';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "18%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "spisestue": [
+                        {
+                          "background-color": "[[[\n  if (states['climate.smart_radiator_spisestue'].state === 'unavailable')\n    return 'grey';\n  if (states['climate.smart_radiator_spisestue'].state === 'heat')\n    return '#93ba28';\n  return '#e01913';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "28%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "orangerie": [
+                        {
+                          "background-color": "[[[\n  if (states['climate.smart_radiator_orangerie'].state === 'unavailable')\n    return 'grey';\n  if (states['climate.smart_radiator_orangerie'].state === 'heat')\n    return '#93ba28';\n  return '#e01913';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "38%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "entre": [
+                        {
+                          "background-color": "[[[\n  if (states['climate.smart_radiator_entre'].state === 'unavailable')\n    return 'grey';\n  if (states['climate.smart_radiator_entre'].state === 'heat')\n    return '#93ba28';\n  return '#e01913';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "48%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "nania": [
+                        {
+                          "background-color": "[[[\n  if (states['climate.smart_radiator_nania'].state === 'unavailable')\n    return 'grey';\n  if (states['climate.smart_radiator_nania'].state === 'heat')\n    return '#93ba28';\n  return '#e01913';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "58%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "sasha": [
+                        {
+                          "background-color": "[[[\n  if (states['climate.smart_radiator_sasha'].state === 'unavailable')\n    return 'grey';\n  if (states['climate.smart_radiator_sasha'].state === 'heat')\n    return '#93ba28';\n  return '#e01913';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "68%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "mattias": [
+                        {
+                          "background-color": "[[[\n  if (states['climate.smart_radiator_mattias'].state === 'unavailable')\n    return 'grey';\n  if (states['climate.smart_radiator_mattias'].state === 'heat')\n    return '#93ba28';\n  return '#e01913';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "78%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "kontor": [
+                        {
+                          "background-color": "[[[\n  if (states['climate.smart_radiator_kontor'].state === 'unavailable')\n    return 'grey';\n  if (states['climate.smart_radiator_kontor'].state === 'heat')\n    return '#93ba28';\n  return '#e01913';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "88%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "tado_api_status": [
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "50%"
+                        },
+                        {
+                          "top": "70%"
+                        },
+                        {
+                          "color": "red"
+                        },
+                        {
+                          "font-style": "bold"
+                        },
+                        {
+                          "font-size": "30px"
+                        }
+                      ]
+                    }
+                  },
+                  "custom_fields": {
+                    "kokken": "",
+                    "stue": "",
+                    "spisestue": "",
+                    "orangerie": "",
+                    "entre": "",
+                    "sasha": "",
+                    "mattias": "",
+                    "nania": "",
+                    "kontor": "",
+                    "tado_api_status": "[[[\n  if (states['input_text.tado_api_status'].state == 'ok')\n    return \"\";\n  return \"!\";\n]]]\n"
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "icon": "mdi:thermometer",
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "#tado-controls"
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  },
+                  "entity_picture": "/local/hue_tado_logo.png?v1",
+                  "show_entity_picture": true,
+                  "show_name": false,
+                  "show_icon": false,
+                  "styles": {
+                    "grid": [
+                      {
+                        "position": "relative"
+                      }
+                    ],
+                    "custom_fields": {
+                      "kokken": [
+                        {
+                          "background-color": "[[[\n  if (!window.tempToColor) {\n    window.tempToColor = function(temp) {\n      if (temp == null || isNaN(temp)) return 'grey';\n    \n      // Hue palette: deep blue → cyan → green → yellow → orange → Hue red\n    \n      if (temp <= 15) return 'rgba(0,85,255,1)';      // Deep Hue blue (coldest)\n      else if (temp <= 16) return 'rgba(0,140,255,1)'; // Hue blue\n      else if (temp <= 17) return 'rgba(0,190,255,1)'; // Cyan-blue\n      else if (temp <= 18) return 'rgba(0,210,170,1)'; // Hue aqua / teal\n      else if (temp <= 19) return 'rgba(120,220,70,1)';// Hue green\n      else if (temp <= 20) return 'rgba(255,230,60,1)';// Hue yellow\n      //else if (temp <= 21) return 'rgba(255,170,40,1)';// Hue warm yellow-orange\n      //else if (temp <= 22) return 'rgba(255,110,30,1)';// Hue orange\n      //else if (temp <= 23) return 'rgba(255,60,30,1)'; // Hue warm red-orange\n      else if (temp <= 24) return 'rgba(255,20,20,1)'; // Hue red\n      else return 'rgba(215,0,0,1)';                   // Deepest Hue red (warmest)\n    };\n  }\n\n  const ent = states['climate.smart_radiator_kokken'];\n  if (!ent || ent.state === 'unavailable') return 'grey';\n  if (ent.state === 'heat') {\n    return window.tempToColor(ent.attributes.temperature);\n  }\n  return 'lightgrey';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "8%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "stue": [
+                        {
+                          "background-color": "[[[\n  const ent = states['climate.smart_radiator_stue'];\n  if (!ent || ent.state === 'unavailable') return 'grey';\n  if (ent.state === 'heat')\n    return window.tempToColor(ent.attributes.temperature);\n  return 'lightgrey';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "18%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "spisestue": [
+                        {
+                          "background-color": "[[[\n  const ent = states['climate.smart_radiator_spisestue'];\n  if (!ent || ent.state === 'unavailable') return 'grey';\n  if (ent.state === 'heat')\n    return window.tempToColor(ent.attributes.temperature);\n  return 'lightgrey';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "28%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "orangerie": [
+                        {
+                          "background-color": "[[[\n  const ent = states['climate.smart_radiator_orangerie'];\n  if (!ent || ent.state === 'unavailable') return 'grey';\n  if (ent.state === 'heat')\n    return window.tempToColor(ent.attributes.temperature);\n  return 'lightgrey';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "38%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "entre": [
+                        {
+                          "background-color": "[[[\n  const ent = states['climate.smart_radiator_entre'];\n  if (!ent || ent.state === 'unavailable') return 'grey';\n  if (ent.state === 'heat')\n    return window.tempToColor(ent.attributes.temperature);\n  return 'lightgrey';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "48%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "nania": [
+                        {
+                          "background-color": "[[[\n  const ent = states['climate.smart_radiator_nania'];\n  if (!ent || ent.state === 'unavailable') return 'grey';\n  if (ent.state === 'heat')\n    return window.tempToColor(ent.attributes.temperature);\n  return 'lightgrey';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "58%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "sasha": [
+                        {
+                          "background-color": "[[[\n  const ent = states['climate.smart_radiator_sasha'];\n  if (!ent || ent.state === 'unavailable') return 'grey';\n  if (ent.state === 'heat')\n    return window.tempToColor(ent.attributes.temperature);\n  return 'lightgrey';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "68%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "mattias": [
+                        {
+                          "background-color": "[[[\n  const ent = states['climate.smart_radiator_mattias'];\n  if (!ent || ent.state === 'unavailable') return 'grey';\n  if (ent.state === 'heat')\n    return window.tempToColor(ent.attributes.temperature);\n  return 'lightgrey';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "78%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "kontor": [
+                        {
+                          "background-color": "[[[\n  const ent = states['climate.smart_radiator_kontor'];\n  if (!ent || ent.state === 'unavailable') return 'grey';\n  if (ent.state === 'heat')\n    return window.tempToColor(ent.attributes.temperature);\n  return 'lightgrey';\n]]]\n"
+                        },
+                        {
+                          "border-radius": "50%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "88%"
+                        },
+                        {
+                          "top": "10%"
+                        },
+                        {
+                          "height": "10px"
+                        },
+                        {
+                          "width": "10px"
+                        }
+                      ],
+                      "tado_api_status": [
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "50%"
+                        },
+                        {
+                          "top": "70%"
+                        },
+                        {
+                          "color": "red"
+                        },
+                        {
+                          "font-style": "bold"
+                        },
+                        {
+                          "font-size": "30px"
+                        }
+                      ]
+                    }
+                  },
+                  "custom_fields": {
+                    "kokken": "",
+                    "stue": "",
+                    "spisestue": "",
+                    "orangerie": "",
+                    "entre": "",
+                    "sasha": "",
+                    "mattias": "",
+                    "nania": "",
+                    "kontor": "",
+                    "tado_api_status": "[[[\n  if (states['input_text.tado_api_status'].state == 'ok')\n    return \"\";\n  return \"!\";\n]]]\n"
+                  }
+                }
+              ]
+            }
+          ],
+          "visible": [
+            {
+              "user": "9b780ba66a134f9fb0d170bd99d80708"
+            }
+          ],
+          "cards": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,1306 @@
+group_all_and_set_volume:
+  sequence:
+  - action: script.group_all
+    metadata: {}
+    data: {}
+  - action: media_player.volume_set
+    metadata: {}
+    target:
+      entity_id: media_player.spisestue
+    data:
+      volume_level: 0.02
+    enabled: false
+  - action: media_player.volume_set
+    metadata: {}
+    target:
+      entity_id: media_player.entre
+    data:
+      volume_level: 0.05
+    enabled: false
+  - action: media_player.volume_set
+    metadata: {}
+    target:
+      entity_id: media_player.kokken
+    data:
+      volume_level: 0.01
+    enabled: false
+  - action: media_player.volume_set
+    metadata: {}
+    target:
+      entity_id: media_player.stue
+    data:
+      volume_level: 0.01
+    enabled: false
+  - action: script.reset_kokken_volume
+    metadata: {}
+    data: {}
+  - action: script.reset_stue_volume
+    metadata: {}
+    data: {}
+  - action: script.reset_spisestue_volume
+    metadata: {}
+    data: {}
+  - action: script.reset_entre_volume
+    metadata: {}
+    data: {}
+  alias: group_all_and_set_volume
+  description: ''
+play_p3_on_sonos:
+  sequence:
+  - action: script.play_p3
+    metadata: {}
+    data: {}
+  - action: media_player.play_media
+    target:
+      entity_id: media_player.spisestue
+    data:
+      media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
+      media_content_type: music
+      extra:
+        thumb: https://upload.wikimedia.org/wikipedia/en/thumb/c/c4/DR_P3_logo_2020.svg/1200px-DR_P3_logo_2020.svg.png
+    enabled: true
+  alias: play_p3_on_sonos
+  description: ''
+play_p4_on_sonos:
+  sequence:
+  - action: script.play_p4
+    metadata: {}
+    data: {}
+  - action: media_player.play_media
+    target:
+      entity_id: media_player.spisestue
+    data:
+      media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
+      media_content_type: music
+    enabled: true
+  alias: play_p4_on_sonos
+  description: ''
+toggle_p3_p4:
+  sequence:
+  - action: media_player.play_media
+    metadata: {}
+    data:
+      media_content_type: channel
+      media_content_id: "{% if 'DR P4' in state_attr('media_player.argon_radio_2i_305890754e1c',
+        'media_title') %}\n  DAB/preset/3\n{% else %}\n  DAB/preset/4\n{% endif %}\n"
+    target:
+      entity_id: media_player.argon_radio_2i_305890754e1c
+  alias: toggle_p3_p4
+  description: ''
+add_stue_to_group:
+  sequence:
+  - if:
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: binary_sensor.someone_is_watching_tv
+        state: 'on'
+    then:
+    - action: media_player.join
+      metadata: {}
+      data:
+        group_members:
+        - media_player.stue
+        - media_player.spisestue
+      target:
+        entity_id: media_player.spisestue
+      enabled: false
+    - action: pyscript.add_stue_to_group
+      metadata: {}
+      data: {}
+  alias: add_stue_to_group
+  description: ''
+add_kokken_to_group:
+  sequence:
+  - action: media_player.join
+    metadata: {}
+    data:
+      group_members:
+      - media_player.kokken
+      - media_player.spisestue
+    target:
+      entity_id: media_player.spisestue
+    enabled: false
+  - action: pyscript.add_kokken_to_group
+    metadata: {}
+    data: {}
+  alias: add_kokken_to_group
+  description: ''
+add_entre_to_group:
+  sequence:
+  - action: media_player.join
+    metadata: {}
+    data:
+      group_members:
+      - media_player.entre
+      - media_player.spisestue
+    target:
+      entity_id: media_player.spisestue
+    enabled: false
+  - action: pyscript.add_entre_to_group
+    metadata: {}
+    data: {}
+  alias: add_entre_to_group
+  description: ''
+remove_kokken_from_group:
+  sequence:
+  - action: media_player.unjoin
+    metadata: {}
+    data: {}
+    target:
+      entity_id: media_player.kokken
+  alias: remove_kokken_from_group
+  description: ''
+toggle_kokken_in_group:
+  sequence:
+  - if:
+    - condition: state
+      entity_id: binary_sensor.kokken_is_grouped
+      state: 'on'
+    then:
+    - action: script.remove_kokken_from_group
+      metadata: {}
+      data: {}
+    else:
+    - action: script.add_kokken_to_group
+      metadata: {}
+      data: {}
+  alias: toggle_kokken_in_group
+  description: ''
+remove_stue_from_group:
+  sequence:
+  - action: media_player.unjoin
+    metadata: {}
+    data: {}
+    target:
+      entity_id: media_player.stue
+  alias: remove_stue_from_group
+  description: ''
+remove_entre_from_group:
+  sequence:
+  - action: media_player.unjoin
+    metadata: {}
+    data: {}
+    target:
+      entity_id: media_player.entre
+  alias: remove_entre_from_group
+  description: ''
+toggle_stue_in_group:
+  sequence:
+  - if:
+    - condition: state
+      entity_id: binary_sensor.stue_is_grouped
+      state: 'on'
+    then:
+    - action: script.remove_stue_from_group
+      metadata: {}
+      data: {}
+    else:
+    - action: script.add_stue_to_group
+      metadata: {}
+      data: {}
+  alias: toggle_stue_in_group
+  description: ''
+toggle_entre_in_group:
+  sequence:
+  - if:
+    - condition: state
+      entity_id: binary_sensor.entre_is_grouped
+      state: 'on'
+    then:
+    - action: script.remove_entre_from_group
+      metadata: {}
+      data: {}
+    else:
+    - action: script.add_entre_to_group
+      metadata: {}
+      data: {}
+  alias: toggle_entre_in_group
+  description: ''
+increase_master_volume:
+  sequence:
+  - if:
+    - condition: state
+      entity_id: binary_sensor.kokken_is_grouped
+      state: 'on'
+    then:
+    - action: input_number.increment
+      metadata: {}
+      data: {}
+      target:
+        entity_id: input_number.kokken_volume
+  - if:
+    - condition: state
+      entity_id: binary_sensor.entre_is_grouped
+      state: 'on'
+    then:
+    - action: input_number.increment
+      metadata: {}
+      data: {}
+      target:
+        entity_id:
+        - input_number.entre_volume
+  - if:
+    - condition: state
+      entity_id: binary_sensor.stue_is_grouped
+      state: 'on'
+    then:
+    - action: input_number.increment
+      metadata: {}
+      data: {}
+      target:
+        entity_id:
+        - input_number.stue_volume
+  - action: input_number.increment
+    metadata: {}
+    data: {}
+    target:
+      entity_id: input_number.spisestue_volume
+  alias: increase_master_volume
+  description: ''
+decrease_master_volume:
+  sequence:
+  - if:
+    - condition: state
+      entity_id: binary_sensor.kokken_is_grouped
+      state: 'on'
+    then:
+    - action: input_number.decrement
+      metadata: {}
+      data: {}
+      target:
+        entity_id: input_number.kokken_volume
+  - if:
+    - condition: state
+      entity_id: binary_sensor.entre_is_grouped
+      state: 'on'
+    then:
+    - action: input_number.decrement
+      metadata: {}
+      data: {}
+      target:
+        entity_id:
+        - input_number.entre_volume
+  - if:
+    - condition: state
+      entity_id: binary_sensor.stue_is_grouped
+      state: 'on'
+    then:
+    - action: input_number.decrement
+      metadata: {}
+      data: {}
+      target:
+        entity_id:
+        - input_number.stue_volume
+  - action: input_number.decrement
+    metadata: {}
+    data: {}
+    target:
+      entity_id: input_number.spisestue_volume
+  alias: decrease_master_volume
+  description: ''
+play_pause_all_grouped_speakers:
+  sequence:
+  - if:
+    - condition: state
+      entity_id: binary_sensor.any_speaker_in_group_is_playing
+      state: 'on'
+    then:
+    - action: media_player.media_pause
+      metadata: {}
+      data: {}
+      target:
+        entity_id:
+        - media_player.spisestue
+    - if:
+      - condition: state
+        entity_id: binary_sensor.kokken_is_grouped
+        state: 'on'
+      then:
+      - action: media_player.media_pause
+        metadata: {}
+        data: {}
+        target:
+          entity_id: media_player.kokken
+    - if:
+      - condition: state
+        entity_id: binary_sensor.entre_is_grouped
+        state: 'on'
+      then:
+      - action: media_player.media_pause
+        metadata: {}
+        data: {}
+        target:
+          entity_id: media_player.entre
+    - if:
+      - condition: state
+        entity_id: binary_sensor.stue_is_grouped
+        state: 'on'
+      then:
+      - action: media_player.media_pause
+        metadata: {}
+        data: {}
+        target:
+          entity_id: media_player.stue
+    else:
+    - action: media_player.media_play
+      metadata: {}
+      data: {}
+      target:
+        entity_id:
+        - media_player.spisestue
+    - if:
+      - condition: state
+        entity_id: binary_sensor.kokken_is_grouped
+        state: 'on'
+      then:
+      - action: media_player.media_play
+        metadata: {}
+        data: {}
+        target:
+          entity_id: media_player.kokken
+    - if:
+      - condition: state
+        entity_id: binary_sensor.entre_is_grouped
+        state: 'on'
+      then:
+      - action: media_player.media_play
+        metadata: {}
+        data: {}
+        target:
+          entity_id: media_player.entre
+    - if:
+      - condition: state
+        entity_id: binary_sensor.stue_is_grouped
+        state: 'on'
+      then:
+      - action: media_player.media_play
+        metadata: {}
+        data: {}
+        target:
+          entity_id: media_player.stue
+  alias: play_pause_all_grouped_speakers
+  description: ''
+group_all:
+  sequence:
+  - action: script.add_entre_to_group
+    metadata: {}
+    data: {}
+  - action: script.add_kokken_to_group
+    metadata: {}
+    data: {}
+  - action: script.add_stue_to_group
+    metadata: {}
+    data: {}
+  alias: group_all
+  description: ''
+remove_spisestue_from_group:
+  sequence:
+  - action: media_player.unjoin
+    metadata: {}
+    data: {}
+    target:
+      entity_id: media_player.spisestue
+  alias: remove_spisestue_from_group
+  description: ''
+mute_or_unmute_spisestue:
+  sequence:
+  - if:
+    - condition: template
+      value_template: '{{ state_attr(''media_player.spisestue'', ''is_volume_muted'')
+        == True }}'
+    then:
+    - action: media_player.volume_mute
+      metadata: {}
+      data:
+        is_volume_muted: false
+      target:
+        entity_id: media_player.spisestue
+    else:
+    - action: media_player.volume_mute
+      metadata: {}
+      data:
+        is_volume_muted: true
+      target:
+        entity_id: media_player.spisestue
+  alias: mute_or_unmute_spisestue
+  description: ''
+mute_or_unmute_stue:
+  sequence:
+  - if:
+    - condition: template
+      value_template: '{{ state_attr(''media_player.stue'', ''is_volume_muted'') ==
+        True }}'
+    then:
+    - action: media_player.volume_mute
+      metadata: {}
+      data:
+        is_volume_muted: false
+      target:
+        entity_id: media_player.stue
+    else:
+    - action: media_player.volume_mute
+      metadata: {}
+      data:
+        is_volume_muted: true
+      target:
+        entity_id: media_player.stue
+  alias: mute_or_unmute_stue
+  description: ''
+mute_or_unmute_kokken:
+  sequence:
+  - if:
+    - condition: template
+      value_template: '{{ state_attr(''media_player.kokken'', ''is_volume_muted'')
+        == True }}'
+    then:
+    - action: media_player.volume_mute
+      metadata: {}
+      data:
+        is_volume_muted: false
+      target:
+        entity_id: media_player.kokken
+    else:
+    - action: media_player.volume_mute
+      metadata: {}
+      data:
+        is_volume_muted: true
+      target:
+        entity_id: media_player.kokken
+  alias: mute_or_unmute_kokken
+  description: ''
+mute_or_unmute_entre:
+  sequence:
+  - if:
+    - condition: template
+      value_template: '{{ state_attr(''media_player.entre'', ''is_volume_muted'')
+        == True }}'
+    then:
+    - action: media_player.volume_mute
+      metadata: {}
+      data:
+        is_volume_muted: false
+      target:
+        entity_id: media_player.entre
+    else:
+    - action: media_player.volume_mute
+      metadata: {}
+      data:
+        is_volume_muted: true
+      target:
+        entity_id: media_player.entre
+  alias: mute_or_unmute_entre
+  description: ''
+play_p3:
+  sequence:
+  - action: timer.start
+    metadata: {}
+    data: {}
+    target:
+      entity_id: timer.radio_turned_on_by_automation
+  - action: media_player.turn_on
+    target:
+      entity_id: media_player.argon_radio_2i_305890754e1c
+    data: {}
+    enabled: true
+  - action: media_player.play_media
+    data:
+      media:
+        media_content_id: DAB/preset/3
+        media_content_type: channel
+        metadata: {}
+    target:
+      entity_id: media_player.argon_radio_2i_305890754e1c
+  alias: play_p3
+  description: ''
+play_p4:
+  sequence:
+  - action: timer.start
+    metadata: {}
+    data: {}
+    target:
+      entity_id: timer.radio_turned_on_by_automation
+  - action: media_player.turn_on
+    target:
+      entity_id: media_player.argon_radio_2i_305890754e1c
+    data: {}
+  - action: media_player.play_media
+    data:
+      media:
+        media_content_id: DAB/preset/4
+        media_content_type: channel
+        metadata: {}
+    target:
+      entity_id: media_player.argon_radio_2i_305890754e1c
+  alias: play_p4
+  description: ''
+play_p6:
+  sequence:
+  - action: timer.start
+    metadata: {}
+    data: {}
+    target:
+      entity_id: timer.radio_turned_on_by_automation
+  - action: media_player.turn_on
+    target:
+      entity_id: media_player.argon_radio_2i_305890754e1c
+    data: {}
+    enabled: true
+  - action: media_player.play_media
+    data:
+      media:
+        media_content_id: DAB/preset/5
+        media_content_type: channel
+        metadata: {}
+    target:
+      entity_id: media_player.argon_radio_2i_305890754e1c
+  alias: play_p6
+  description: ''
+play_p8:
+  sequence:
+  - action: timer.start
+    metadata: {}
+    data: {}
+    target:
+      entity_id: timer.radio_turned_on_by_automation
+  - action: media_player.turn_on
+    target:
+      entity_id: media_player.argon_radio_2i_305890754e1c
+    data: {}
+    enabled: true
+  - action: media_player.play_media
+    data:
+      media:
+        media_content_id: DAB/preset/6
+        media_content_type: channel
+        metadata: {}
+    target:
+      entity_id: media_player.argon_radio_2i_305890754e1c
+  alias: play_p8
+  description: ''
+play_p6_on_sonos:
+  sequence:
+  - action: script.play_p6
+    metadata: {}
+    data: {}
+  - action: media_player.play_media
+    target:
+      entity_id: media_player.spisestue
+    data:
+      media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
+      media_content_type: music
+    enabled: true
+  alias: play_p6_on_sonos
+  description: ''
+play_p8_on_sonos:
+  sequence:
+  - action: script.play_p8
+    metadata: {}
+    data: {}
+  - action: media_player.play_media
+    target:
+      entity_id: media_player.spisestue
+    data:
+      media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
+      media_content_type: music
+    enabled: true
+  alias: play_p8_on_sonos
+  description: ''
+increase_tado_temperature:
+  sequence:
+  - action: input_number.set_value
+    metadata: {}
+    data_template:
+      entity_id: '{{ entity }}'
+      value: '{{ [(states(entity)|float) + 0.5, 25]|min }}'
+  alias: increase_tado_temperature
+  description: ''
+decrease_tado_temperature:
+  sequence:
+  - action: input_number.set_value
+    metadata: {}
+    data_template:
+      entity_id: '{{ entity }}'
+      value: '{{ [(states(entity)|float) - 0.5, 15]|max }}'
+  alias: decrease_tado_temperature
+  description: ''
+turn_off_tado_on_ground_floor:
+  sequence:
+  - action: climate.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - climate.smart_radiator_kokken
+      - climate.smart_radiator_orangerie
+      - climate.smart_radiator_spisestue
+      - climate.smart_radiator_stue
+  alias: turn_off_tado_on_ground_floor
+  description: ''
+decrease_tado_temperature_on_ground_floor:
+  sequence:
+  - action: script.decrease_tado_temperature
+    metadata: {}
+    data:
+      entity: input_number.orangerie_temperature_helper
+    enabled: false
+  - action: script.decrease_tado_temperature
+    metadata: {}
+    data:
+      entity: input_number.stue_temperature_helper
+  - action: script.decrease_tado_temperature
+    metadata: {}
+    data:
+      entity: input_number.spisestue_temperature_helper
+  - action: script.decrease_tado_temperature
+    metadata: {}
+    data:
+      entity: input_number.kokken_temperature_helper
+  - action: script.decrease_tado_temperature
+    metadata: {}
+    data:
+      entity: input_number.toilet_temperature_helper
+    enabled: false
+  alias: decrease_tado_temperature_on_ground_floor
+  description: ''
+increase_tado_temperature_on_ground_floor:
+  sequence:
+  - action: script.increase_tado_temperature
+    metadata: {}
+    data:
+      entity: input_number.orangerie_temperature_helper
+    enabled: false
+  - action: script.increase_tado_temperature
+    metadata: {}
+    data:
+      entity: input_number.stue_temperature_helper
+  - action: script.increase_tado_temperature
+    metadata: {}
+    data:
+      entity: input_number.spisestue_temperature_helper
+  - action: script.increase_tado_temperature
+    metadata: {}
+    data:
+      entity: input_number.kokken_temperature_helper
+  - action: script.increase_tado_temperature
+    metadata: {}
+    data:
+      entity: input_number.toilet_temperature_helper
+    enabled: false
+  alias: increase_tado_temperature_on_ground_floor
+  description: ''
+decrease_tado_temperature_on_first_floor:
+  sequence:
+  - action: script.decrease_tado_temperature
+    metadata: {}
+    data:
+      entity: input_number.kontor_temperature_helper
+  - action: script.decrease_tado_temperature
+    metadata: {}
+    data:
+      entity: input_number.mattias_temperature_helper
+  - action: script.decrease_tado_temperature
+    metadata: {}
+    data:
+      entity: input_number.nania_temperature_helper
+  - action: script.decrease_tado_temperature
+    metadata: {}
+    data:
+      entity: input_number.sasha_temperature_helper
+  alias: decrease_tado_temperature_on_first_floor
+  description: ''
+increase_tado_temperature_on_first_floor:
+  sequence:
+  - action: script.increase_tado_temperature
+    metadata: {}
+    data:
+      entity: input_number.nania_temperature_helper
+  - action: script.increase_tado_temperature
+    metadata: {}
+    data:
+      entity: input_number.kontor_temperature_helper
+  - action: script.increase_tado_temperature
+    metadata: {}
+    data:
+      entity: input_number.mattias_temperature_helper
+  - action: script.increase_tado_temperature
+    metadata: {}
+    data:
+      entity: input_number.sasha_temperature_helper
+  alias: increase_tado_temperature_on_first_floor
+  description: ''
+resume_tado_schedule_on_first_floor:
+  sequence:
+  - action: climate.set_hvac_mode
+    metadata: {}
+    data:
+      hvac_mode: auto
+    target:
+      entity_id:
+      - climate.kontor
+      - climate.nania
+      - climate.mattias
+      - climate.sasha
+  alias: resume_tado_schedule_on_first_floor
+  description: ''
+turn_off_tado_on_first_floor:
+  sequence:
+  - action: climate.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - climate.smart_radiator_mattias
+      - climate.smart_radiator_sasha
+      - climate.smart_radiator_kontor
+      - climate.smart_radiator_nania
+  alias: turn_off_tado_on_first_floor
+  description: ''
+turn_on_tado_on_ground_floor:
+  sequence:
+  - action: climate.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - climate.smart_radiator_kokken
+      - climate.smart_radiator_orangerie
+      - climate.smart_radiator_spisestue
+      - climate.smart_radiator_stue
+  alias: turn_on_tado_on_ground_floor
+  description: ''
+turn_on_tado_on_first_floor:
+  sequence:
+  - action: climate.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - climate.smart_radiator_nania
+      - climate.smart_radiator_kontor
+      - climate.smart_radiator_sasha
+      - climate.smart_radiator_mattias
+  alias: turn_on_tado_on_first_floor
+  description: ''
+toggle_tado_on_ground_floor:
+  sequence:
+  - if:
+    - condition: or
+      conditions:
+      - condition: state
+        entity_id: climate.smart_radiator_kokken
+        state: heat
+      - condition: state
+        entity_id: climate.smart_radiator_orangerie
+        state: heat
+      - condition: state
+        entity_id: climate.smart_radiator_stue
+        state: heat
+      - condition: state
+        entity_id: climate.smart_radiator_spisestue
+        state: heat
+    then:
+    - action: script.turn_off_tado_on_ground_floor
+      metadata: {}
+      data: {}
+    else:
+    - action: script.turn_on_tado_on_ground_floor
+      metadata: {}
+      data: {}
+  alias: toggle_tado_on_ground_floor
+  description: ''
+toggle_tado_on_first_floor:
+  sequence:
+  - if:
+    - condition: or
+      conditions:
+      - condition: state
+        entity_id: climate.smart_radiator_nania
+        state: heat
+      - condition: state
+        entity_id: climate.smart_radiator_sasha
+        state: heat
+      - condition: state
+        entity_id: climate.smart_radiator_mattias
+        state: heat
+      - condition: state
+        entity_id: climate.smart_radiator_kontor
+        state: heat
+    then:
+    - action: script.turn_off_tado_on_first_floor
+      metadata: {}
+      data: {}
+    else:
+    - action: script.turn_on_tado_on_first_floor
+      metadata: {}
+      data: {}
+  alias: toggle_tado_on_first_floor
+  description: ''
+play_p3_on_sonos_in_kokken:
+  sequence:
+  - action: script.play_p3
+    metadata: {}
+    data: {}
+  - action: script.force_play_media_in_kokken
+    metadata: {}
+    data:
+      media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
+      media_content_type: music
+  alias: play_p3_on_sonos_in_kokken
+  description: ''
+play_p4_on_sonos_in_kokken:
+  sequence:
+  - action: script.play_p4
+    metadata: {}
+    data: {}
+  - action: script.force_play_media_in_kokken
+    metadata: {}
+    data:
+      media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
+      media_content_type: music
+  alias: play_p4_on_sonos_in_kokken
+  description: ''
+play_p6_on_sonos_in_kokken:
+  sequence:
+  - action: script.play_p6
+    metadata: {}
+    data: {}
+  - action: script.force_play_media_in_kokken
+    metadata: {}
+    data:
+      media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
+      media_content_type: music
+  alias: play_p6_on_sonos_in_kokken
+  description: ''
+force_play_media_in_kokken:
+  fields:
+    media_content_id:
+      description: The media content ID (e.g., stream URL)
+      example: aac://https://live-bauerdk.sharp-stream.com/vinyl-premium_96.aac
+      required: true
+      selector:
+        text:
+    media_content_type:
+      description: The media content type (e.g., music, video)
+      example: music
+      required: true
+      selector:
+        text:
+  sequence:
+  - variables:
+      initial_source: '{{ state_attr(''media_player.kokken'', ''source'') }}'
+  - action: media_player.play_media
+    data:
+      media:
+        media_content_id: '{{ media_content_id }}'
+        media_content_type: '{{ media_content_type }}'
+        metadata: {}
+    target:
+      entity_id: media_player.kokken
+  - if:
+    - condition: template
+      value_template: '{{ initial_source == ''AirPlay'' }}'
+    then:
+    - delay:
+        seconds: 1
+    - if:
+      - condition: not
+        conditions:
+        - condition: state
+          entity_id: media_player.kokken
+          state: playing
+      then:
+      - action: media_player.play_media
+        data:
+          media:
+            media_content_id: '{{ media_content_id }}'
+            media_content_type: '{{ media_content_type }}'
+            metadata: {}
+        target:
+          entity_id: media_player.kokken
+  - action: input_text.set_value
+    metadata: {}
+    data:
+      value: 'False'
+    target:
+      entity_id: input_text.kokken_feels_lucky
+  - action: media_player.volume_mute
+    metadata: {}
+    data:
+      is_volume_muted: false
+    target:
+      entity_id: media_player.kokken
+  alias: force_play_media_in_kokken
+  description: 'Plays media in the kitchen. If the source was AirPlay before starting,
+    waits 1 seconds and retries if not playing.
+
+    '
+toggle_shuffle_kokken:
+  alias: toggle_shuffle_kokken
+  description: Toggle shuffle on media_player.kokken
+  sequence:
+  - variables:
+      current_shuffle: '{{ state_attr(''media_player.kokken'', ''shuffle'') | default(false)
+        }}'
+  - data:
+      entity_id: media_player.kokken
+      shuffle: '{{ not current_shuffle }}'
+    action: media_player.shuffle_set
+toggle_kokken_feels_lucky:
+  sequence:
+  - if:
+    - condition: state
+      entity_id: input_text.kokken_feels_lucky
+      state: 'True'
+    then:
+    - action: input_text.set_value
+      metadata: {}
+      data:
+        value: 'False'
+      target:
+        entity_id: input_text.kokken_feels_lucky
+    else:
+    - action: input_text.set_value
+      metadata: {}
+      data:
+        value: 'True'
+      target:
+        entity_id: input_text.kokken_feels_lucky
+    - if:
+      - condition: state
+        entity_id: timer.kokken_is_lucky_change_timer
+        state: active
+      then:
+      - action: timer.cancel
+        metadata: {}
+        data: {}
+        target:
+          entity_id: timer.kokken_is_lucky_change_timer
+      enabled: false
+    - action: timer.start
+      metadata: {}
+      data: {}
+      target:
+        entity_id:
+        - timer.kokken_is_lucky_change_timer
+        - timer.kokken_is_lucky_force_change_timer
+  alias: toggle_kokken_feels_lucky
+  description: ''
+play_npo_radio_2:
+  sequence:
+  - action: timer.start
+    metadata: {}
+    data: {}
+    target:
+      entity_id: timer.radio_turned_on_by_automation
+  - action: media_player.turn_on
+    target:
+      entity_id: media_player.argon_radio_2i_305890754e1c
+    data: {}
+    enabled: true
+  - action: media_player.play_media
+    data:
+      media:
+        media_content_id: Internet radio/preset/2
+        media_content_type: channel
+        metadata: {}
+    target:
+      entity_id: media_player.argon_radio_2i_305890754e1c
+  alias: play_npo_radio_2
+  description: ''
+play_npo_radio_2_on_sonos_in_kokken:
+  sequence:
+  - action: script.play_npo_radio_2
+    metadata: {}
+    data: {}
+    enabled: false
+  - action: script.force_play_media_in_kokken
+    metadata: {}
+    data:
+      media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
+      media_content_type: music
+    enabled: false
+  - if:
+    - condition: state
+      entity_id: input_text.commercials_on_npo_radio_2
+      state: 'True'
+    then:
+    - action: input_text.set_value
+      metadata: {}
+      data:
+        value: Buffering...
+      target:
+        entity_id: input_text.kokken_media_header
+    - action: media_player.shuffle_set
+      metadata: {}
+      data:
+        shuffle: true
+      target:
+        entity_id: media_player.kokken
+    - action: script.force_play_media_in_kokken
+      metadata: {}
+      data:
+        media_content_id: '{{ states(''input_text.npo_radio_2_filler_playlist_id'')
+          }}'
+        media_content_type: favorite_item_id
+      enabled: false
+    - action: media_player.play_media
+      metadata: {}
+      data:
+        media_content_id: '{{ states(''input_text.npo_radio_2_filler_playlist_id'')
+          }}'
+        media_content_type: favorite_item_id
+      target:
+        entity_id: media_player.kokken
+    - action: input_text.set_value
+      metadata: {}
+      data:
+        value: 'True'
+      target:
+        entity_id: input_text.resume_npo_radio_2_after_commercials
+    - action: media_player.shuffle_set
+      metadata: {}
+      data:
+        shuffle: true
+      target:
+        entity_id: media_player.kokken
+    else:
+    - action: script.play_npo_radio_2
+      metadata: {}
+      data: {}
+    - action: script.force_play_media_in_kokken
+      metadata: {}
+      data:
+        media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
+        media_content_type: music
+  alias: play_npo_radio_2_on_sonos_in_kokken
+  description: ''
+play_radio_vinyl_and_disable_resume:
+  alias: play_radio_vinyl_and_disable_resume_npo_radio_2
+  sequence:
+  - target:
+      entity_id: input_text.resume_npo_radio_2_after_commercials
+    data:
+      value: 'False'
+    action: input_text.set_value
+  - data:
+      media_content_id: FV:2/73
+      media_content_type: favorite_item_id
+    action: script.force_play_media_in_kokken
+  mode: single
+  description: ''
+handle_radio_playback:
+  alias: handle_radio_playback
+  sequence:
+  - wait_template: '{{ state_attr(trigger_entity_id, ''media_content_id'') != None
+      }}'
+    continue_on_timeout: false
+    timeout: '200'
+  - if:
+    - condition: state
+      entity_id: media_player.argon_radio_2i_305890754e1c
+      state:
+      - 'off'
+    then:
+    - action: timer.start
+      target:
+        entity_id: timer.radio_turned_on_by_automation
+    - if:
+      - condition: template
+        value_template: '{{ ''x-rincon-stream:RINCON_804AF2CAFA8001400'' in state_attr(trigger_entity_id,
+          ''media_content_id'')}}'
+      then:
+      - if:
+        - condition: state
+          entity_id: input_text.reset_radio
+          state: 'True'
+        then:
+        - action: script.play_npo_radio_2
+        - action: input_text.set_value
+          data:
+            value: 'False'
+          target:
+            entity_id: input_text.reset_radio
+        else:
+        - action: media_player.turn_on
+          target:
+            entity_id: media_player.argon_radio_2i_305890754e1c
+      - wait_template: '{{ state_attr(''media_player.argon_radio_2i_305890754e1c'',
+          ''source'') != None }}'
+        continue_on_timeout: false
+        timeout: '200'
+      - if:
+        - condition: and
+          conditions:
+          - condition: not
+            conditions:
+            - condition: state
+              entity_id: media_player.argon_radio_2i_305890754e1c
+              attribute: source
+              state: Internet radio
+          - condition: not
+            conditions:
+            - condition: state
+              entity_id: media_player.argon_radio_2i_305890754e1c
+              attribute: source
+              state: DAB
+        then:
+        - action: script.play_p3
+        else:
+        - if:
+          - condition: state
+            entity_id: media_player.argon_radio_2i_305890754e1c
+            attribute: source
+            state: Internet radio
+          - condition: state
+            entity_id: input_text.commercials_on_npo_radio_2
+            state: 'True'
+          - condition: state
+            entity_id: binary_sensor.npo_radio_2_is_playing
+            state: 'on'
+          then:
+          - action: media_player.shuffle_set
+            data:
+              shuffle: true
+            target:
+              entity_id: '{{ trigger_entity_id }}'
+          - action: media_player.play_media
+            data:
+              media:
+                media_content_id: '{{ states(''input_text.npo_radio_2_filler_playlist_id'')
+                  }}'
+                media_content_type: favorite_item_id
+            target:
+              entity_id: '{{ trigger_entity_id }}'
+          - action: input_text.set_value
+            data:
+              value: 'True'
+            target:
+              entity_id: input_text.resume_npo_radio_2_after_commercials
+          - action: media_player.shuffle_set
+            data:
+              shuffle: true
+            target:
+              entity_id: '{{ trigger_entity_id }}'
+    else:
+    - if:
+      - condition: state
+        entity_id: binary_sensor.npo_radio_2_is_playing
+        state:
+        - 'on'
+      - condition: state
+        entity_id: input_text.commercials_on_npo_radio_2
+        state:
+        - 'True'
+      - condition: template
+        value_template: '{{ ''x-rincon-stream:RINCON_804AF2CAFA8001400'' in state_attr(trigger_entity_id,
+          ''media_content_id'')}}'
+      then:
+      - action: media_player.play_media
+        data:
+          media:
+            media_content_id: '{{ states(''input_text.npo_radio_2_filler_playlist_id'')
+              }}'
+            media_content_type: favorite_item_id
+        target:
+          entity_id: '{{ trigger_entity_id }}'
+      - wait_template: '{{ state_attr(trigger_entity_id, ''media_playlist'') != None
+          }}'
+        continue_on_timeout: false
+        timeout: '200'
+      - wait_template: '{{ states(trigger_entity_id) == "playing" }}'
+        continue_on_timeout: false
+        timeout: '200'
+      - action: pyscript.group_if_same_content
+        metadata: {}
+        data: {}
+  mode: single
+  description: ''
+pause_kokken_and_show_media_player_controls_on_shelly:
+  sequence:
+  - action: media_player.media_pause
+    metadata: {}
+    target:
+      entity_id: media_player.kokken
+    data: {}
+  - action: input_text.set_value
+    metadata: {}
+    target:
+      entity_id: input_text.show_media_player_controls_on_shelly
+    data:
+      value: 'False'
+  alias: pause_kokken_and_hide_media_player_controls_on_shelly
+  description: ''
+toggle_hue:
+  alias: toggle_hue
+  description: 'Toggle a Hue light: turn off if on, otherwise activate a Hue scene'
+  mode: single
+  fields:
+    entity_id:
+      name: Light entity
+      description: The light entity to toggle
+      required: true
+      selector:
+        entity:
+          domain: light
+    scene_entity_id:
+      name: Scene entity
+      description: The scene to toggle
+      required: true
+      selector:
+        entity:
+          domain: scene
+  sequence:
+  - if:
+    - condition: template
+      value_template: '{{ is_state(entity_id, ''on'') }}'
+    then:
+    - target:
+        entity_id: '{{ entity_id }}'
+      action: light.turn_off
+    else:
+    - action: scene.turn_on
+      metadata: {}
+      target:
+        entity_id: '{{ scene_entity_id }}'
+      data: {}
+reset_spisestue_volume:
+  sequence:
+  - action: media_player.volume_set
+    metadata: {}
+    target:
+      entity_id: media_player.spisestue
+    data:
+      volume_level: 0.02
+  alias: reset_spisestue_volume
+  description: ''
+reset_entre_volume:
+  sequence:
+  - action: media_player.volume_set
+    metadata: {}
+    target:
+      entity_id: media_player.entre
+    data:
+      volume_level: 0.05
+  alias: reset_entre_volume
+  description: ''
+reset_kokken_volume:
+  sequence:
+  - action: media_player.volume_set
+    metadata: {}
+    target:
+      entity_id: media_player.kokken
+    data:
+      volume_level: 0.01
+  alias: reset_kokken_volume
+  description: ''
+reset_stue_volume:
+  sequence:
+  - action: media_player.volume_set
+    metadata: {}
+    target:
+      entity_id: media_player.stue
+    data:
+      volume_level: 0.01
+  alias: reset_stue_volume
+  description: ''
