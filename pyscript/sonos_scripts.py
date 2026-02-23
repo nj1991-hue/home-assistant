@@ -14,8 +14,16 @@ sonos_media = None
 @time_trigger("cron(0 3 * * *)")
 def refresh_sonos_media():
     global sonos_media
-    playlists = media_player.browse_media(entity_id = "media_player.kokken", media_content_type= "favorites_folder", media_content_id= "object.container.playlistContainer")
-    streams = media_player.browse_media(entity_id = "media_player.kokken", media_content_type= "favorites_folder", media_content_id= "object.item.audioItem.audioBroadcast")
+    playlists = media_player.browse_media(
+        entity_id = "media_player.kokken", 
+        media_content_type= "favorites_folder", 
+        media_content_id= "object.container.playlistContainer"
+    )
+    streams = media_player.browse_media(
+        entity_id = "media_player.kokken", 
+        media_content_type= "favorites_folder", 
+        media_content_id= "object.item.audioItem.audioBroadcast"
+    )
     
     sonos_media_dict = {}
     
