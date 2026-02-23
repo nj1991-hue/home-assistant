@@ -344,7 +344,12 @@ def get_tado_rooms_and_devices():
     ):
         get_tado_rooms_devices_last_called = time.time()
         increment_request_counter()
-        service.call("shell_command", "get_tado_rooms_devices", blocking=True, home_id = pyscript.config["global"]["tado_home_id"])
+        service.call(
+            "shell_command", 
+            "get_tado_rooms_devices", 
+            blocking=True, 
+            home_id = pyscript.config["global"]["tado_home_id"]
+        )
     response = service.call("shell_command", "get_tado_rooms_devices_json", blocking=True, return_response=True)
     
     if response['stdout']:
