@@ -270,6 +270,7 @@ def set_kokken_meta_data():
     kokken_media_content_id = getattr(media_player.kokken,"media_content_id", None)
     kokken_media_artist = getattr(media_player.kokken,"media_artist", None)
     kokken_media_title = getattr(media_player.kokken,"media_title", None)
+    kokken_media_album_name = getattr(media_player.kokken,"media_album_name", None)
     kokken_source = getattr(media_player.kokken,"source", None)
 
     kokken_media_channel = getattr(media_player.kokken,"media_channel", None)
@@ -347,6 +348,9 @@ def set_kokken_meta_data():
 
     if input_text.resume_npo_radio_2_after_commercials == "True" and media_header == get_media_name(input_text.npo_radio_2_filler_playlist_id):
         media_header = "NPO Radio 2 (Reklame)"
+        
+    if kokken_media_playlist == "Music Assistant":
+        media_header = kokken_media_album_name
 
     input_text.kokken_media_title = media_title
     input_text.kokken_media_subtitle = media_subtitle
@@ -887,10 +891,10 @@ def adjust_volume_when_classical_music_plays(var_name=None, value=None, old_valu
                          entity_id=player, volume_level=new)
 
 
-@state_trigger("media_player.kokken")
-@state_trigger("media_player.entre")
-@state_trigger("media_player.spisestue")
-@state_trigger("media_player.stue")
+@state_trigger("media_player.kokken.queue_position")
+@state_trigger("media_player.entre.queue_position")
+@state_trigger("media_player.spisestue.queue_position")
+@state_trigger("media_player.stue.queue_position")
 def set_repeat_to_true(var_name=None):
     """
     Makes sure repeat is always set to True
@@ -900,8 +904,42 @@ def set_repeat_to_true(var_name=None):
     if var_name in [m.entity_id for m in media_players]:
         media_player.repeat_set(entity_id = var_name, repeat="all")
 
+
+@state_trigger("media_player.kokken_2")
+@state_trigger("media_player.entre_2")
+@state_trigger("media_player.spisestue_2")
+@state_trigger("media_player.stue_2")
+def set_repeat_to_true_for_music_assistant_speakers(var_name=None):
+    """
+    Makes sure repeat is always set to True for music assistant duplicates
+    """
+    media_players = get_media_players()
     
+    if var_name in [m.entity_id + "_2" for m in media_players]:
+        media_player.repeat_set(entity_id = var_name, repeat="all")
+
+
+@service    
+@time_trigger("cron(0 3 * * *)")
+def update_random_album():
+    for i in range(20):
+        album = music_assistant.get_library(
+            config_entry_id="01KJD55JFR0EVEB6YP6869PN0Y",
+            media_type= "album",
+            limit= 1,
+            order_by= "random",
+            album_type=["album"]
+        )["items"][0]
+        
+        if album["explicit"] != True:
+            log.info(f'Found a non-explicit album: {album["name"]}')
+            break
+        else:
+            log.info(f'{album["name"]} is too explicit...')
     
+    input_text.random_album_uri = album["uri"]
+    input_text.random_album_thumbnail = album["image"]
+    input_text.random_album_name = album["name"]
     
     
     
