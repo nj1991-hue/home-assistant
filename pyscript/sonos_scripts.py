@@ -171,13 +171,57 @@ async def spotify_track_exists(artist, title):
             return song_exists
 
 
-@service
-async def test_spotify_track_exists():
-    artist = "KRO"
-    title = "NCRV"
-    exists = await spotify_track_exists(artist, title)
-    log.info(f"Track exists: {exists}")
+async def get_song_metadata_from_itunes(artist, track):
+    base_url = "https://itunes.apple.com/search"
+    query = f"{artist} {track}"
 
+    params = {
+        "term": query,
+        "entity": "song",
+        "limit": 1
+    }
+
+    async with aiohttp.ClientSession() as session:
+        async with session.get(base_url, params=params) as response:
+            data = await response.json(content_type=None)
+
+    if not data["results"]:
+        return None
+
+    return data["results"][0]
+
+
+def get_album_art(artist, track, size=600):
+    artwork_url = get_song_metadata_from_itunes(artist, track)["artworkUrl100"]
+
+    return artwork_url.replace("100x100", f"{size}x{size}")
+
+def determine_if_song_exists(artist, track):
+    
+    if not media_string_is_valid(artist) or not media_string_is_valid(track):
+        return False
+        
+    metadata = get_song_metadata_from_itunes(artist, track)
+    song_exists = True if metadata else False
+    input_text.song_exists_log = f"{song_exists} ({artist} - {track})"
+
+    return song_exists
+
+def get_genre(artist, track):
+    metadata = get_song_metadata_from_itunes(artist, track)
+
+    return metadata["primaryGenreName"]
+    
+@service
+def test_itunes_api():
+
+    log.info(get_album_art("The beatles", "Yellow submarine"))
+    
+    log.info(song_exists("KRO NCRV", "Radio 2"))
+    log.info(song_exists("The beatles", "Yellow submarine"))
+    
+    log.info(get_genre("Lorna shore", "Oblivion"))    
+    
 
 def get_album_info_from_spotify(access_token, artist, title):
     search_url = "https://api.spotify.com/v1/search"
@@ -199,7 +243,7 @@ def get_album_info_from_spotify(access_token, artist, title):
         log.info(f"No suitable album found for artist: {artist} and title: {title}.")
         return None
 
-def get_album_art(artist, title):
+def get_album_art_from_spotify(artist, title):
 
     access_token = await get_spotify_access_token(pyscript.config["global"]["spotify_client_id"], pyscript.config["global"]["spotify_api_secret"])
     if access_token:
@@ -413,7 +457,7 @@ def set_kokken_art():
             artist = kokken_media_artist
             song_title = kokken_media_title
 
-        # Get album art from Spotify
+        # Get album art from iTunes
         art_url = get_album_art(artist, song_title)
 
     # Radio 100
@@ -567,7 +611,8 @@ async def get_npo_radio_2_metadata():
         dab_media_title_artist = dab_media_title.split(" - ")[-2].strip()
         dab_media_title_title = dab_media_title.split(" - ")[-1].strip()
         try:
-            song_exists = await spotify_track_exists(dab_media_title_artist, dab_media_title_title) 
+            #song_exists = await spotify_track_exists(dab_media_title_artist, dab_media_title_title) 
+            song_exists = determine_if_song_exists(dab_media_title_artist, dab_media_title_title)
         except Exception as e:
             log.warning(f"Error while connecting to Spotify: {e}")
             song_exists = False
