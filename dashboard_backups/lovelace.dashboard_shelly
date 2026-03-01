@@ -1400,15 +1400,11 @@
                   "show_icon": false,
                   "tap_action": {
                     "action": "call-service",
-                    "service": "music_assistant.play_media",
-                    "target": {
-                      "entity_id": "media_player.kokken_2"
-                    },
-                    "data": {
-                      "media_id": "[[[\n  return states['input_text.random_album_uri'].state\n]]]\n"
-                    }
+                    "target": {},
+                    "perform_action": "script.play_p3_on_sonos_in_kokken"
                   },
-                  "entity_picture": "[[[\n  return states['input_text.random_album_thumbnail'].state\n]]]\n",
+                  "name": "P3 (DAB)",
+                  "entity_picture": "https://upload.wikimedia.org/wikipedia/en/thumb/c/c4/DR_P3_logo_2020.svg/1200px-DR_P3_logo_2020.svg.png",
                   "show_entity_picture": true,
                   "grid_options": {
                     "columns": 4
@@ -4267,6 +4263,28 @@
                   "grid_options": {
                     "columns": 4
                   }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "entity": "media_player.kokken",
+                  "show_name": false,
+                  "show_icon": false,
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "music_assistant.play_media",
+                    "target": {
+                      "entity_id": "media_player.kokken_2"
+                    },
+                    "data": {
+                      "media_id": "[[[\n  return states['input_text.random_album_uri'].state\n]]]\n"
+                    }
+                  },
+                  "entity_picture": "[[[\n  return states['input_text.random_album_thumbnail'].state\n]]]\n",
+                  "show_entity_picture": true,
+                  "grid_options": {
+                    "columns": 4
+                  }
                 }
               ]
             }
@@ -4277,6 +4295,19 @@
             }
           ],
           "cards": []
+        },
+        {
+          "type": "sections",
+          "max_columns": 1,
+          "title": "V3",
+          "path": "v3",
+          "theme": "shelly",
+          "sections": [
+            {
+              "type": "grid",
+              "cards": []
+            }
+          ]
         }
       ]
     }
