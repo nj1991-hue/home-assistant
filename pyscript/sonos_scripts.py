@@ -123,53 +123,23 @@ async def fetch_json(session, url, *args, **kwargs):
  
 async def post(session, url, **kwargs):
     response = await session.post(url, **kwargs)
+    log.info(response.text())
     return await response.json()
 
-async def get_spotify_access_token(client_id, client_secret):
-    url = "https://accounts.spotify.com/api/token"
-    headers = {
-        "Authorization": "Basic " + (client_id + ":" + client_secret).encode("ascii").decode("ascii"),
-    }
-    data = {
-        "grant_type": "client_credentials",
-    }
-    
-    async with aiohttp.ClientSession() as session:
-        response_data = await post(session, url, data=data, auth=aiohttp.BasicAuth(client_id, client_secret))
 
-    if "access_token" in response_data:
-        return response_data["access_token"]
-    else:
-        log.warning(f"Error obtaining access token: {response_data}")
+async def get_metadata_from_itunes(params):
+
+    base_url = "https://itunes.apple.com/search"
+
+    async with aiohttp.ClientSession() as session:
+        async with session.get(base_url, params=params) as response:
+            data = await response.json(content_type=None)
+
+    if not data["results"]:
         return None
 
-
-async def spotify_track_exists(artist, title):
+    return data["results"][0]
     
-    access_token = await get_spotify_access_token(pyscript.config["global"]["spotify_client_id"], pyscript.config["global"]["spotify_api_secret"])
-    
-    search_url = "https://api.spotify.com/v1/search"
-    headers = {"Authorization": f"Bearer {access_token}"}
-    params = {
-        "q": f"artist:{artist} track:{title}",
-        "type": "track",
-        "limit": 1,
-    }
-    
-
-    async with aiohttp.ClientSession() as session:
-        async with session.get(search_url, headers=headers, params=params) as response:
-            data = await response.json()
-            if "NCRV" in title or "NCRV" in artist:
-                song_exists = False
-            elif "tracks" in data and data["tracks"]["items"]:
-                song_exists = True
-            else:
-                song_exists = False
-                
-            input_text.song_exists_log = f"{song_exists} ({artist} - {title})"
-            return song_exists
-
 
 async def get_song_metadata_from_itunes(artist, track):
     base_url = "https://itunes.apple.com/search"
@@ -180,21 +150,28 @@ async def get_song_metadata_from_itunes(artist, track):
         "entity": "song",
         "limit": 1
     }
+    return get_metadata_from_itunes(params)
 
-    async with aiohttp.ClientSession() as session:
-        async with session.get(base_url, params=params) as response:
-            data = await response.json(content_type=None)
 
-    if not data["results"]:
-        return None
+async def get_album_metadata_from_itunes(artist, album):
+    base_url = "https://itunes.apple.com/search"
+    query = f"{artist} {album}"
 
-    return data["results"][0]
+    params = {
+        "term": query,
+        "entity": "album",
+        "limit": 1
+    }
+    return get_metadata_from_itunes(params)
 
 
 def get_album_art(artist, track, size=600):
-    artwork_url = get_song_metadata_from_itunes(artist, track)["artworkUrl100"]
-
-    return artwork_url.replace("100x100", f"{size}x{size}")
+    metadata = get_song_metadata_from_itunes(artist, track)
+    if metadata:
+        artwork_url = metadata["artworkUrl100"]
+        return artwork_url.replace("100x100", f"{size}x{size}")
+    else:
+        return None
 
 def determine_if_song_exists(artist, track):
     
@@ -207,52 +184,22 @@ def determine_if_song_exists(artist, track):
 
     return song_exists
 
-def get_genre(artist, track):
-    metadata = get_song_metadata_from_itunes(artist, track)
-
-    return metadata["primaryGenreName"]
+def get_genre(artist, album):
+    metadata = get_album_metadata_from_itunes(artist, album)
+    if metadata:
+        return metadata["primaryGenreName"]
+    return None
     
 @service
 def test_itunes_api():
 
     log.info(get_album_art("The beatles", "Yellow submarine"))
     
-    log.info(song_exists("KRO NCRV", "Radio 2"))
-    log.info(song_exists("The beatles", "Yellow submarine"))
+    log.info(determine_if_song_exists("KRO NCRV", "Radio 2"))
+    log.info(determine_if_song_exists("The beatles", "Yellow submarine"))
     
-    log.info(get_genre("Lorna shore", "Oblivion"))    
+    log.info(get_genre("Lorna shore", "I Feel the Everblack Festering Within Me"))    
     
-
-def get_album_info_from_spotify(access_token, artist, title):
-    search_url = "https://api.spotify.com/v1/search"
-    headers = {
-        "Authorization": f"Bearer {access_token}",
-    }
-    params = {
-        "q": f"artist:{artist} track:{title}",
-        "type": "track",
-        "limit": 1,
-    }
-    async with aiohttp.ClientSession() as session:
-        response_data = await fetch_json(session, search_url, headers=headers, params=params)
-
-    if 'tracks' in response_data and response_data['tracks']['items']:
-        track = response_data['tracks']['items'][0]
-        return track["album"]
-    else:
-        log.info(f"No suitable album found for artist: {artist} and title: {title}.")
-        return None
-
-def get_album_art_from_spotify(artist, title):
-
-    access_token = await get_spotify_access_token(pyscript.config["global"]["spotify_client_id"], pyscript.config["global"]["spotify_api_secret"])
-    if access_token:
-        album = await get_album_info_from_spotify(access_token, artist, title)
-        if album:
-            return album["images"][0]["url"]
-    return None
-
-
 
 async def parse_pic(html):
     soup = BeautifulSoup(html, 'html.parser')
@@ -611,10 +558,9 @@ async def get_npo_radio_2_metadata():
         dab_media_title_artist = dab_media_title.split(" - ")[-2].strip()
         dab_media_title_title = dab_media_title.split(" - ")[-1].strip()
         try:
-            #song_exists = await spotify_track_exists(dab_media_title_artist, dab_media_title_title) 
             song_exists = determine_if_song_exists(dab_media_title_artist, dab_media_title_title)
         except Exception as e:
-            log.warning(f"Error while connecting to Spotify: {e}")
+            log.warning(f"Error while connecting to itunes: {e}")
             song_exists = False
     else:
         dab_media_title_artist = "-"
@@ -966,8 +912,9 @@ def set_repeat_to_true_for_music_assistant_speakers(var_name=None):
 
 @service    
 @time_trigger("cron(0 3 * * *)")
+@state_trigger("input_text.apple_music_provider_status")
 def update_random_album():
-    for i in range(20):
+    for i in range(30):
         album = music_assistant.get_library(
             config_entry_id="01KJD55JFR0EVEB6YP6869PN0Y",
             media_type= "album",
@@ -976,15 +923,95 @@ def update_random_album():
             album_type=["album"]
         )["items"][0]
         
-        if album["explicit"] != True:
-            log.info(f'Found a non-explicit album: {album["name"]}')
+        if not album["artists"]:
+            continue
+        
+        genre = get_genre(album["artists"][0]["name"], album["name"])
+        
+        if not genre:
+            continue
+        
+        if (album["explicit"] != True) and ("metal" not in genre.lower()):
+            log.info(f'Found a non-explicit non-metal album: {album["name"]}; genre = {genre}')
+
+            input_text.random_album_uri = album["uri"]
+            input_text.random_album_thumbnail = album["image"]
+            input_text.random_album_name = album["name"]
             break
         else:
-            log.info(f'{album["name"]} is too explicit...')
+            log.info(f'{album["name"]} is too explicit... Genre = {genre}')
     
-    input_text.random_album_uri = album["uri"]
-    input_text.random_album_thumbnail = album["image"]
-    input_text.random_album_name = album["name"]
+
+async def get_music_assistant_access_token():
+    url = "http://localhost:8095/auth/login"
+    data = {
+      "provider_id": "builtin",
+      "credentials": {
+        "username": pyscript.config["global"]["music_assistant_username"],
+        "password": pyscript.config["global"]["music_assistant_password"]
+      }
+    }
+    
+    async with aiohttp.ClientSession() as session:
+        response_data = await post(session, url, json=data)
+
+    if "token" in response_data:
+        return response_data["token"]
+    else:
+        log.warning(f"Error obtaining access token: {response_data}")
+        return None
+    
+
+@service
+def get_music_assistant_provider_data(provider):
+    token = get_music_assistant_access_token()
+    
+    url = "http://localhost:8095/api"
+
+    headers = {
+        "accept": "application/json",
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+    
+    payload = {
+        "command": "config/providers", # http://192.168.1.199:8095/api-docs/commands
+        "args": {}
+    }
+    
+    async with aiohttp.ClientSession() as session:
+        response_data = await post(session, url, json=payload, headers=headers)
+        
+    for provider_data in response_data:
+        if provider_data["domain"] == provider:
+            return provider_data
+    
+@service
+@state_trigger("sensor.shellywalldisplay_0008225bc076_illuminance_level")
+def get_apple_music_provider_status():
+    provider_data = get_music_assistant_provider_data("apple_music")
+    
+    last_error = provider_data["last_error"]
+    
+    if last_error:
+        input_text.apple_music_provider_status = last_error[:255]
+    else:
+        if media_player.kokken_2 == "unavailable":
+            input_text.apple_music_provider_status = "UNAVAILABLE"
+        else:
+            input_text.apple_music_provider_status = "OK"
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     

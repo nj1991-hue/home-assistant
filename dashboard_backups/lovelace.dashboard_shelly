@@ -1408,7 +1408,43 @@
                   "show_entity_picture": true,
                   "grid_options": {
                     "columns": 4
-                  }
+                  },
+                  "visibility": [
+                    {
+                      "condition": "state",
+                      "entity": "input_text.apple_music_provider_status",
+                      "state_not": "OK"
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "square_button",
+                  "entity": "media_player.kokken",
+                  "show_name": false,
+                  "show_icon": false,
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "music_assistant.play_media",
+                    "target": {
+                      "entity_id": "media_player.kokken_2"
+                    },
+                    "data": {
+                      "media_id": "[[[\n  return states['input_text.random_album_uri'].state\n]]]\n"
+                    }
+                  },
+                  "entity_picture": "[[[\n  return states['input_text.random_album_thumbnail'].state\n]]]\n",
+                  "show_entity_picture": true,
+                  "grid_options": {
+                    "columns": 4
+                  },
+                  "visibility": [
+                    {
+                      "condition": "state",
+                      "entity": "input_text.apple_music_provider_status",
+                      "state": "OK"
+                    }
+                  ]
                 },
                 {
                   "type": "custom:button-card",
@@ -4295,19 +4331,6 @@
             }
           ],
           "cards": []
-        },
-        {
-          "type": "sections",
-          "max_columns": 1,
-          "title": "V3",
-          "path": "v3",
-          "theme": "shelly",
-          "sections": [
-            {
-              "type": "grid",
-              "cards": []
-            }
-          ]
         }
       ]
     }

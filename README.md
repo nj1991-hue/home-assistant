@@ -8,7 +8,8 @@ Home assistant config, containing the following:
 - Temperature calibration based on external sensors
 
 ## SONOS
-- Spotify integration
+- itunes api integration
+- music assistant api integration
 - Various quality-of-life automations
 
 ## Other

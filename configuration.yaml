@@ -25,6 +25,8 @@ pyscript:
     spotify_api_secret: !secret my_spotify_api_secret
     spotify_client_id: !secret spotify_client_id
     tado_home_id: !secret tado_home_id
+    music_assistant_username: !secret music_assistant_username
+    music_assistant_password: !secret music_assistant_password
 
 
 logger:
