@@ -1,0 +1,121 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "input_number",
+  "data": {
+    "items": [
+      {
+        "id": "spisestue_scaled_volume",
+        "min": 0.0,
+        "max": 20.0,
+        "name": "spisestue_volume",
+        "mode": "slider",
+        "step": 1.0
+      },
+      {
+        "id": "stue_volume",
+        "min": 0.0,
+        "max": 20.0,
+        "name": "stue_volume",
+        "mode": "slider",
+        "step": 1.0
+      },
+      {
+        "id": "kokken_volume",
+        "min": 0.0,
+        "max": 20.0,
+        "name": "kokken_volume",
+        "mode": "slider",
+        "step": 1.0
+      },
+      {
+        "id": "entre_volume",
+        "min": 0.0,
+        "max": 20.0,
+        "name": "entre_volume",
+        "mode": "slider",
+        "step": 1.0
+      },
+      {
+        "id": "orangerie_temperature_helper",
+        "min": 15.0,
+        "max": 25.0,
+        "name": "orangerie_temperature_helper",
+        "mode": "slider",
+        "step": 1.0
+      },
+      {
+        "id": "spisestue_temperature_helper",
+        "min": 15.0,
+        "max": 25.0,
+        "name": "spisestue_temperature_helper",
+        "mode": "slider",
+        "step": 1.0
+      },
+      {
+        "id": "stue_temperature_helper",
+        "min": 15.0,
+        "max": 25.0,
+        "name": "stue_temperature_helper",
+        "mode": "slider",
+        "step": 1.0
+      },
+      {
+        "id": "kokken_temperature_helper",
+        "min": 15.0,
+        "max": 25.0,
+        "name": "kokken_temperature_helper",
+        "mode": "slider",
+        "step": 1.0
+      },
+      {
+        "id": "toilet_temperature_helper",
+        "min": 15.0,
+        "max": 25.0,
+        "name": "toilet_temperature_helper",
+        "mode": "slider",
+        "step": 1.0
+      },
+      {
+        "id": "mattias_temperature_helper",
+        "min": 15.0,
+        "max": 25.0,
+        "name": "mattias_temperature_helper",
+        "mode": "slider",
+        "step": 1.0
+      },
+      {
+        "id": "sasha_temperature_helper",
+        "min": 15.0,
+        "max": 25.0,
+        "name": "sasha_temperature_helper",
+        "mode": "slider",
+        "step": 1.0
+      },
+      {
+        "id": "nania_temperature_helper",
+        "min": 15.0,
+        "max": 25.0,
+        "name": "nania_temperature_helper",
+        "mode": "slider",
+        "step": 1.0
+      },
+      {
+        "id": "kontor_temperature_helper",
+        "min": 15.0,
+        "max": 25.0,
+        "name": "kontor_temperature_helper",
+        "mode": "slider",
+        "step": 1.0
+      },
+      {
+        "id": "entre_temperature_helper",
+        "min": 15.0,
+        "max": 25.0,
+        "name": "entre_temperature_helper",
+        "mode": "slider",
+        "step": 1.0
+      }
+    ]
+  }
+}

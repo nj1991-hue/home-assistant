@@ -1770,3 +1770,20 @@
     metadata: {}
     data: {}
   mode: single
+- id: '1772478074600'
+  alias: pause_music_assistant_when_dab_radio_turns_off
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - media_player.argon_radio_2i_305890754e1c
+    to:
+    - 'off'
+  conditions: []
+  actions:
+  - action: media_player.media_pause
+    metadata: {}
+    target:
+      entity_id: media_player.argon_radio_2i_305890754e1c_2
+    data: {}
+  mode: single

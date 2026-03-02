@@ -6,6 +6,8 @@
 !pyscript/**
 !dashboard_backups/ 
 !dashboard_backups/**
+!helper_backups/ 
+!helper_backups/**
 !**.sh
 !.gitignore
 

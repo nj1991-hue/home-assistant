@@ -327,6 +327,11 @@ def set_kokken_meta_data():
             
         if playlist and not media_title:
             media_title = await get_dr_media_header(f"https://www.dr.dk/lyd/playlister/{playlist}")
+            
+        if dab_media_title == "Music Assistant":
+            media_header = getattr(media_player.argon_radio_2i_305890754e1c_2, "media_album_name", "-")
+            media_title = getattr(media_player.argon_radio_2i_305890754e1c_2, "media_artist", "-")
+            media_subtitle = getattr(media_player.argon_radio_2i_305890754e1c_2, "media_title", "-")
 
     if not media_header:
         media_header = kokken_media_channel or kokken_media_playlist or kokken_source or "???"
@@ -374,6 +379,7 @@ def set_kokken_art():
     if kokken_media_content_id == "x-rincon-stream:RINCON_804AF2CAFA8001400":
         dab_channel = getattr(media_player.argon_radio_2i_305890754e1c, "media_content_id", None)
         dab_source = getattr(media_player.argon_radio_2i_305890754e1c, "source", None)
+        dab_media_title = getattr(media_player.argon_radio_2i_305890754e1c, "media_title", None)
 
         if dab_source != "DAB":
             playlist = None
@@ -388,7 +394,9 @@ def set_kokken_art():
 
         if playlist:
             art_url = await get_dr_pic(f"https://www.dr.dk/lyd/playlister/{playlist}")
-        else:
+        elif dab_media_title == "Music Assistant":
+            art_url = getattr(media_player.argon_radio_2i_305890754e1c_2, "entity_picture", None)
+        if not art_url:
             if dab_source == "AUX in":
                 art_url = "https://i.pinimg.com/736x/94/ca/e0/94cae02ce1205a5ebefba850c0ccbf47.jpg"
             else:
@@ -896,18 +904,13 @@ def set_repeat_to_true(var_name=None):
         media_player.repeat_set(entity_id = var_name, repeat="all")
 
 
-@state_trigger("media_player.kokken_2")
-@state_trigger("media_player.entre_2")
-@state_trigger("media_player.spisestue_2")
-@state_trigger("media_player.stue_2")
+
+@state_trigger("media_player.argon_radio_2i_305890754e1c_2")
 def set_repeat_to_true_for_music_assistant_speakers(var_name=None):
     """
     Makes sure repeat is always set to True for music assistant duplicates
     """
-    media_players = get_media_players()
-    
-    if var_name in [m.entity_id + "_2" for m in media_players]:
-        media_player.repeat_set(entity_id = var_name, repeat="all")
+    media_player.repeat_set(entity_id = var_name, repeat="all")
 
 
 @service    
@@ -996,14 +999,25 @@ def get_apple_music_provider_status():
     if last_error:
         input_text.apple_music_provider_status = last_error[:255]
     else:
-        if media_player.kokken_2 == "unavailable":
+        if media_player.argon_radio_2i_305890754e1c_2 == "unavailable":
             input_text.apple_music_provider_status = "UNAVAILABLE"
         else:
             input_text.apple_music_provider_status = "OK"
     
     
+@state_trigger("media_player.argon_radio_2i_305890754e1c.source")
+def update_last_dab_radio_source():
+    dab_source = getattr(media_player.argon_radio_2i_305890754e1c, "source", None)
+    dab_media_title = getattr(media_player.argon_radio_2i_305890754e1c, "media_title", None)
     
+    if not dab_source or not dab_media_title:
+        return
     
+    if dab_source == "Local Music" and dab_media_title == "Music Assistant":
+        input_text.last_dab_radio_source = dab_media_title
+    else:
+        input_text.last_dab_radio_source = dab_source
+        
     
     
     

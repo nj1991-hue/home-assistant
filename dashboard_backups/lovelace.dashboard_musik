@@ -514,7 +514,7 @@
                     "perform_action": "script.play_p3_on_sonos"
                   },
                   "name": "P3 (DAB)",
-                  "entity_picture": "https://upload.wikimedia.org/wikipedia/en/thumb/c/c4/DR_P3_logo_2020.svg/1200px-DR_P3_logo_2020.svg.png",
+                  "entity_picture": "/local/p3_logo.png",
                   "show_entity_picture": true,
                   "grid_options": {
                     "columns": 3
@@ -566,7 +566,7 @@
                     "perform_action": "script.play_p4_on_sonos"
                   },
                   "name": "P3 (DAB)",
-                  "entity_picture": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/DR_P4_2017_logo.png/800px-DR_P4_2017_logo.png",
+                  "entity_picture": "/local/p4_logo.png",
                   "show_entity_picture": true,
                   "grid_options": {
                     "columns": 3
@@ -618,7 +618,7 @@
                     "perform_action": "script.play_p6_on_sonos"
                   },
                   "name": "P3 (DAB)",
-                  "entity_picture": "https://upload.wikimedia.org/wikipedia/commons/9/91/DR_P6_Beat_2017_logo.png",
+                  "entity_picture": "/local/p6_logo.png",
                   "show_entity_picture": true,
                   "grid_options": {
                     "columns": 3
@@ -670,7 +670,7 @@
                     "perform_action": "script.play_p8_on_sonos"
                   },
                   "name": "P3 (DAB)",
-                  "entity_picture": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/DR_P8_2017_Jazz_logo.png/640px-DR_P8_2017_Jazz_logo.png",
+                  "entity_picture": "/local/p8_logo.png",
                   "show_entity_picture": true,
                   "grid_options": {
                     "columns": 3

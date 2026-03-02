@@ -1,0 +1,229 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "input_text",
+  "data": {
+    "items": [
+      {
+        "id": "media_title_in_spisestue",
+        "name": "media_title_in_spisestue",
+        "mode": "text",
+        "min": 0,
+        "max": 100
+      },
+      {
+        "id": "home_state",
+        "name": "home_state",
+        "icon": "mdi:home",
+        "max": 100,
+        "mode": "text",
+        "min": 0
+      },
+      {
+        "id": "sonos_art_url_kokken",
+        "name": "sonos_art_url_kokken",
+        "icon": "mdi:palette",
+        "max": 100,
+        "mode": "text",
+        "min": 0
+      },
+      {
+        "id": "kokken_media_title",
+        "name": "kokken_media_title",
+        "icon": "mdi:subtitles-outline",
+        "max": 100,
+        "mode": "text",
+        "min": 0
+      },
+      {
+        "id": "kokken_media_subtitle",
+        "name": "kokken_media_subtitle",
+        "icon": "mdi:subtitles-outline",
+        "max": 100,
+        "mode": "text",
+        "min": 0
+      },
+      {
+        "id": "kokken_media_header",
+        "name": "kokken_media_header",
+        "icon": "mdi:subtitles",
+        "max": 100,
+        "mode": "text",
+        "min": 0
+      },
+      {
+        "id": "tado_api_status",
+        "name": "tado_api_status",
+        "icon": "mdi:api",
+        "min": 0,
+        "mode": "text",
+        "max": 100
+      },
+      {
+        "id": "tado_verification_uri_complete",
+        "name": "tado_verification_uri_complete",
+        "icon": "mdi:web-check",
+        "min": 0,
+        "max": 100,
+        "mode": "text"
+      },
+      {
+        "id": "kokken_feels_lucky",
+        "name": "kokken_feels_lucky",
+        "icon": "mdi:clover",
+        "mode": "text",
+        "max": 100,
+        "min": 0
+      },
+      {
+        "id": "commercials_on_npo_radio_2",
+        "name": "commercials_on_npo_radio_2",
+        "icon": "mdi:currency-usd",
+        "min": 0,
+        "max": 100,
+        "mode": "text"
+      },
+      {
+        "id": "resume_npo_radio_2_after_commercials",
+        "name": "resume_npo_radio_2_after_commercials",
+        "icon": "mdi:currency-usd",
+        "min": 0,
+        "max": 100,
+        "mode": "text"
+      },
+      {
+        "id": "npo_radio_2_filler_playlist_id",
+        "name": "npo_radio_2_filler_playlist_id",
+        "min": 0,
+        "max": 100,
+        "mode": "text"
+      },
+      {
+        "id": "reset_radio",
+        "name": "reset_radio",
+        "icon": "mdi:lock-reset",
+        "max": 100,
+        "mode": "text",
+        "min": 0
+      },
+      {
+        "id": "aqara_door_and_window_sensor_kontor_helper",
+        "name": "aqara_door_and_window_sensor_kontor_helper",
+        "icon": "mdi:window-closed-variant",
+        "max": 100,
+        "mode": "text",
+        "min": 0
+      },
+      {
+        "id": "aqara_door_and_window_sensor_mattias_helper",
+        "name": "aqara_door_and_window_sensor_mattias_helper",
+        "icon": "mdi:window-closed-variant",
+        "max": 100,
+        "mode": "text",
+        "min": 0
+      },
+      {
+        "id": "aqara_door_and_window_sensor_sasha_helper",
+        "name": "aqara_door_and_window_sensor_sasha_helper",
+        "icon": "mdi:window-closed-variant",
+        "max": 100,
+        "mode": "text",
+        "min": 0
+      },
+      {
+        "id": "aqara_door_and_window_sensor_nania_helper",
+        "name": "aqara_door_and_window_sensor_nania_helper",
+        "icon": "mdi:window-closed-variant",
+        "max": 100,
+        "mode": "text",
+        "min": 0
+      },
+      {
+        "id": "aqara_door_and_window_sensor_kontor_right_helper",
+        "name": "aqara_door_and_window_sensor_kontor_right_helper",
+        "icon": "mdi:window-closed-variant",
+        "max": 100,
+        "mode": "text",
+        "min": 0
+      },
+      {
+        "id": "song_exists_log",
+        "name": "song_exists_log",
+        "min": 0,
+        "max": 100,
+        "mode": "text"
+      },
+      {
+        "id": "show_toilet_temperature_helper",
+        "name": "show_toilet_temperature_helper",
+        "max": 100,
+        "min": 0,
+        "mode": "text"
+      },
+      {
+        "id": "on_holiday",
+        "name": "on_holiday",
+        "icon": "mdi:candycane",
+        "max": 100,
+        "min": 0,
+        "mode": "text"
+      },
+      {
+        "id": "show_media_player_controls_on_shelly",
+        "name": "show_media_player_controls_on_shelly",
+        "icon": "mdi:camera-control",
+        "mode": "text",
+        "max": 100,
+        "min": 0
+      },
+      {
+        "id": "kokken_song_history",
+        "name": "kokken_song_history",
+        "icon": "mdi:history",
+        "max": 100,
+        "mode": "text",
+        "min": 0
+      },
+      {
+        "id": "random_album_uri",
+        "name": "random_album_uri",
+        "icon": "mdi:folder-music",
+        "max": 100,
+        "mode": "text",
+        "min": 0
+      },
+      {
+        "id": "random_album_thumbnail",
+        "name": "random_album_thumbnail",
+        "icon": "mdi:music-box-outline",
+        "max": 100,
+        "mode": "text",
+        "min": 0
+      },
+      {
+        "id": "random_album_name",
+        "name": "random_album_name",
+        "icon": "mdi:music-box",
+        "max": 100,
+        "mode": "text",
+        "min": 0
+      },
+      {
+        "id": "apple_music_provider_status",
+        "name": "apple_music_provider_status",
+        "icon": "mdi:apple",
+        "min": 0,
+        "mode": "text",
+        "max": 100
+      },
+      {
+        "id": "last_dab_radio_source",
+        "name": "last_dab_radio_source",
+        "icon": "mdi:radio",
+        "mode": "text",
+        "max": 100,
+        "min": 0
+      }
+    ]
+  }
+}

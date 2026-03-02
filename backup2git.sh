@@ -7,11 +7,16 @@ export GIT_SSH_COMMAND='ssh -i /config/.ssh/id_rsa -o UserKnownHostsFile=/config
 # Backup Lovelace dashboards before committing
 STORAGE_DIR="/config/.storage"
 BACKUP_DIR="/config/dashboard_backups"
+HELPER_BACKUP_DIR="/config/helper_backups"
 
 mkdir -p "$BACKUP_DIR"
+mkdir -p "HELPER_BACKUP_DIR"
 
 # Copy files matching lovelace.dashboard_xxxx
 find "$STORAGE_DIR" -maxdepth 1 -type f -name "lovelace.dashboard_*" -exec cp -f {} "$BACKUP_DIR"/ \;
+
+# Copy files matching input_xxxx
+find "$STORAGE_DIR" -maxdepth 1 -type f -name "input_*" -exec cp -f {} "$HELPER_BACKUP_DIR"/ \;
 
 # Get HA version and prepare commit message
 HA_VERSION=$(cat .HA_VERSION)

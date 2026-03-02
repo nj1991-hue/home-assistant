@@ -1317,7 +1317,7 @@
                     }
                   },
                   "name": "Radio 100",
-                  "entity_picture": "https://media.bauerradio.com/image/upload/c_crop,g_custom/v1671007312/brand_manager/stations/zmmxfieeuyahlygz0pge.jpg",
+                  "entity_picture": "/local/radio_100_logo.jpg",
                   "show_entity_picture": true,
                   "grid_options": {
                     "columns": 4
@@ -1334,7 +1334,7 @@
                     "service": "script.play_radio_vinyl_and_disable_resume"
                   },
                   "name": "Radio Vinyl",
-                  "entity_picture": "https://assets.planetradio.co.uk/pi2/1KQ3PeBmcx_u7ffwsvOj8DmX2Y1AgOAjt_320.jpg",
+                  "entity_picture": "/local/radio_vinyl_logo.jpg",
                   "show_entity_picture": true,
                   "grid_options": {
                     "columns": 4
@@ -1358,7 +1358,7 @@
                     "target": {},
                     "perform_action": "script.play_npo_radio_2_on_sonos_in_kokken"
                   },
-                  "entity_picture": "https://play-lh.googleusercontent.com/YuECiV7reuwIxovYWfkKnfVzcwuDx3sVYe1SUQkFAcwIBDOcDJVkM94uleIVcyAStw=w240-h480-rw",
+                  "entity_picture": "/local/npo_radio_2_logo.webp",
                   "show_entity_picture": true,
                   "grid_options": {
                     "columns": 4
@@ -1404,7 +1404,7 @@
                     "perform_action": "script.play_p3_on_sonos_in_kokken"
                   },
                   "name": "P3 (DAB)",
-                  "entity_picture": "https://upload.wikimedia.org/wikipedia/en/thumb/c/c4/DR_P3_logo_2020.svg/1200px-DR_P3_logo_2020.svg.png",
+                  "entity_picture": "/local/p3_logo.png",
                   "show_entity_picture": true,
                   "grid_options": {
                     "columns": 4
@@ -1425,10 +1425,7 @@
                   "show_icon": false,
                   "tap_action": {
                     "action": "call-service",
-                    "service": "music_assistant.play_media",
-                    "target": {
-                      "entity_id": "media_player.kokken_2"
-                    },
+                    "service": "script.play_music_assistant_on_sonos_in_kokken",
                     "data": {
                       "media_id": "[[[\n  return states['input_text.random_album_uri'].state\n]]]\n"
                     }
@@ -1457,7 +1454,7 @@
                     "target": {},
                     "perform_action": "script.play_npo_radio_2_on_sonos_in_kokken"
                   },
-                  "entity_picture": "https://play-lh.googleusercontent.com/YuECiV7reuwIxovYWfkKnfVzcwuDx3sVYe1SUQkFAcwIBDOcDJVkM94uleIVcyAStw=w240-h480-rw",
+                  "entity_picture": "/local/npo_radio_2_logo.webp",
                   "show_entity_picture": true,
                   "grid_options": {
                     "columns": 4
@@ -4320,7 +4317,14 @@
                   "show_entity_picture": true,
                   "grid_options": {
                     "columns": 4
-                  }
+                  },
+                  "visibility": [
+                    {
+                      "condition": "state",
+                      "entity": "input_text.apple_music_provider_status",
+                      "state": "OK"
+                    }
+                  ]
                 }
               ]
             }

@@ -1122,66 +1122,83 @@ handle_radio_playback:
           target:
             entity_id: input_text.reset_radio
         else:
-        - action: media_player.turn_on
-          target:
-            entity_id: media_player.argon_radio_2i_305890754e1c
+        - if:
+          - condition: template
+            value_template: '{{ states(''input_text.last_dab_radio_source'') == "Music
+              Assistant" }}'
+          then:
+          - action: media_player.media_play
+            metadata: {}
+            target:
+              entity_id: media_player.argon_radio_2i_305890754e1c_2
+            data: {}
+          else:
+          - action: media_player.turn_on
+            target:
+              entity_id: media_player.argon_radio_2i_305890754e1c
+            data: {}
       - wait_template: '{{ state_attr(''media_player.argon_radio_2i_305890754e1c'',
           ''source'') != None }}'
         continue_on_timeout: false
         timeout: '200'
       - if:
-        - condition: and
-          conditions:
-          - condition: not
+        - condition: template
+          value_template: '{{ state_attr(''media_player.argon_radio_2i_305890754e1c'',
+            ''media_title'') != "Music Assistant" }}'
+        then:
+        - if:
+          - condition: and
             conditions:
+            - condition: not
+              conditions:
+              - condition: state
+                entity_id: media_player.argon_radio_2i_305890754e1c
+                attribute: source
+                state: Internet radio
+            - condition: not
+              conditions:
+              - condition: state
+                entity_id: media_player.argon_radio_2i_305890754e1c
+                attribute: source
+                state: DAB
+          then:
+          - action: script.play_p3
+          else:
+          - if:
             - condition: state
               entity_id: media_player.argon_radio_2i_305890754e1c
               attribute: source
               state: Internet radio
-          - condition: not
-            conditions:
             - condition: state
-              entity_id: media_player.argon_radio_2i_305890754e1c
-              attribute: source
-              state: DAB
-        then:
-        - action: script.play_p3
-        else:
-        - if:
-          - condition: state
-            entity_id: media_player.argon_radio_2i_305890754e1c
-            attribute: source
-            state: Internet radio
-          - condition: state
-            entity_id: input_text.commercials_on_npo_radio_2
-            state: 'True'
-          - condition: state
-            entity_id: binary_sensor.npo_radio_2_is_playing
-            state: 'on'
-          then:
-          - action: media_player.shuffle_set
-            data:
-              shuffle: true
-            target:
-              entity_id: '{{ trigger_entity_id }}'
-          - action: media_player.play_media
-            data:
-              media:
-                media_content_id: '{{ states(''input_text.npo_radio_2_filler_playlist_id'')
-                  }}'
-                media_content_type: favorite_item_id
-            target:
-              entity_id: '{{ trigger_entity_id }}'
-          - action: input_text.set_value
-            data:
-              value: 'True'
-            target:
-              entity_id: input_text.resume_npo_radio_2_after_commercials
-          - action: media_player.shuffle_set
-            data:
-              shuffle: true
-            target:
-              entity_id: '{{ trigger_entity_id }}'
+              entity_id: input_text.commercials_on_npo_radio_2
+              state: 'True'
+            - condition: state
+              entity_id: binary_sensor.npo_radio_2_is_playing
+              state: 'on'
+            then:
+            - action: media_player.shuffle_set
+              data:
+                shuffle: true
+              target:
+                entity_id: '{{ trigger_entity_id }}'
+            - action: media_player.play_media
+              data:
+                media:
+                  media_content_id: '{{ states(''input_text.npo_radio_2_filler_playlist_id'')
+                    }}'
+                  media_content_type: favorite_item_id
+              target:
+                entity_id: '{{ trigger_entity_id }}'
+            - action: input_text.set_value
+              data:
+                value: 'True'
+              target:
+                entity_id: input_text.resume_npo_radio_2_after_commercials
+            - action: media_player.shuffle_set
+              data:
+                shuffle: true
+              target:
+                entity_id: '{{ trigger_entity_id }}'
     else:
     - if:
       - condition: state
@@ -1304,3 +1321,32 @@ reset_stue_volume:
       volume_level: 0.01
   alias: reset_stue_volume
   description: ''
+play_music_assistant_on_sonos_in_kokken:
+  alias: play_music_assistant_on_sonos_in_kokken
+  description: ''
+  fields:
+    media_id:
+      name: Media ID
+      description: The media ID to play
+      required: true
+      example: spotify:track:123456789
+  sequence:
+  - action: timer.start
+    metadata: {}
+    target:
+      entity_id: timer.radio_turned_on_by_automation
+    data: {}
+  - action: music_assistant.play_media
+    metadata: {}
+    target:
+      entity_id: media_player.argon_radio_2i_305890754e1c_2
+    data:
+      media_id: '{{ media_id }}'
+  - wait_template: '{{ states(''media_player.argon_radio_2i_305890754e1c'') == "playing"
+      }}'
+    continue_on_timeout: true
+  - action: script.force_play_media_in_kokken
+    metadata: {}
+    data:
+      media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
+      media_content_type: music

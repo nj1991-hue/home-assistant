@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "input_boolean",
+  "data": {
+    "items": [
+      {
+        "id": "hide_radio_vinyl_button_on_shelly",
+        "name": "hide_radio_vinyl_button_on_shelly"
+      }
+    ]
+  }
+}
