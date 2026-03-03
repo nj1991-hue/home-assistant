@@ -726,25 +726,27 @@
                   "sections": [
                     "media browser"
                   ],
-                  "favoritesItemsPerRow": 4,
-                  "favoritesToIgnore": [
-                    "NPO Radio 2",
-                    "Radio Vinyl",
-                    "Rainy Morning Mix",
-                    "Crazy Train",
-                    "Karaoke"
-                  ],
-                  "topFavorites": [
-                    ""
-                  ],
-                  "customFavoriteThumbnails": {
-                    "NPO Radio 2": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/NPO_Radio_2_logo.svg/1200px-NPO_Radio_2_logo.svg.png"
+                  "mediaBrowser": {
+                    "itemsPerRow": 4,
+                    "hideHeader": true,
+                    "onlyFavorites": true,
+                    "favorites": {
+                      "title": " ",
+                      "hideTitleForThumbnailIcons": true,
+                      "iconPadding": 0,
+                      "exclude": [
+                        "NPO Radio 2",
+                        "Radio Vinyl",
+                        "Rainy Morning Mix",
+                        "Crazy Train",
+                        "Karaoke"
+                      ],
+                      "customThumbnails": {
+                        "NPO Radio 2": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/NPO_Radio_2_logo.svg/1200px-NPO_Radio_2_logo.svg.png"
+                      }
+                    }
                   },
-                  "hideBrowseMediaButton": true,
-                  "favoritesHideTitleForThumbnailIcons": true,
-                  "showAudioInputFormat": false,
                   "startSection": "media browser",
-                  "mediaBrowserTitle": " ",
                   "entityId": "media_player.spisestue",
                   "entities": [
                     "media_player.spisestue"
@@ -754,10 +756,10 @@
                     "debug": true,
                     "style": {
                       "sonos-media-browser$": {
-                        ".": "sonos-media-browser-header {\n  display: none;\n}  \n",
-                        "sonos-media-browser-icons$": {
-                          "ha-control-button$": ".button {\n  --control-button-padding: 0;\n  --control-button-border-radius: 10px;\n  --control-button-background-color: rgb(246,246,246);\n  --control-button-background-opacity: 1;\n}\n",
-                          "ha-control-button": ".thumbnail {\n  margin: 0px !important;\n}\n"
+                        "sonos-favorites$": {
+                          "sonos-favorites-icons$": {
+                            "ha-control-button": ".thumbnail {\n  margin: 0px 0% !important;\n}\n"
+                          }
                         }
                       },
                       ".": "ha-card {\n  background: rgba(0, 0, 0, 0);\n  border: 0px;\n  padding: 0px;\n  margin: 0%;\n}\n"

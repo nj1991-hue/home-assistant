@@ -223,6 +223,104 @@
         "mode": "text",
         "max": 100,
         "min": 0
+      },
+      {
+        "id": "recently_added_album_1_uri",
+        "name": "recently_added_album_1_uri",
+        "mode": "text",
+        "max": 100,
+        "min": 0
+      },
+      {
+        "id": "recently_added_album_2_uri",
+        "name": "recently_added_album_2_uri",
+        "mode": "text",
+        "max": 100,
+        "min": 0
+      },
+      {
+        "id": "recently_added_album_3_uri",
+        "name": "recently_added_album_3_uri",
+        "mode": "text",
+        "max": 100,
+        "min": 0
+      },
+      {
+        "id": "recently_added_album_4_uri",
+        "name": "recently_added_album_4_uri",
+        "mode": "text",
+        "max": 100,
+        "min": 0
+      },
+      {
+        "id": "recently_added_album_5_uri",
+        "name": "recently_added_album_5_uri",
+        "mode": "text",
+        "max": 100,
+        "min": 0
+      },
+      {
+        "id": "recently_added_album_1_thumbnail",
+        "name": "recently_added_album_1_thumbnail",
+        "mode": "text",
+        "max": 100,
+        "min": 0
+      },
+      {
+        "id": "recently_added_album_2_thumbnail",
+        "name": "recently_added_album_2_thumbnail",
+        "mode": "text",
+        "max": 100,
+        "min": 0
+      },
+      {
+        "id": "recently_added_album_3_thumbnail",
+        "name": "recently_added_album_3_thumbnail",
+        "mode": "text",
+        "max": 100,
+        "min": 0
+      },
+      {
+        "id": "recently_added_album_4_thumbnail",
+        "name": "recently_added_album_4_thumbnail",
+        "mode": "text",
+        "max": 100,
+        "min": 0
+      },
+      {
+        "id": "recently_added_album_5_thumbnail",
+        "name": "recently_added_album_5_thumbnail",
+        "mode": "text",
+        "max": 100,
+        "min": 0
+      },
+      {
+        "id": "album_of_the_week_uri",
+        "name": "album_of_the_week_uri",
+        "mode": "text",
+        "max": 100,
+        "min": 0
+      },
+      {
+        "id": "album_of_the_week_thumbnail",
+        "name": "album_of_the_week_thumbnail",
+        "mode": "text",
+        "max": 100,
+        "min": 0
+      },
+      {
+        "id": "recently_added_album_6_uri",
+        "name": "recently_added_album_6_uri",
+        "mode": "text",
+        "max": 100,
+        "min": 0
+      },
+      {
+        "id": "recently_added_album_6_thumbnail",
+        "name": "recently_added_album_6_thumbnail",
+        "mode": "text",
+        "max": 100,
+        "min": 0
       }
     ]
   }

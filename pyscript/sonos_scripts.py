@@ -945,6 +945,37 @@ def update_random_album():
             log.info(f'{album["name"]} is too explicit... Genre = {genre}')
     
 
+@service    
+@time_trigger("cron(0 3 * * *)")
+@state_trigger("input_text.apple_music_provider_status")
+def update_recently_added_albums():
+    albums = music_assistant.get_library(
+        config_entry_id="01KJD55JFR0EVEB6YP6869PN0Y",
+        media_type= "album",
+        limit= 6,
+        order_by= "timestamp_added_desc",
+        album_type=["album"]
+    )["items"]
+
+    input_text.recently_added_album_1_uri = albums[0]["uri"]
+    input_text.recently_added_album_1_thumbnail = albums[0]["image"]
+
+    input_text.recently_added_album_2_uri = albums[1]["uri"]
+    input_text.recently_added_album_2_thumbnail = albums[1]["image"]
+
+    input_text.recently_added_album_3_uri = albums[2]["uri"]
+    input_text.recently_added_album_3_thumbnail = albums[2]["image"]
+
+    input_text.recently_added_album_4_uri = albums[3]["uri"]
+    input_text.recently_added_album_4_thumbnail = albums[3]["image"]
+
+    input_text.recently_added_album_5_uri = albums[4]["uri"]
+    input_text.recently_added_album_5_thumbnail = albums[4]["image"]
+
+    input_text.recently_added_album_6_uri = albums[5]["uri"]
+    input_text.recently_added_album_6_thumbnail = albums[5]["image"]
+
+
 async def get_music_assistant_access_token():
     url = "http://localhost:8095/auth/login"
     data = {

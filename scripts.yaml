@@ -1350,3 +1350,15 @@ play_music_assistant_on_sonos_in_kokken:
     data:
       media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
       media_content_type: music
+play_p8_on_sonos_in_kokken:
+  sequence:
+  - action: script.play_p8
+    metadata: {}
+    data: {}
+  - action: script.force_play_media_in_kokken
+    metadata: {}
+    data:
+      media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
+      media_content_type: music
+  alias: play_p8_on_sonos_in_kokken
+  description: ''
