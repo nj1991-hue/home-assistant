@@ -1344,7 +1344,8 @@ play_music_assistant_on_sonos_in_kokken:
       media_id: '{{ media_id }}'
   - wait_template: '{{ states(''media_player.argon_radio_2i_305890754e1c'') == "playing"
       }}'
-    continue_on_timeout: true
+    continue_on_timeout: false
+    timeout: '5'
   - action: script.force_play_media_in_kokken
     metadata: {}
     data:

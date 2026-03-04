@@ -257,11 +257,12 @@ def media_string_is_valid(artist_or_song):
 @state_trigger("media_player.kokken.*")
 @state_trigger("media_player.argon_radio_2i_305890754e1c")
 @state_trigger("media_player.argon_radio_2i_305890754e1c.*")
+@state_trigger("media_player.argon_radio_2i_305890754e1c_2")
+@state_trigger("media_player.argon_radio_2i_305890754e1c_2.*")
 def set_kokken_meta_data():
     kokken_media_content_id = getattr(media_player.kokken,"media_content_id", None)
     kokken_media_artist = getattr(media_player.kokken,"media_artist", None)
     kokken_media_title = getattr(media_player.kokken,"media_title", None)
-    kokken_media_album_name = getattr(media_player.kokken,"media_album_name", None)
     kokken_source = getattr(media_player.kokken,"source", None)
 
     kokken_media_channel = getattr(media_player.kokken,"media_channel", None)
@@ -329,7 +330,7 @@ def set_kokken_meta_data():
             media_title = await get_dr_media_header(f"https://www.dr.dk/lyd/playlister/{playlist}")
             
         if dab_media_title == "Music Assistant":
-            media_header = getattr(media_player.argon_radio_2i_305890754e1c_2, "media_album_name", "-")
+            media_header = getattr(media_player.argon_radio_2i_305890754e1c_2, "media_album_name", "Apple music playlist")
             media_title = getattr(media_player.argon_radio_2i_305890754e1c_2, "media_artist", "-")
             media_subtitle = getattr(media_player.argon_radio_2i_305890754e1c_2, "media_title", "-")
 
@@ -345,9 +346,6 @@ def set_kokken_meta_data():
     if input_text.resume_npo_radio_2_after_commercials == "True" and media_header == get_media_name(input_text.npo_radio_2_filler_playlist_id):
         media_header = "NPO Radio 2 (Reklame)"
         
-    if kokken_media_playlist == "Music Assistant":
-        media_header = kokken_media_album_name
-
     input_text.kokken_media_title = media_title
     input_text.kokken_media_subtitle = media_subtitle
     input_text.kokken_media_header = media_header
@@ -541,20 +539,23 @@ async def get_npo_radio_2_metadata():
     
     if not playlist_table:
         log.warning(f"Could not scrape {url}")
-        return None, None, None
-    
-    # Find the first row (usually the currently playing song)
-    first_row = playlist_table.find("tr")
-    
-    # Check if it's marked as currently playing
-    is_active = "active" in first_row.get("class", [])
-    artist = None
-    title = None
-    
-    text = first_row.find_all("td")[1].text.strip()
-    if text.count(" - ") == 1:
-        artist = text.split(" - ")[0].strip()
-        title = text.split(" - ")[1].strip()
+        #return None, None, None
+        is_active = False
+        artist = None
+        title = None
+    else:
+        # Find the first row (usually the currently playing song)
+        first_row = playlist_table.find("tr")
+        
+        # Check if it's marked as currently playing
+        is_active = "active" in first_row.get("class", [])
+        artist = None
+        title = None
+        
+        text = first_row.find_all("td")[1].text.strip()
+        if text.count(" - ") == 1:
+            artist = text.split(" - ")[0].strip()
+            title = text.split(" - ")[1].strip()
         
     dab_media_title = getattr(media_player.argon_radio_2i_305890754e1c, "media_title", "")
     if artist:
@@ -849,17 +850,21 @@ def group_if_same_content():
             add_media_player_to_group(other_media_player.entity_id)
 
 
-@state_trigger("sensor.entre_media_channel")
-@state_trigger("sensor.stue_media_channel")
-@state_trigger("sensor.spisestue_media_channel")
-@state_trigger("sensor.kokken_media_channel")
-def adjust_volume_when_classical_music_plays(var_name=None, value=None, old_value=None):
-
+def adjust_volume_for_quiet_music(var_name, value, old_value, keywords):
+    
     timer_state = state.get('timer.sonos_morning_routine_running')
     
+    def keyword_in(value):
+        for keyword in keywords:
+            if keyword in value:
+                return True
+        return False
+
     if timer_state != "idle":
         return
-    elif value and old_value and "Klassisk" not in value and "Klassisk" not in old_value:
+    elif value and old_value and not keyword_in(value) and not keyword_in(old_value):
+        return
+    elif value and old_value and keyword_in(value) and keyword_in(old_value):
         return
     
     room = var_name.split("_")[0].split(".")[1]
@@ -867,7 +872,7 @@ def adjust_volume_when_classical_music_plays(var_name=None, value=None, old_valu
 
     step = 0.05
     
-    if value and "Klassisk" in value:
+    if value and keyword_in(value):
         current = float(state.get(f"{player}.volume_level") or 0.0)
         new = min(current + step, 1.0)
         log.info(f"Adjusting volume for {player}")
@@ -876,7 +881,7 @@ def adjust_volume_when_classical_music_plays(var_name=None, value=None, old_valu
             service.call("media_player", "volume_set",
                          entity_id=player, volume_level=new)
 
-    elif old_value and "Klassisk" in old_value:
+    elif old_value and keyword_in(old_value):
         current = float(state.get(f"{player}.volume_level") or 0.0)
         if current > 0.05:
             new = current - step
@@ -888,6 +893,14 @@ def adjust_volume_when_classical_music_plays(var_name=None, value=None, old_valu
             log.info(f"Adjusting volume for {player}")
             service.call("media_player", "volume_set",
                          entity_id=player, volume_level=new)
+    
+
+@state_trigger("sensor.entre_media_channel")
+@state_trigger("sensor.stue_media_channel")
+@state_trigger("sensor.spisestue_media_channel")
+@state_trigger("sensor.kokken_media_channel")
+def adjust_volume_when_quiet_music_plays(var_name=None, value=None, old_value=None):
+    adjust_volume_for_quiet_music(var_name, value, old_value, ["Klassisk","P8 Jazz"])
 
 
 @state_trigger("media_player.kokken.queue_position")
@@ -952,7 +965,7 @@ def update_recently_added_albums():
     albums = music_assistant.get_library(
         config_entry_id="01KJD55JFR0EVEB6YP6869PN0Y",
         media_type= "album",
-        limit= 6,
+        limit= 25,
         order_by= "timestamp_added_desc",
         album_type=["album"]
     )["items"]
@@ -974,6 +987,34 @@ def update_recently_added_albums():
 
     input_text.recently_added_album_6_uri = albums[5]["uri"]
     input_text.recently_added_album_6_thumbnail = albums[5]["image"]
+    
+    for album in albums:
+        genre = get_genre(album["artists"][0]["name"], album["name"])
+        if "metal" not in genre.lower():
+            input_text.spotlight_album_uri = album["uri"]
+            input_text.spotlight_album_thumbnail = album["image"]
+            break
+
+
+@service    
+@time_trigger("cron(0 3 * * *)")
+@state_trigger("input_text.apple_music_provider_status")
+def update_recently_added_playlists():
+    playlists = music_assistant.get_library(
+        config_entry_id="01KJD55JFR0EVEB6YP6869PN0Y",
+        media_type= "playlist",
+        limit= 25,
+        order_by= "timestamp_added_desc",
+    )["items"]
+
+    input_text.recently_added_playlist_1_uri = playlists[0]["uri"]
+    input_text.recently_added_playlist_1_thumbnail = playlists[0]["image"]
+
+    input_text.recently_added_playlist_2_uri = playlists[1]["uri"]
+    input_text.recently_added_playlist_2_thumbnail = playlists[1]["image"]
+
+    input_text.recently_added_playlist_3_uri = playlists[2]["uri"]
+    input_text.recently_added_playlist_3_thumbnail = playlists[2]["image"]
 
 
 async def get_music_assistant_access_token():

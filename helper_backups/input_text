@@ -321,6 +321,62 @@
         "mode": "text",
         "max": 100,
         "min": 0
+      },
+      {
+        "id": "spotlight_album_uri",
+        "name": "spotlight_album_uri",
+        "mode": "text",
+        "max": 100,
+        "min": 0
+      },
+      {
+        "id": "spotlight_album_thumbnail",
+        "name": "spotlight_album_thumbnail",
+        "mode": "text",
+        "max": 100,
+        "min": 0
+      },
+      {
+        "id": "recently_added_playlist_1_uri",
+        "name": "recently_added_playlist_1_uri",
+        "mode": "text",
+        "max": 100,
+        "min": 0
+      },
+      {
+        "id": "recently_added_playlist_2_uri",
+        "name": "recently_added_playlist_2_uri",
+        "mode": "text",
+        "max": 100,
+        "min": 0
+      },
+      {
+        "id": "recently_added_playlist_3_uri",
+        "name": "recently_added_playlist_3_uri",
+        "mode": "text",
+        "max": 100,
+        "min": 0
+      },
+      {
+        "id": "recently_added_playlist_1_thumbnail",
+        "name": "recently_added_playlist_1_thumbnail",
+        "mode": "text",
+        "max": 100,
+        "min": 0
+      },
+      {
+        "id": "recently_added_playlist_2_thumbnail",
+        "name": "recently_added_playlist_2_thumbnail",
+        "mode": "text",
+        "max": 100,
+        "min": 0
+      },
+      {
+        "id": "recently_added_playlist_3_thumbnail",
+        "name": "recently_added_playlist_3_thumbnail",
+        "mode": "text",
+        "max": 100,
+        "min": 0
       }
     ]
   }
