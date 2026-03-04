@@ -1117,10 +1117,11 @@ handle_radio_playback:
         then:
         - action: script.play_npo_radio_2
         - action: input_text.set_value
-          data:
-            value: 'False'
+          metadata: {}
           target:
             entity_id: input_text.reset_radio
+          data:
+            value: 'False'
         else:
         - if:
           - condition: template
