@@ -1010,16 +1010,6 @@ play_npo_radio_2:
   description: ''
 play_npo_radio_2_on_sonos_in_kokken:
   sequence:
-  - action: script.play_npo_radio_2
-    metadata: {}
-    data: {}
-    enabled: false
-  - action: script.force_play_media_in_kokken
-    metadata: {}
-    data:
-      media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
-      media_content_type: music
-    enabled: false
   - if:
     - condition: state
       entity_id: input_text.commercials_on_npo_radio_2
@@ -1037,19 +1027,13 @@ play_npo_radio_2_on_sonos_in_kokken:
         shuffle: true
       target:
         entity_id: media_player.kokken
-    - action: script.force_play_media_in_kokken
-      metadata: {}
-      data:
-        media_content_id: '{{ states(''input_text.npo_radio_2_filler_playlist_id'')
-          }}'
-        media_content_type: favorite_item_id
-      enabled: false
     - action: media_player.play_media
-      metadata: {}
       data:
-        media_content_id: '{{ states(''input_text.npo_radio_2_filler_playlist_id'')
-          }}'
-        media_content_type: favorite_item_id
+        media:
+          media_content_id: '{{ states(''input_text.npo_radio_2_filler_playlist_id'')
+            }}'
+          media_content_type: favorite_item_id
+          metadata: {}
       target:
         entity_id: media_player.kokken
     - action: input_text.set_value
@@ -1068,14 +1052,22 @@ play_npo_radio_2_on_sonos_in_kokken:
     - action: script.play_npo_radio_2
       metadata: {}
       data: {}
-    - action: script.force_play_media_in_kokken
-      metadata: {}
+    - action: script.force_play_media
       data:
+        target_media_player: media_player.kokken
         media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
         media_content_type: music
   alias: play_npo_radio_2_on_sonos_in_kokken
   description: ''
 play_radio_vinyl_and_disable_resume:
+  fields:
+    entity_id:
+      description: The media player entity to play on
+      example: media_player.kokken
+      required: true
+      selector:
+        entity:
+          domain: media_player
   alias: play_radio_vinyl_and_disable_resume_npo_radio_2
   sequence:
   - target:
@@ -1083,10 +1075,11 @@ play_radio_vinyl_and_disable_resume:
     data:
       value: 'False'
     action: input_text.set_value
-  - data:
+  - action: script.force_play_media
+    data:
       media_content_id: FV:2/73
       media_content_type: favorite_item_id
-    action: script.force_play_media_in_kokken
+      target_media_player: '{{ entity_id }}'
   mode: single
   description: ''
 handle_radio_playback:
@@ -1322,15 +1315,134 @@ reset_stue_volume:
       volume_level: 0.01
   alias: reset_stue_volume
   description: ''
-play_music_assistant_on_sonos_in_kokken:
-  alias: play_music_assistant_on_sonos_in_kokken
+play_p8_on_sonos_in_kokken:
+  sequence:
+  - action: script.play_p8
+    metadata: {}
+    data: {}
+  - action: script.force_play_media_in_kokken
+    metadata: {}
+    data:
+      media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
+      media_content_type: music
+  alias: play_p8_on_sonos_in_kokken
+  description: ''
+play_preset_on_dab_radio:
+  alias: play_preset_on_dab_radio
   description: ''
   fields:
-    media_id:
-      name: Media ID
-      description: The media ID to play
+    preset_path:
+      description: Media content ID of the preset channel to play
+      example: DAB/preset/3
       required: true
-      example: spotify:track:123456789
+      selector:
+        text:
+  sequence:
+  - action: timer.start
+    target:
+      entity_id: timer.radio_turned_on_by_automation
+  - action: media_player.turn_on
+    target:
+      entity_id: media_player.argon_radio_2i_305890754e1c
+  - action: media_player.play_media
+    target:
+      entity_id: media_player.argon_radio_2i_305890754e1c
+    data:
+      media:
+        media_content_id: '{{ preset_path }}'
+        media_content_type: channel
+        metadata: {}
+  mode: single
+force_play_media:
+  fields:
+    target_media_player:
+      description: The media player entity to play on
+      example: media_player.kokken
+      required: true
+      selector:
+        entity:
+          domain: media_player
+    media_content_id:
+      description: The media content ID (e.g., stream URL)
+      required: true
+      selector:
+        text:
+    media_content_type:
+      description: The media content type (e.g., music, video)
+      required: true
+      selector:
+        text:
+  sequence:
+  - variables:
+      initial_source: '{{ state_attr(target_media_player, ''source'') }}'
+  - action: media_player.play_media
+    target:
+      entity_id: '{{ target_media_player }}'
+    data:
+      media:
+        media_content_id: '{{ media_content_id }}'
+        media_content_type: '{{ media_content_type }}'
+        metadata: {}
+  - if:
+    - condition: template
+      value_template: '{{ initial_source == ''AirPlay'' }}'
+    then:
+    - delay:
+        seconds: 1
+    - if:
+      - condition: template
+        value_template: '{{ not is_state(target_media_player, ''playing'') }}'
+      then:
+      - action: media_player.play_media
+        target:
+          entity_id: '{{ target_media_player }}'
+        data:
+          media:
+            media_content_id: '{{ media_content_id }}'
+            media_content_type: '{{ media_content_type }}'
+            metadata: {}
+  - action: input_text.set_value
+    target:
+      entity_id: input_text.kokken_feels_lucky
+    data:
+      value: 'False'
+  - action: media_player.volume_mute
+    target:
+      entity_id: '{{ target_media_player }}'
+    data:
+      is_volume_muted: false
+  alias: force_play_media
+  description: 'Plays media on the selected media player. If the source was AirPlay
+    before starting, waits 1 second and retries if not playing.
+
+    '
+play_radio_preset_on_sonos:
+  fields:
+    entity_id:
+      description: The media player entity to play on
+      example: media_player.kokken
+      required: true
+      selector:
+        entity:
+          domain: media_player
+    preset_path:
+      description: Media content ID of the preset channel to play
+      example: DAB/preset/3
+      required: true
+      selector:
+        text:
+  sequence:
+  - action: script.play_preset_on_dab_radio
+    data:
+      preset_path: '{{ preset_path }}'
+  - action: script.force_play_media
+    data:
+      target_media_player: '{{ entity_id }}'
+      media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
+      media_content_type: music
+  alias: play_radio_preset_on_sonos
+  description: ''
+play_music_assistant_on_sonos:
   sequence:
   - action: timer.start
     metadata: {}
@@ -1346,21 +1458,81 @@ play_music_assistant_on_sonos_in_kokken:
   - wait_template: '{{ states(''media_player.argon_radio_2i_305890754e1c'') == "playing"
       }}'
     continue_on_timeout: false
-    timeout: '5'
-  - action: script.force_play_media_in_kokken
-    metadata: {}
+    timeout: '10'
+  - action: script.force_play_media
     data:
+      target_media_player: '{{ entity_id }}'
       media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
       media_content_type: music
-play_p8_on_sonos_in_kokken:
+  alias: play_music_assistant_on_sonos
+  description: ''
+  fields:
+    media_id:
+      name: Media ID
+      description: The media ID to play
+      required: true
+      example: spotify:track:123456789
+    entity_id:
+      name: Sonos player entity ID
+      description: The entity ID of the sonos player to stream the queue to.
+      required: true
+      example: media_player.kokken
+play_npo_radio_2_on_sonos:
+  fields:
+    entity_id:
+      description: The media player entity to play on
+      example: media_player.kokken
+      required: true
+      selector:
+        entity:
+          domain: media_player
   sequence:
-  - action: script.play_p8
-    metadata: {}
-    data: {}
-  - action: script.force_play_media_in_kokken
-    metadata: {}
-    data:
-      media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
-      media_content_type: music
-  alias: play_p8_on_sonos_in_kokken
+  - if:
+    - condition: state
+      entity_id: input_text.commercials_on_npo_radio_2
+      state: 'True'
+    then:
+    - action: input_text.set_value
+      metadata: {}
+      data:
+        value: Buffering...
+      target:
+        entity_id: input_text.kokken_media_header
+    - action: media_player.shuffle_set
+      metadata: {}
+      data:
+        shuffle: true
+      target:
+        entity_id: '{{ entity_id }}'
+    - action: media_player.play_media
+      data:
+        media:
+          media_content_id: '{{ states(''input_text.npo_radio_2_filler_playlist_id'')
+            }}'
+          media_content_type: favorite_item_id
+          metadata: {}
+      target:
+        entity_id: '{{ entity_id }}'
+    - action: input_text.set_value
+      metadata: {}
+      data:
+        value: 'True'
+      target:
+        entity_id: input_text.resume_npo_radio_2_after_commercials
+    - action: media_player.shuffle_set
+      metadata: {}
+      data:
+        shuffle: true
+      target:
+        entity_id: '{{ entity_id }}'
+    else:
+    - action: script.play_npo_radio_2
+      metadata: {}
+      data: {}
+    - action: script.force_play_media
+      data:
+        target_media_player: '{{ entity_id }}'
+        media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
+        media_content_type: music
+  alias: play_npo_radio_2_on_sonos
   description: ''

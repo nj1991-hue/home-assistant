@@ -123,7 +123,6 @@ async def fetch_json(session, url, *args, **kwargs):
  
 async def post(session, url, **kwargs):
     response = await session.post(url, **kwargs)
-    log.info(response.text())
     return await response.json()
 
 
@@ -477,20 +476,20 @@ def get_lucky_station():
         
     return random.choice(stations_to_choose_from)
 
-    
+
 @service
-def play_lucky_station_in_kokken():
-    task.unique("play_lucky_station_in_kokken")
+def play_lucky_station(entity_id):
+    task.unique("play_lucky_station")
     station_to_play = get_lucky_station()
     media_content_type = "favorite_item_id" if "FV:" in station_to_play else "music"
 
     media_player.play_media(
         media_content_id=station_to_play, 
         media_content_type=media_content_type,
-        entity_id="media_player.kokken"
+        entity_id=entity_id
     )
     
-    media_player.shuffle_set(entity_id = "media_player.kokken", shuffle=True)
+    media_player.shuffle_set(entity_id = entity_id, shuffle=True)
     asyncio.sleep(15) # Give automations a chance to reset kokken_feels_lucky
     input_text.kokken_feels_lucky = "True"
     service.call('timer', 'start', entity_id='timer.kokken_is_lucky_change_timer')
@@ -500,7 +499,7 @@ def play_lucky_station_in_kokken():
 @state_trigger("timer.kokken_is_lucky_force_change_timer")
 @state_trigger("media_player.kokken.media_title")
 def change_lucky_station_in_kokken():
-    task.unique("play_lucky_station_in_kokken", kill_me=True)
+    task.unique("play_lucky_station", kill_me=True)
     timer_state = state.get('timer.kokken_is_lucky_change_timer')
     force_timer_state = state.get('timer.kokken_is_lucky_force_change_timer')
     morning_routine_timer_state = state.get('timer.sonos_morning_routine_running')
@@ -516,7 +515,7 @@ def change_lucky_station_in_kokken():
         and morning_routine_timer_state == "idle"
         ):
         log.info("playing lucky station in kokken")
-        play_lucky_station_in_kokken()
+        play_lucky_station("media_player.kokken")
 
     
 @service
@@ -919,16 +918,21 @@ def set_repeat_to_true(var_name=None):
 
 
 @state_trigger("media_player.argon_radio_2i_305890754e1c_2")
-def set_repeat_to_true_for_music_assistant_speakers(var_name=None):
+def dont_stop_the_music_for_music_assistant_speakers():
     """
-    Makes sure repeat is always set to True for music assistant duplicates
+    Makes sure Music Assitant speakers never stop playing
     """
-    media_player.repeat_set(entity_id = var_name, repeat="all")
+    dont_stop_the_music("Argon Radio 2i 305890754e1c")
 
 
 @service    
 @time_trigger("cron(0 3 * * *)")
 @state_trigger("input_text.apple_music_provider_status")
+def update_music_assistant_uris():
+    update_random_album()
+    update_recently_added_albums()
+    update_recently_added_playlists()
+
 def update_random_album():
     for i in range(30):
         album = music_assistant.get_library(
@@ -958,16 +962,12 @@ def update_random_album():
             log.info(f'{album["name"]} is too explicit... Genre = {genre}')
     
 
-@service    
-@time_trigger("cron(0 3 * * *)")
-@state_trigger("input_text.apple_music_provider_status")
 def update_recently_added_albums():
     albums = music_assistant.get_library(
         config_entry_id="01KJD55JFR0EVEB6YP6869PN0Y",
         media_type= "album",
         limit= 25,
         order_by= "timestamp_added_desc",
-        album_type=["album"]
     )["items"]
 
     input_text.recently_added_album_1_uri = albums[0]["uri"]
@@ -990,15 +990,11 @@ def update_recently_added_albums():
     
     for album in albums:
         genre = get_genre(album["artists"][0]["name"], album["name"])
-        if "metal" not in genre.lower():
+        if genre and "metal" not in genre.lower():
             input_text.spotlight_album_uri = album["uri"]
             input_text.spotlight_album_thumbnail = album["image"]
             break
 
-
-@service    
-@time_trigger("cron(0 3 * * *)")
-@state_trigger("input_text.apple_music_provider_status")
 def update_recently_added_playlists():
     playlists = music_assistant.get_library(
         config_entry_id="01KJD55JFR0EVEB6YP6869PN0Y",
@@ -1037,8 +1033,12 @@ async def get_music_assistant_access_token():
         return None
     
 
-@service
-def get_music_assistant_provider_data(provider):
+def run_music_assistant_command(command, **kwargs):
+    """
+    Runs a music assistant command on the API
+    
+    A list of commands can be found at http://192.168.1.199:8095/api-docs/commands
+    """
     token = get_music_assistant_access_token()
     
     url = "http://localhost:8095/api"
@@ -1050,16 +1050,60 @@ def get_music_assistant_provider_data(provider):
     }
     
     payload = {
-        "command": "config/providers", # http://192.168.1.199:8095/api-docs/commands
-        "args": {}
+        "command": command,
+        "args": kwargs
     }
     
     async with aiohttp.ClientSession() as session:
         response_data = await post(session, url, json=payload, headers=headers)
+    return response_data
+
+@service
+@state_trigger("input_text.home_state")
+def sync_music_assistant_library(old_value = None):
+    if old_value is None or "away" in old_value.lower() or "night" in old_value.lower():
+        log.info("Refreshing music database")
+        run_music_assistant_command("music/sync")
+        update_recently_added_playlists()
+        update_recently_added_albums()
         
-    for provider_data in response_data:
+
+@service
+def get_music_assistant_provider_data(provider):
+
+    for provider_data in run_music_assistant_command("config/providers"):
         if provider_data["domain"] == provider:
             return provider_data
+    
+@service
+def dont_stop_the_music(player_name):
+    """
+    Set don't stop the music = True for a music assistant player
+    """
+    
+    player_info = run_music_assistant_command(
+        "players/get_by_name",
+        name = player_name)
+    
+    player_id = player_info["player_id"]
+    
+    player_queue = run_music_assistant_command(
+        "player_queues/get_active_queue",
+        player_id = player_id)
+    
+    queue_id = player_queue["queue_id"]
+
+    run_music_assistant_command(
+        "player_queues/repeat",
+        queue_id = queue_id,
+        repeat_mode = "off"
+    )
+    
+    run_music_assistant_command(
+        "player_queues/dont_stop_the_music",
+        queue_id = queue_id,
+        dont_stop_the_music_enabled = True
+    )
     
 @service
 @state_trigger("sensor.shellywalldisplay_0008225bc076_illuminance_level")
