@@ -377,6 +377,34 @@
         "mode": "text",
         "max": 100,
         "min": 0
+      },
+      {
+        "id": "recently_added_album_7_uri",
+        "name": "recently_added_album_7_uri",
+        "min": 0,
+        "mode": "text",
+        "max": 100
+      },
+      {
+        "id": "recently_added_album_7_thumbnail",
+        "name": "recently_added_album_7_thumbnail",
+        "min": 0,
+        "mode": "text",
+        "max": 100
+      },
+      {
+        "id": "recently_added_playlist_4_uri",
+        "name": "recently_added_playlist_4_uri",
+        "min": 0,
+        "mode": "text",
+        "max": 100
+      },
+      {
+        "id": "recently_added_playlist_4_thumbnail",
+        "name": "recently_added_playlist_4_thumbnail",
+        "min": 0,
+        "mode": "text",
+        "max": 100
       }
     ]
   }

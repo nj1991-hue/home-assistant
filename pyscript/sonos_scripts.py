@@ -928,6 +928,7 @@ def dont_stop_the_music_for_music_assistant_speakers():
 @service    
 @time_trigger("cron(0 3 * * *)")
 @state_trigger("input_text.apple_music_provider_status")
+@time_trigger("startup")
 def update_music_assistant_uris():
     update_random_album()
     update_recently_added_albums()
@@ -944,6 +945,8 @@ def update_random_album():
         )["items"][0]
         
         if not album["artists"]:
+            continue
+        if not album["image"]:
             continue
         
         genre = get_genre(album["artists"][0]["name"], album["name"])
@@ -963,30 +966,36 @@ def update_random_album():
     
 
 def update_recently_added_albums():
-    albums = music_assistant.get_library(
+    album_response = music_assistant.get_library(
         config_entry_id="01KJD55JFR0EVEB6YP6869PN0Y",
         media_type= "album",
         limit= 25,
         order_by= "timestamp_added_desc",
     )["items"]
+    
+    albums = [a for a in album_response if a["image"]]
 
     input_text.recently_added_album_1_uri = albums[0]["uri"]
-    input_text.recently_added_album_1_thumbnail = albums[0]["image"]
+    input_text.recently_added_album_1_thumbnail = albums[0]["image"] or "/local/404.png"
 
     input_text.recently_added_album_2_uri = albums[1]["uri"]
-    input_text.recently_added_album_2_thumbnail = albums[1]["image"]
+    input_text.recently_added_album_2_thumbnail = albums[1]["image"] or "/local/404.png"
 
     input_text.recently_added_album_3_uri = albums[2]["uri"]
-    input_text.recently_added_album_3_thumbnail = albums[2]["image"]
+    input_text.recently_added_album_3_thumbnail = albums[2]["image"] or "/local/404.png"
 
     input_text.recently_added_album_4_uri = albums[3]["uri"]
-    input_text.recently_added_album_4_thumbnail = albums[3]["image"]
+    input_text.recently_added_album_4_thumbnail = albums[3]["image"] or "/local/404.png"
 
     input_text.recently_added_album_5_uri = albums[4]["uri"]
-    input_text.recently_added_album_5_thumbnail = albums[4]["image"]
+    input_text.recently_added_album_5_thumbnail = albums[4]["image"] or "/local/404.png"
 
     input_text.recently_added_album_6_uri = albums[5]["uri"]
-    input_text.recently_added_album_6_thumbnail = albums[5]["image"]
+    input_text.recently_added_album_6_thumbnail = albums[5]["image"] or "/local/404.png"
+
+    input_text.recently_added_album_7_uri = albums[6]["uri"]
+    input_text.recently_added_album_7_thumbnail = albums[6]["image"] or "/local/404.png"
+
     
     for album in albums:
         genre = get_genre(album["artists"][0]["name"], album["name"])
@@ -1004,13 +1013,16 @@ def update_recently_added_playlists():
     )["items"]
 
     input_text.recently_added_playlist_1_uri = playlists[0]["uri"]
-    input_text.recently_added_playlist_1_thumbnail = playlists[0]["image"]
+    input_text.recently_added_playlist_1_thumbnail = playlists[0]["image"] or "/local/404.png"
 
     input_text.recently_added_playlist_2_uri = playlists[1]["uri"]
-    input_text.recently_added_playlist_2_thumbnail = playlists[1]["image"]
+    input_text.recently_added_playlist_2_thumbnail = playlists[1]["image"] or "/local/404.png"
 
     input_text.recently_added_playlist_3_uri = playlists[2]["uri"]
-    input_text.recently_added_playlist_3_thumbnail = playlists[2]["image"]
+    input_text.recently_added_playlist_3_thumbnail = playlists[2]["image"] or "/local/404.png"
+
+    input_text.recently_added_playlist_4_uri = playlists[3]["uri"]
+    input_text.recently_added_playlist_4_thumbnail = playlists[3]["image"] or "/local/404.png"
 
 
 async def get_music_assistant_access_token():
@@ -1058,14 +1070,27 @@ def run_music_assistant_command(command, **kwargs):
         response_data = await post(session, url, json=payload, headers=headers)
     return response_data
 
-@service
 @state_trigger("input_text.home_state")
-def sync_music_assistant_library(old_value = None):
-    if old_value is None or "away" in old_value.lower() or "night" in old_value.lower():
+def sync_music_assistant_when_we_get_home_or_wake_up(old_value = None):
+    old_home_state = old_value.lower()
+    if "away" in old_home_state or "night" in old_home_state:
         log.info("Refreshing music database")
         run_music_assistant_command("music/sync")
-        update_recently_added_playlists()
-        update_recently_added_albums()
+
+@state_trigger("sensor.shellywalldisplay_0008225bc076_illuminance_level")
+def update_albums_and_playlists_when_shelly_is_interacted_with(value = None):
+    if not value or "dark" in value.lower():
+        return
+    update_recently_added_playlists()
+    update_recently_added_albums()
+
+@service
+def sync_music_assistant_library():
+    log.info("Refreshing music database")
+    run_music_assistant_command("music/sync")
+    asyncio.sleep(4)
+    update_recently_added_playlists()
+    update_recently_added_albums()
         
 
 @service
@@ -1105,9 +1130,12 @@ def dont_stop_the_music(player_name):
         dont_stop_the_music_enabled = True
     )
     
-@service
 @state_trigger("sensor.shellywalldisplay_0008225bc076_illuminance_level")
-def get_apple_music_provider_status():
+def set_apple_music_provider_status(value=None):
+
+    if not value or "dark" in value.lower():
+        return
+    
     provider_data = get_music_assistant_provider_data("apple_music")
     
     last_error = provider_data["last_error"]

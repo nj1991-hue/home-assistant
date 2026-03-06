@@ -779,7 +779,7 @@
                       ],
                       "mediaBrowser": {
                         "hideHeader": true,
-                        "itemsPerRow": 3,
+                        "itemsPerRow": 4,
                         "onlyFavorites": true,
                         "favorites": {
                           "title": " ",
@@ -1640,12 +1640,7 @@
                           "grid_options": {
                             "columns": 4
                           }
-                        }
-                      ]
-                    },
-                    {
-                      "type": "horizontal-stack",
-                      "cards": [
+                        },
                         {
                           "type": "custom:button-card",
                           "template": "square_button",
@@ -1665,7 +1660,12 @@
                           "grid_options": {
                             "columns": 4
                           }
-                        },
+                        }
+                      ]
+                    },
+                    {
+                      "type": "horizontal-stack",
+                      "cards": [
                         {
                           "type": "custom:button-card",
                           "template": "square_button",
@@ -1701,6 +1701,46 @@
                             }
                           },
                           "entity_picture": "[[[\n  return states['input_text.recently_added_album_6_thumbnail'].state\n]]]\n",
+                          "show_entity_picture": true,
+                          "grid_options": {
+                            "columns": 4
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_button",
+                          "entity": "media_player.kokken",
+                          "show_name": false,
+                          "show_icon": false,
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "script.play_music_assistant_on_sonos",
+                            "data": {
+                              "entity_id": "media_player.kokken",
+                              "media_id": "[[[\n  return states['input_text.recently_added_album_7_uri'].state\n]]]\n"
+                            }
+                          },
+                          "entity_picture": "[[[\n  return states['input_text.recently_added_album_7_thumbnail'].state\n]]]\n",
+                          "show_entity_picture": true,
+                          "grid_options": {
+                            "columns": 4
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_button",
+                          "entity": "media_player.kokken",
+                          "show_name": false,
+                          "show_icon": false,
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "script.play_music_assistant_on_sonos",
+                            "data": {
+                              "entity_id": "media_player.kokken",
+                              "media_id": "[[[\n  return states['input_text.random_album_uri'].state\n]]]\n"
+                            }
+                          },
+                          "entity_picture": "[[[\n  return states['input_text.random_album_thumbnail'].state\n]]]\n",
                           "show_entity_picture": true,
                           "grid_options": {
                             "columns": 4
@@ -1756,6 +1796,59 @@
                           "template": "square_button",
                           "entity": "media_player.kokken",
                           "show_name": false,
+                          "show_icon": false,
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "script.play_music_assistant_on_sonos",
+                            "data": {
+                              "entity_id": "media_player.kokken",
+                              "media_id": "[[[\n  return states['input_text.recently_added_playlist_3_uri'].state\n]]]\n"
+                            }
+                          },
+                          "entity_picture": "[[[\n  return states['input_text.recently_added_playlist_3_thumbnail'].state\n]]]\n",
+                          "show_entity_picture": true,
+                          "grid_options": {
+                            "columns": 4
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_button",
+                          "entity": "media_player.kokken",
+                          "show_name": false,
+                          "show_icon": false,
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "script.play_music_assistant_on_sonos",
+                            "data": {
+                              "entity_id": "media_player.kokken",
+                              "media_id": "[[[\n  return states['input_text.recently_added_playlist_4_uri'].state\n]]]\n"
+                            }
+                          },
+                          "entity_picture": "[[[\n  return states['input_text.recently_added_playlist_4_thumbnail'].state\n]]]\n",
+                          "show_entity_picture": true,
+                          "grid_options": {
+                            "columns": 4
+                          },
+                          "visibility": [
+                            {
+                              "condition": "not",
+                              "conditions": [
+                                {
+                                  "condition": "user",
+                                  "users": [
+                                    "9b780ba66a134f9fb0d170bd99d80708"
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_button",
+                          "entity": "media_player.kokken",
+                          "show_name": false,
                           "show_icon": true,
                           "tap_action": {
                             "action": "call-service",
@@ -1764,7 +1857,15 @@
                           "icon": "mdi:refresh",
                           "grid_options": {
                             "columns": 4
-                          }
+                          },
+                          "visibility": [
+                            {
+                              "condition": "user",
+                              "users": [
+                                "9b780ba66a134f9fb0d170bd99d80708"
+                              ]
+                            }
+                          ]
                         }
                       ]
                     }
