@@ -66,6 +66,20 @@ def get_media_name(media_content_id):
 def test_get_media_content_id():
     log.info(get_media_content_id("The Voice"))
 
+def get_media_player(entity_id):
+    """
+    returns a media player given its entity ID
+    """
+    media_players = [
+        media_player.kokken,
+        media_player.entre,
+        media_player.stue,
+        media_player.spisestue,
+    ]
+
+    media_player_dict={player.entity_id: player for player in media_players}
+    return media_player_dict[entity_id]
+
 @service
 def get_media_players():
     """
@@ -671,6 +685,18 @@ async def stop_npo_radio_2_commercial_break():
     log.info("Stopping commercial break")
     input_text.commercials_on_npo_radio_2 = "False"
     
+def start_npo_radio_2_filler_playlist(media_player_obj):
+    input_text.resume_npo_radio_2_after_commercials = "True"
+    media_player.shuffle_set(entity_id = media_player_obj.entity_id, shuffle=True)
+    media_player.play_media(
+        media_content_id=input_text.npo_radio_2_filler_playlist_id, 
+        media_content_type="favorite_item_id",
+        entity_id=media_player_obj.entity_id
+    )
+    asyncio.sleep(2)
+    media_player.shuffle_set(entity_id = media_player_obj.entity_id, shuffle=True)    
+    
+    
 @state_trigger("input_text.commercials_on_npo_radio_2")
 async def switch_to_playlist_on_commercial_break(value=None, old_value=None):
     
@@ -691,15 +717,7 @@ async def switch_to_playlist_on_commercial_break(value=None, old_value=None):
         ):
             
             log.info(f"Switching to {filler_playlist_title} because of commercials")
-            input_text.resume_npo_radio_2_after_commercials = "True"
-            media_player.shuffle_set(entity_id = media_player_obj.entity_id, shuffle=True)
-            media_player.play_media(
-                media_content_id=input_text.npo_radio_2_filler_playlist_id, 
-                media_content_type="favorite_item_id",
-                entity_id=media_player_obj.entity_id
-            )
-            await asyncio.sleep(2)
-            media_player.shuffle_set(entity_id = media_player_obj.entity_id, shuffle=True)
+            start_npo_radio_2_filler_playlist(media_player_obj)
         else:
             log.info(
                 f"Not switching to {filler_playlist_title}: "
@@ -1161,10 +1179,91 @@ def update_last_dab_radio_source():
         input_text.last_dab_radio_source = dab_media_title
     else:
         input_text.last_dab_radio_source = dab_source
+    
+    
+def wait_for(obj, attribute, is_or_is_not, desired_value, timeout=20):
+    """
+    Waits for an attribute to obtain a certain value and then returns the value
+    of the attribute
+    """
+    value = None
+    
+    for i in range(timeout*2):
+
+        if attribute == "state":
+            value = state.get(obj.entity_id)
+        else:
+            value = state.getattr(obj.entity_id).get(attribute)        
         
+        if is_or_is_not == "is" and value == desired_value:
+            return value
+        elif is_or_is_not == "is_not" and value != desired_value:
+            return value
+        log.info(f"{obj.entity_id}.{attribute} {is_or_is_not} {desired_value} == False. It is {value}. Sleeping")
+        asyncio.sleep(0.5)
+    raise Exception(f"Timeout while waiting for {obj.entity_id}.{attribute}  {is_or_is_not} {desired_value}")
     
+@service
+def handle_radio_playback(trigger_entity_id):
+    log.info(f"Handling radio playback for {trigger_entity_id}")
+    media_player_obj = get_media_player(trigger_entity_id)
+    media_content_id = wait_for(media_player_obj, "media_content_id", "is_not", None)
     
+    if media_player.argon_radio_2i_305890754e1c == "off":
+        service.call('timer', 'start', entity_id='timer.radio_turned_on_by_automation')
+        
+        if "x-rincon-stream:RINCON_804AF2CAFA8001400" not in media_content_id:
+            log.info(f"{media_player_obj} is not playing line-in. Returning")
+            return
+        
+        if input_text.reset_radio == "True":
+            log.info("Resetting radio. It is probably the first time it is turned on today")
+            service.call("script", "play_npo_radio_2")
+            input_text.reset_radio = "False"
+        else:
+            if input_text.last_dab_radio_source == "Music Assistant":
+                log.info("Resuming Music Assistant playback")
+                media_player.media_play(entity_id="media_player.argon_radio_2i_305890754e1c_2")
+                return
+            else:
+                log.info("Turning on radio")
+                media_player.turn_on(entity_id="media_player.argon_radio_2i_305890754e1c")
+        
+        dab_source = wait_for(media_player.argon_radio_2i_305890754e1c, "source", "is_not", None)
+        
+        log.info(f"Obtained DAB source: {dab_source}")
+        
+        if media_player.argon_radio_2i_305890754e1c.media_title == "Music Assistant":
+            log.info("DAB radio is playing Music Assistant. Returning")
+            return
+        
+        dab_source = media_player.argon_radio_2i_305890754e1c.source
+        if dab_source != "Internet radio" and dab_source != "DAB":
+            log.info("DAB radio is neither playing internet radio or DAB; Defaulting to P3")
+            service.call("script", "play_p3")
+        elif (
+            dab_source == "Internet radio" 
+            and input_text.commercials_on_npo_radio_2 == "True" 
+            and binary_sensor.npo_radio_2_is_playing == "on"
+        ):
+            log.info("DAB radio is playing NPO radio 2 but there are commercials. Starting filler playlist")
+            start_npo_radio_2_filler_playlist(media_player_obj)
+        log.info("Handled radio playback successfully")
+
+            
+    elif (
+        "x-rincon-stream:RINCON_804AF2CAFA8001400" in media_content_id
+        and input_text.commercials_on_npo_radio_2 == "True" 
+        and binary_sensor.npo_radio_2_is_playing == "on"
+    ):
+        log.info("No need to turn on the DAB radio because there are commercials. Starting filler playlist")
+        start_npo_radio_2_filler_playlist(media_player_obj)
+        wait_for(media_player_obj, "media_playlist", "is_not", None)
+        wait_for(media_player_obj, "state", "is", "playing")
+        group_if_same_content()
     
+            
+
     
     
     
