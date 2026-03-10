@@ -41,22 +41,22 @@ scene: !include scenes.yaml
 shell_command:
   set_temperature_offset: /config/set_temperature_offset.sh {{ home_id }} {{ device }} {{ offset }}
 
-  get_tado_access_token: "jq -r '.access_token' /config/tado_response.json"
+  get_tado_access_token: "jq -r '.access_token' /config/json/tado/auth.json"
 
-  get_tado_response_json: "jq -r '.' /config/tado_response.json"
+  get_tado_response_json: "jq -r '.' /config/json/tado/auth.json"
 
-  get_tado_rooms_devices_json: "jq -r '.' /config/tado_rooms_devices.json"
+  get_tado_rooms_devices_json: "jq -r '.' /config/json/tado/rooms_devices.json"
 
   get_tado_temperature_as_measured: >-
-    jq -r '.rooms[].devices[] | select(.serialNumber=="{{ device }}") | .temperatureAsMeasured' /config/tado_rooms_devices.json
+    jq -r '.rooms[].devices[] | select(.serialNumber=="{{ device }}") | .temperatureAsMeasured' /config/json/tado/rooms_devices.json
 
   get_tado_schedule: /config/get_tado_schedule.sh {{ home_id }} {{zone}} {{room}}
 
   get_tado_away_schedule: /config/get_tado_away_schedule.sh {{ home_id }} {{zone}} {{room}}
   
-  get_tado_schedule_json: "jq -r '.' /config/tado_schedule_{{ room }}.json"
+  get_tado_schedule_json: "jq -r '.' /config/json/tado/schedule_{{ room }}.json"
 
-  get_tado_away_schedule_json: "jq -r '.' /config/tado_away_schedule_{{ room }}.json"
+  get_tado_away_schedule_json: "jq -r '.' /config/json/tado/away_schedule_{{ room }}.json"
   
   get_tado_rooms_devices: /config/get_tado_rooms_devices.sh {{ home_id }}
 

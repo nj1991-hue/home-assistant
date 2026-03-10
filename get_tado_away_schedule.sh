@@ -16,13 +16,13 @@ HTTP_STATUS=$(curl -s -w "%{http_code}" -o "$TEMP_FILE" \
   -H "Sec-Fetch-Dest: empty" \
   -H "Sec-Fetch-Mode: cors" \
   -H "Sec-Fetch-Site: same-site" \
-  -H "Authorization: Bearer $(jq -r '.access_token' /config/tado_response.json)" \
+  -H "Authorization: Bearer $(jq -r '.access_token' /config/json/tado/auth.json)" \
   -H "Connection: keep-alive" \
   -H "TE: trailers")
 
 # Check if the HTTP status code is 200
 if [ "$HTTP_STATUS" -eq 200 ]; then
-  mv "$TEMP_FILE" "/config/tado_away_schedule_$3.json"
+  mv "$TEMP_FILE" "/config/json/tado/away_schedule_$3.json"
 else
   echo "Failed to fetch schedule. HTTP status code: $HTTP_STATUS"
   rm "$TEMP_FILE"

@@ -708,10 +708,10 @@
                                   "position": "absolute"
                                 },
                                 {
-                                  "left": "50%"
+                                  "left": "42%"
                                 },
                                 {
-                                  "top": "70%"
+                                  "top": "20%"
                                 },
                                 {
                                   "color": "red"
@@ -1382,6 +1382,54 @@
                             "perform_action": "script.increase_tado_temperature_on_ground_floor",
                             "target": {}
                           }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_tado_button",
+                          "name": "Authorize",
+                          "icon": "mdi:security",
+                          "show_name": true,
+                          "show_state": false,
+                          "color": "red",
+                          "visibility": [
+                            {
+                              "condition": "state",
+                              "entity": "input_text.tado_api_status",
+                              "state_not": "ok"
+                            },
+                            {
+                              "condition": "state",
+                              "entity": "binary_sensor.tado_verification_in_progress",
+                              "state": "off"
+                            }
+                          ],
+                          "tap_action": {
+                            "action": "perform-action",
+                            "perform_action": "pyscript.authorize_tado_api"
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_tado_button",
+                          "grid_options": {
+                            "columns": 4
+                          },
+                          "name": "Validate",
+                          "icon": "mdi:web-check",
+                          "show_name": true,
+                          "show_state": false,
+                          "color": "red",
+                          "tap_action": {
+                            "action": "url",
+                            "url_path": "[[[\n  return states['input_text.tado_verification_uri_complete'].state\n]]]\n"
+                          },
+                          "visibility": [
+                            {
+                              "condition": "state",
+                              "entity": "binary_sensor.tado_verification_in_progress",
+                              "state": "on"
+                            }
+                          ]
                         }
                       ]
                     }
@@ -1420,6 +1468,26 @@
                     {
                       "type": "horizontal-stack",
                       "cards": [
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_button",
+                          "entity": "media_player.kokken",
+                          "show_name": false,
+                          "show_icon": false,
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "script.play_radio_preset_on_sonos",
+                            "data": {
+                              "entity_id": "media_player.kokken",
+                              "preset_path": "DAB/preset/2"
+                            }
+                          },
+                          "entity_picture": "/local/p2_logo.png",
+                          "show_entity_picture": true,
+                          "grid_options": {
+                            "columns": 4
+                          }
+                        },
                         {
                           "type": "custom:button-card",
                           "template": "square_button",
@@ -1539,6 +1607,26 @@
                             }
                           },
                           "entity_picture": "/local/radio_bob_logo.png",
+                          "show_entity_picture": true,
+                          "grid_options": {
+                            "columns": 4
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_button",
+                          "entity": "media_player.kokken",
+                          "show_name": false,
+                          "show_icon": false,
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "script.play_radio_preset_on_sonos",
+                            "data": {
+                              "entity_id": "media_player.kokken",
+                              "preset_path": "Internet radio/preset/5"
+                            }
+                          },
+                          "entity_picture": "/local/radio_paradise_logo.jpg",
                           "show_entity_picture": true,
                           "grid_options": {
                             "columns": 4

@@ -9,6 +9,8 @@ import datetime
 import json
 
 sonos_media = None
+#default_radio_station = "NPO Radio 2"
+default_radio_station = "Random album"
 
 @service
 @time_trigger("cron(0 3 * * *)")
@@ -31,7 +33,7 @@ def refresh_sonos_media():
         for child in media.children:
             sonos_media_dict[child.title] = child.media_content_id
 
-    file_path = "/config/sonos_media.json"
+    file_path = "/config/json/sonos/media.json"
     json_data = json.dumps(sonos_media_dict, indent=4, ensure_ascii=False)
 
     async with aiofiles.open(file_path, mode="w", encoding="utf-8") as f:
@@ -44,7 +46,7 @@ def get_sonos_media():
     global sonos_media
     
     if not sonos_media:
-        file_path = "/config/sonos_media.json"
+        file_path = "/config/json/sonos/media.json"
     
         async with aiofiles.open(file_path, mode="r", encoding="utf-8") as f:
             content = await f.read()
@@ -589,7 +591,7 @@ async def get_npo_radio_2_metadata():
         dab_media_title_title = "-"
         song_exists = False
     
-    is_playing = is_active or artist_in_media_title or song_exists
+    is_playing = artist_in_media_title or (song_exists and npo_radio_2_is_playing())
             
     log.info(
         f"is_playing: {is_playing}, "
@@ -1203,8 +1205,18 @@ def wait_for(obj, attribute, is_or_is_not, desired_value, timeout=20):
         asyncio.sleep(0.5)
     raise Exception(f"Timeout while waiting for {obj.entity_id}.{attribute}  {is_or_is_not} {desired_value}")
     
+    
+def play_dab_preset(preset):
+    media_player.play_media(
+        entity_id="media_player.argon_radio_2i_305890754e1c",
+        media_content_id=preset,
+        media_content_type="channel"
+    )
+
+
 @service
 def handle_radio_playback(trigger_entity_id):
+    global default_radio_station
     log.info(f"Handling radio playback for {trigger_entity_id}")
     media_player_obj = get_media_player(trigger_entity_id)
     media_content_id = wait_for(media_player_obj, "media_content_id", "is_not", None)
@@ -1217,8 +1229,16 @@ def handle_radio_playback(trigger_entity_id):
             return
         
         if input_text.reset_radio == "True":
-            log.info("Resetting radio. It is probably the first time it is turned on today")
-            service.call("script", "play_npo_radio_2")
+            log.info(f"Resetting radio to {default_radio_station}. It is probably the first time it is turned on today")
+            if default_radio_station == "NPO Radio 2":
+                play_dab_preset("Internet radio/preset/2")
+            elif default_radio_station == "Random album":
+                music_assistant.play_media(entity_id= "media_player.argon_radio_2i_305890754e1c_2", media_id = input_text.random_album_uri)
+                return
+            else:
+                log.warning(f"Unsupported value for default_radio_station: {default_radio_station}; Playing p3")
+                play_dab_preset("DAB/preset/3")
+
             input_text.reset_radio = "False"
         else:
             if input_text.last_dab_radio_source == "Music Assistant":
@@ -1240,7 +1260,7 @@ def handle_radio_playback(trigger_entity_id):
         dab_source = media_player.argon_radio_2i_305890754e1c.source
         if dab_source != "Internet radio" and dab_source != "DAB":
             log.info("DAB radio is neither playing internet radio or DAB; Defaulting to P3")
-            service.call("script", "play_p3")
+            play_dab_preset("DAB/preset/3")
         elif (
             dab_source == "Internet radio" 
             and input_text.commercials_on_npo_radio_2 == "True" 

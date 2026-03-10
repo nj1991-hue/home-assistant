@@ -29,7 +29,7 @@ HTTP_STATUS=$(curl -s -w "%{http_code}" -o "$TEMP_FILE" \
   -H "Sec-Fetch-Dest: empty" \
   -H "Sec-Fetch-Mode: cors" \
   -H "Sec-Fetch-Site: same-site" \
-  -H "Authorization: Bearer $(jq -r '.access_token' /config/tado_response.json)" \
+  -H "Authorization: Bearer $(jq -r '.access_token' /config/json/tado/auth.json)" \
   -H "Connection: keep-alive" \
   -H "Priority: u=0" \
   -H "TE: trailers" \
@@ -37,7 +37,8 @@ HTTP_STATUS=$(curl -s -w "%{http_code}" -o "$TEMP_FILE" \
 
 # Check if the HTTP status code is 200 or 204 (PATCH often returns 204 No Content)
 if [ "$HTTP_STATUS" -eq 200 ] || [ "$HTTP_STATUS" -eq 204 ]; then
-  mv "$TEMP_FILE" "/config/tado_device_${DEVICE_ID}_offset_response.json"
+  echo "Successfully updated tado device offset"
+  rm "$TEMP_FILE"
 else
   echo "Failed to set device offset. HTTP status code: $HTTP_STATUS"
   cat "$TEMP_FILE"

@@ -361,6 +361,10 @@ def get_tado_rooms_and_devices():
 @service
 def check_tado_response():
     response = service.call("shell_command","get_tado_response_json", return_response=True)
+    error = response.get("stderr")
+    if error:
+        input_text.tado_api_status = error[:255]  
+        return
 
     tado_response = json.loads(response["stdout"])
     
@@ -588,14 +592,14 @@ async def obtain_new_refresh_token(session, refresh_token):
         return await response.json() 
 
 async def dump_tado_response(tado_response):
-    filename = "/config/tado_response.json"
+    filename = "/config/json/tado/auth.json"
     json_object = json.dumps(tado_response)
     async with aiofiles.open(filename, mode='w') as f:
         f.write(json_object)
         
 @service
 def refresh_tado_token():
-    filename = "/config/tado_response.json"
+    filename = "/config/json/tado/auth.json"
     async with aiofiles.open(filename, mode='r') as f:
         contents = await f.read()
         tado_response = json.loads(contents)
