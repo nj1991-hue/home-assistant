@@ -301,9 +301,9 @@ def set_kokken_meta_data():
             
             now_playing = ' - '.join([t.strip() for t in dab_media_title.split("-")[1:]])
             
-            if "/" in now_playing:
-                media_subtitle = now_playing.split("/")[0].strip()
-                media_title=now_playing.split("/")[1].strip()
+            if " / " in now_playing:
+                media_subtitle = now_playing.split(" / ")[0].strip()
+                media_title=now_playing.split(" / ")[1].strip()
             else:
                 if "Nu:" in now_playing and "-" in now_playing:
                     media_subtitle = now_playing.split("-")[1].strip()
@@ -326,8 +326,8 @@ def set_kokken_meta_data():
             else:
                 media_header = "Internet radio"
                 
-            if "-" in media_subtitle and media_player.argon_radio_2i_305890754e1c == "playing":
-                media_title = media_subtitle.split("-")[0].strip()
+            if " - " in media_subtitle and media_player.argon_radio_2i_305890754e1c == "playing":
+                media_title = media_subtitle.split(" - ")[0].strip()
                 media_subtitle = media_subtitle.replace(f"{media_title} - ","")
         elif dab_channel == "DAB/preset/3":
             playlist = "p3"
@@ -1230,11 +1230,18 @@ def handle_radio_playback(trigger_entity_id):
         
         if input_text.reset_radio == "True":
             log.info(f"Resetting radio to {default_radio_station}. It is probably the first time it is turned on today")
+            
             if default_radio_station == "NPO Radio 2":
                 play_dab_preset("Internet radio/preset/2")
             elif default_radio_station == "Random album":
-                music_assistant.play_media(entity_id= "media_player.argon_radio_2i_305890754e1c_2", media_id = input_text.random_album_uri)
-                return
+                
+                weekday = now.weekday()
+                
+                if weekday in [5, 6]: # weekend
+                    play_dab_preset("Internet radio/preset/5") # Paradise radio
+                else:
+                    music_assistant.play_media(entity_id= "media_player.argon_radio_2i_305890754e1c_2", media_id = input_text.random_album_uri)
+                    return
             else:
                 log.warning(f"Unsupported value for default_radio_station: {default_radio_station}; Playing p3")
                 play_dab_preset("DAB/preset/3")
