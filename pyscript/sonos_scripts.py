@@ -1235,6 +1235,7 @@ def handle_radio_playback(trigger_entity_id):
                 play_dab_preset("Internet radio/preset/2")
             elif default_radio_station == "Random album":
                 
+                now = datetime.datetime.now()
                 weekday = now.weekday()
                 
                 if weekday in [5, 6]: # weekend
