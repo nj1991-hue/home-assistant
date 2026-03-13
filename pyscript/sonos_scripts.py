@@ -1241,15 +1241,19 @@ def handle_radio_playback(trigger_entity_id):
                 if weekday in [5, 6]: # weekend
                     play_dab_preset("Internet radio/preset/5") # Paradise radio
                 else:
-                    music_assistant.play_media(entity_id= "media_player.argon_radio_2i_305890754e1c_2", media_id = input_text.random_album_uri)
-                    return
+                    if input_text.apple_music_provider_status == "OK":
+                        music_assistant.play_media(entity_id= "media_player.argon_radio_2i_305890754e1c_2", media_id = input_text.random_album_uri)
+                        return
+                    else:
+                        play_dab_preset("Internet radio/preset/5") # Paradise radio
+                        
             else:
                 log.warning(f"Unsupported value for default_radio_station: {default_radio_station}; Playing p3")
                 play_dab_preset("DAB/preset/3")
 
             input_text.reset_radio = "False"
         else:
-            if input_text.last_dab_radio_source == "Music Assistant":
+            if input_text.last_dab_radio_source == "Music Assistant" and input_text.apple_music_provider_status == "OK":
                 log.info("Resuming Music Assistant playback")
                 media_player.media_play(entity_id="media_player.argon_radio_2i_305890754e1c_2")
                 return
