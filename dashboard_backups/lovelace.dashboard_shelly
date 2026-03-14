@@ -231,12 +231,12 @@
                   "template": "square_button",
                   "entity": "media_player.kokken",
                   "aspect_ratio": "2.05/1",
-                  "entity_picture": "[[[\n  return states['input_text.sonos_art_url_kokken'].state\n]]]\n",
+                  "entity_picture": "[[[\n  const room = entity.entity_id.split('.')[1]   \n  return states['pyscript.media_metadata'].attributes[`${room}_art_url`]    \n]]]\n",
                   "show_entity_picture": true,
                   "show_name": true,
                   "layout": "icon_name_state2nd",
-                  "name": "[[[\n  return states['input_text.kokken_media_header'].state \n]]]\n",
-                  "state_display": "[[[\n  return states['input_text.kokken_media_title'].state + '<br>' + states['input_text.kokken_media_subtitle'].state\n]]]\n",
+                  "name": "[[[\n  const room = entity.entity_id.split('.')[1]    \n  return states['pyscript.media_metadata'].attributes[`${room}_media_header`]    \n]]]\n",
+                  "state_display": "[[[\n  const room = entity.entity_id.split('.')[1]\n  return states['pyscript.media_metadata'].attributes[`${room}_media_title`] + '<br>' + states['pyscript.media_metadata'].attributes[`${room}_media_subtitle`]\n]]]\n",
                   "show_state": true,
                   "grid_options": {
                     "columns": 8

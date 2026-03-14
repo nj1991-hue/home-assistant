@@ -8,6 +8,8 @@ import random
 import datetime
 import json
 
+state.persist('pyscript.media_metadata')
+
 sonos_media = None
 #default_radio_station = "NPO Radio 2"
 default_radio_station = "Random album"
@@ -268,26 +270,57 @@ def media_string_is_valid(artist_or_song):
         return False
     return True
 
-@state_trigger("media_player.kokken")
+def set_media_metadata_attributes(entity_id, **kwargs):
+    attrs = state.getattr("pyscript.media_metadata") or {}
+
+    room = entity_id.split('.')[-1]
+
+    for key,value in kwargs.items():
+        attrs[f"{room}_{key}"]=value
+
+    state.set("pyscript.media_metadata", "ok", attrs)
+
+
 @state_trigger("media_player.kokken.*")
-@state_trigger("media_player.argon_radio_2i_305890754e1c")
+@state_trigger("media_player.stue.*")
+@state_trigger("media_player.spisestue.*")
+@state_trigger("media_player.entre.*")
+def set_kokken_meta_data(var_name=None):
+    set_sonos_meta_data(var_name)
+
+
 @state_trigger("media_player.argon_radio_2i_305890754e1c.*")
-@state_trigger("media_player.argon_radio_2i_305890754e1c_2")
 @state_trigger("media_player.argon_radio_2i_305890754e1c_2.*")
-def set_kokken_meta_data():
-    kokken_media_content_id = getattr(media_player.kokken,"media_content_id", None)
-    kokken_media_artist = getattr(media_player.kokken,"media_artist", None)
-    kokken_media_title = getattr(media_player.kokken,"media_title", None)
-    kokken_source = getattr(media_player.kokken,"source", None)
+def set_sonos_metadata_when_radio_changes_state_or_attribute():
+    
+    media_players = [m.entity_id for m in get_media_players()]
+    
+    for entity_id in [
+        "media_player.kokken",
+        "media_player.stue",
+        "media_player.spisestue",
+        "media_player.entre",
+    ]:
+        set_sonos_meta_data(entity_id)
 
-    kokken_media_channel = getattr(media_player.kokken,"media_channel", None)
-    kokken_media_playlist = getattr(media_player.kokken,"media_playlist", None)
 
+def set_sonos_meta_data(entity_id):
+    
+    media_players = [m.entity_id for m in get_media_players()]
+
+    attrs = state.getattr(entity_id)
+    sonos_media_content_id = attrs.get("media_content_id")
+    sonos_media_artist = attrs.get("media_artist")
+    sonos_media_title = attrs.get("media_title")
+    sonos_source = attrs.get("source")
+    sonos_media_channel = attrs.get("media_channel")
+    sonos_media_playlist = attrs.get("media_playlist")
+    
     media_header = None
     media_title = None
     media_subtitle = None
     
-    if kokken_media_content_id == "x-rincon-stream:RINCON_804AF2CAFA8001400":
+    if sonos_media_content_id == "x-rincon-stream:RINCON_804AF2CAFA8001400":
         dab_channel = getattr(media_player.argon_radio_2i_305890754e1c, "media_content_id", None)
         dab_source = getattr(media_player.argon_radio_2i_305890754e1c, "source", None)
         dab_media_title = getattr(media_player.argon_radio_2i_305890754e1c, "media_title", None)
@@ -350,46 +383,54 @@ def set_kokken_meta_data():
             media_subtitle = getattr(media_player.argon_radio_2i_305890754e1c_2, "media_title", "-")
 
     if not media_header:
-        media_header = kokken_media_channel or kokken_media_playlist or kokken_source or "???"
+        media_header = sonos_media_channel or sonos_media_playlist or sonos_source or "???"
         
     if not media_title:
-        media_title = kokken_media_artist or "-"
+        media_title = sonos_media_artist or "-"
         
     if not media_subtitle:
-        media_subtitle = kokken_media_title or "-"
+        media_subtitle = sonos_media_title or "-"
 
     if input_text.resume_npo_radio_2_after_commercials == "True" and media_header == get_media_name(input_text.npo_radio_2_filler_playlist_id):
         media_header = "NPO Radio 2 (Reklame)"
         
-    input_text.kokken_media_title = media_title
-    input_text.kokken_media_subtitle = media_subtitle
-    input_text.kokken_media_header = media_header
+    set_media_metadata_attributes(
+        entity_id=entity_id,
+        media_header=media_header,
+        media_title=media_title,
+        media_subtitle=media_subtitle
+    )
     
 
-@state_trigger("input_text.kokken_media_title")
+@state_trigger("pyscript.media_metadata.kokken_media_title")
 def add_song_to_kokken_history():
     
     task.unique("add_song_to_kokken_history")
     asyncio.sleep(5) # Only add song when it is playing for 5 seconds or more
 
-    song_title = input_text.kokken_media_title
-    artist_name = input_text.kokken_media_subtitle
+    song_title = pyscript.media_metadata.kokken_media_title
+    artist_name = pyscript.media_metadata.kokken_media_subtitle
 
     if media_string_is_valid(artist_name) and media_string_is_valid(song_title):
         input_text.kokken_song_history = f"{song_title} | {artist_name}"
 
 @service
-@state_trigger("input_text.kokken_media_subtitle")
-@state_trigger("input_text.kokken_media_header")
+@state_trigger("pyscript.media_metadata.kokken_media_subtitle")
+@state_trigger("pyscript.media_metadata.kokken_media_header")
 def set_kokken_art():
-    kokken_media_content_id = getattr(media_player.kokken,"media_content_id", "")
-    kokken_media_artist = getattr(media_player.kokken,"media_artist", None)
-    kokken_media_title = getattr(media_player.kokken,"media_title", None)
-    kokken_entity_picture = getattr(media_player.kokken,"entity_picture", None)
-    
+    set_sonos_art("media_player.kokken")
+
+def set_sonos_art(entity_id):
+
+    attrs = state.getattr(entity_id)
+    sonos_media_content_id = attrs.get("media_content_id")
+    sonos_media_artist = attrs.get("media_artist")
+    sonos_media_title = attrs.get("media_title")
+    sonos_entity_picture = attrs.get("entity_picture")
+
     art_url = None
 
-    if kokken_media_content_id == "x-rincon-stream:RINCON_804AF2CAFA8001400":
+    if sonos_media_content_id == "x-rincon-stream:RINCON_804AF2CAFA8001400":
         dab_channel = getattr(media_player.argon_radio_2i_305890754e1c, "media_content_id", None)
         dab_source = getattr(media_player.argon_radio_2i_305890754e1c, "source", None)
         dab_media_title = getattr(media_player.argon_radio_2i_305890754e1c, "media_title", None)
@@ -414,32 +455,32 @@ def set_kokken_art():
                 art_url = "https://i.pinimg.com/736x/94/ca/e0/94cae02ce1205a5ebefba850c0ccbf47.jpg"
             else:
                 art_url = "https://img.freepik.com/premium-vector/retro-radio-receiver-square-vector-icon_92926-93.jpg"
-    elif kokken_entity_picture and not "bauerdk" in kokken_media_content_id:
-        art_url = kokken_entity_picture
-    elif kokken_media_artist and kokken_media_title:
-        if "bauerdk" in kokken_media_content_id:
+    elif sonos_entity_picture and not "bauerdk" in sonos_media_content_id:
+        art_url = sonos_entity_picture
+    elif sonos_media_artist and sonos_media_title:
+        if "bauerdk" in sonos_media_content_id:
             # Radio 100 and Radio Vinyl switch media_artist and media_title up
-            song_title = kokken_media_artist
-            artist = kokken_media_title
+            song_title = sonos_media_artist
+            artist = sonos_media_title
         else:
-            artist = kokken_media_artist
-            song_title = kokken_media_title
+            artist = sonos_media_artist
+            song_title = sonos_media_title
 
         # Get album art from iTunes
         art_url = get_album_art(artist, song_title)
 
     # Radio 100
-    if not art_url and "bauerdk" in kokken_media_content_id:
+    if not art_url and "bauerdk" in sonos_media_content_id:
         art_url = "https://play-lh.googleusercontent.com/zx_nqIaKsrcwKVBkqjrAapFyKk1mdA-ZodUyXig-Tt0RDLnuyeQgUPl1sK3SDbnX3A"
             
     if art_url:
-        # Store file locally so we still show a file when HA no longer caches        
         filename = "sonos_art.png"
         await download_file(art_url,f"/config/www/{filename}")
         
-        # Add a "version" parameter to force a refresh
-        input_text.sonos_art_url_kokken=f"/local/{filename}?v={time.time()}"
-    
+        set_media_metadata_attributes(
+            entity_id=entity_id,
+            art_url = f"/local/{filename}?v={time.time()}" # Add a "version" parameter to force a refresh
+        )
 
 def get_lucky_station():
        
@@ -1150,14 +1191,19 @@ def dont_stop_the_music(player_name):
         dont_stop_the_music_enabled = True
     )
     
-@state_trigger("sensor.shellywalldisplay_0008225bc076_illuminance_level")
-def set_apple_music_provider_status(value=None):
+@state_trigger("media_player.argon_radio_2i_305890754e1c_2")
+def update_apple_music_provider_status_when_radio_changes_state(value = None, old_value=None):
+    if old_value == "unavailable" or value == "unavailable":
+        set_apple_music_provider_status()
 
+def update_apple_music_provider_status_when_shelly_changes_state(value=None):
     if not value or "dark" in value.lower():
         return
+    set_apple_music_provider_status()
     
+    
+def set_apple_music_provider_status():
     provider_data = get_music_assistant_provider_data("apple_music")
-    
     last_error = provider_data["last_error"]
     
     if last_error:
