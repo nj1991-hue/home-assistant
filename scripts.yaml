@@ -836,105 +836,6 @@ toggle_tado_on_first_floor:
       data: {}
   alias: toggle_tado_on_first_floor
   description: ''
-play_p3_on_sonos_in_kokken:
-  sequence:
-  - action: script.play_p3
-    metadata: {}
-    data: {}
-  - action: script.force_play_media_in_kokken
-    metadata: {}
-    data:
-      media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
-      media_content_type: music
-  alias: play_p3_on_sonos_in_kokken
-  description: ''
-play_p4_on_sonos_in_kokken:
-  sequence:
-  - action: script.play_p4
-    metadata: {}
-    data: {}
-  - action: script.force_play_media_in_kokken
-    metadata: {}
-    data:
-      media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
-      media_content_type: music
-  alias: play_p4_on_sonos_in_kokken
-  description: ''
-play_p6_on_sonos_in_kokken:
-  sequence:
-  - action: script.play_p6
-    metadata: {}
-    data: {}
-  - action: script.force_play_media_in_kokken
-    metadata: {}
-    data:
-      media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
-      media_content_type: music
-  alias: play_p6_on_sonos_in_kokken
-  description: ''
-force_play_media_in_kokken:
-  fields:
-    media_content_id:
-      description: The media content ID (e.g., stream URL)
-      example: aac://https://live-bauerdk.sharp-stream.com/vinyl-premium_96.aac
-      required: true
-      selector:
-        text:
-    media_content_type:
-      description: The media content type (e.g., music, video)
-      example: music
-      required: true
-      selector:
-        text:
-  sequence:
-  - variables:
-      initial_source: '{{ state_attr(''media_player.kokken'', ''source'') }}'
-  - action: media_player.play_media
-    data:
-      media:
-        media_content_id: '{{ media_content_id }}'
-        media_content_type: '{{ media_content_type }}'
-        metadata: {}
-    target:
-      entity_id: media_player.kokken
-  - if:
-    - condition: template
-      value_template: '{{ initial_source == ''AirPlay'' }}'
-    then:
-    - delay:
-        seconds: 1
-    - if:
-      - condition: not
-        conditions:
-        - condition: state
-          entity_id: media_player.kokken
-          state: playing
-      then:
-      - action: media_player.play_media
-        data:
-          media:
-            media_content_id: '{{ media_content_id }}'
-            media_content_type: '{{ media_content_type }}'
-            metadata: {}
-        target:
-          entity_id: media_player.kokken
-  - action: input_text.set_value
-    metadata: {}
-    data:
-      value: 'False'
-    target:
-      entity_id: input_text.kokken_feels_lucky
-  - action: media_player.volume_mute
-    metadata: {}
-    data:
-      is_volume_muted: false
-    target:
-      entity_id: media_player.kokken
-  alias: force_play_media_in_kokken
-  description: 'Plays media in the kitchen. If the source was AirPlay before starting,
-    waits 1 seconds and retries if not playing.
-
-    '
 toggle_shuffle_kokken:
   alias: toggle_shuffle_kokken
   description: Toggle shuffle on media_player.kokken
@@ -946,46 +847,6 @@ toggle_shuffle_kokken:
       entity_id: media_player.kokken
       shuffle: '{{ not current_shuffle }}'
     action: media_player.shuffle_set
-toggle_kokken_feels_lucky:
-  sequence:
-  - if:
-    - condition: state
-      entity_id: input_text.kokken_feels_lucky
-      state: 'True'
-    then:
-    - action: input_text.set_value
-      metadata: {}
-      data:
-        value: 'False'
-      target:
-        entity_id: input_text.kokken_feels_lucky
-    else:
-    - action: input_text.set_value
-      metadata: {}
-      data:
-        value: 'True'
-      target:
-        entity_id: input_text.kokken_feels_lucky
-    - if:
-      - condition: state
-        entity_id: timer.kokken_is_lucky_change_timer
-        state: active
-      then:
-      - action: timer.cancel
-        metadata: {}
-        data: {}
-        target:
-          entity_id: timer.kokken_is_lucky_change_timer
-      enabled: false
-    - action: timer.start
-      metadata: {}
-      data: {}
-      target:
-        entity_id:
-        - timer.kokken_is_lucky_change_timer
-        - timer.kokken_is_lucky_force_change_timer
-  alias: toggle_kokken_feels_lucky
-  description: ''
 play_npo_radio_2:
   sequence:
   - action: timer.start
@@ -1315,18 +1176,6 @@ reset_stue_volume:
       volume_level: 0.01
   alias: reset_stue_volume
   description: ''
-play_p8_on_sonos_in_kokken:
-  sequence:
-  - action: script.play_p8
-    metadata: {}
-    data: {}
-  - action: script.force_play_media_in_kokken
-    metadata: {}
-    data:
-      media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
-      media_content_type: music
-  alias: play_p8_on_sonos_in_kokken
-  description: ''
 play_preset_on_dab_radio:
   alias: play_preset_on_dab_radio
   description: ''
@@ -1401,11 +1250,10 @@ force_play_media:
             media_content_id: '{{ media_content_id }}'
             media_content_type: '{{ media_content_type }}'
             metadata: {}
-  - action: input_text.set_value
-    target:
-      entity_id: input_text.kokken_feels_lucky
+  - action: pyscript.disable_sonos_feels_lucky
+    metadata: {}
     data:
-      value: 'False'
+      entity_id: '{{ target_media_player }}'
   - action: media_player.volume_mute
     target:
       entity_id: '{{ target_media_player }}'

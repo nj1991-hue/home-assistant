@@ -784,7 +784,7 @@
           "type": "sections",
           "max_columns": 4,
           "cards": [],
-          "icon": "mdi:music",
+          "icon": "mdi:music-off",
           "visible": []
         },
         {

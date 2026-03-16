@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import re
 import time
 import random
-import datetime
+import datetime, time
 import json
 
 state.persist('pyscript.media_metadata')
@@ -275,131 +275,150 @@ def set_media_metadata_attributes(entity_id, **kwargs):
 
     room = entity_id.split('.')[-1]
 
-    for key,value in kwargs.items():
+    for key, value in kwargs.items():
         attrs[f"{room}_{key}"]=value
 
     state.set("pyscript.media_metadata", "ok", attrs)
+    
+def get_media_metadata_attribute(entity_id, attribute):
+    
+    attrs = state.getattr("pyscript.media_metadata") or {}
+    room = entity_id.split('.')[-1]
+    return attrs.get(f"{room}_{attribute}")
+    
 
 
 @state_trigger("media_player.kokken.*")
 @state_trigger("media_player.stue.*")
 @state_trigger("media_player.spisestue.*")
 @state_trigger("media_player.entre.*")
-def set_kokken_meta_data(var_name=None):
-    set_sonos_meta_data(var_name)
+def set_meta_data(var_name=None):
+    set_sonos_meta_data([var_name])
 
 
 @state_trigger("media_player.argon_radio_2i_305890754e1c.*")
 @state_trigger("media_player.argon_radio_2i_305890754e1c_2.*")
-def set_sonos_metadata_when_radio_changes_state_or_attribute():
-    
-    media_players = [m.entity_id for m in get_media_players()]
-    
-    for entity_id in [
+def set_sonos_metadata_when_radio_changes_state_or_attribute(var_name = None):
+
+    dab_radio_attrs = state.getattr(var_name)
+    dab_media_title = dab_radio_attrs.get("media_title")
+
+    set_sonos_meta_data([
         "media_player.kokken",
         "media_player.stue",
         "media_player.spisestue",
         "media_player.entre",
-    ]:
-        set_sonos_meta_data(entity_id)
+    ])
 
 
-def set_sonos_meta_data(entity_id):
+def set_sonos_meta_data(entity_ids):
     
-    media_players = [m.entity_id for m in get_media_players()]
+    dab_radio_attrs = None
+    dr_media_headers = {}
+    
+    for entity_id in entity_ids:
+    
+        media_players = [m.entity_id for m in get_media_players()]
+    
+        attrs = state.getattr(entity_id)
+        sonos_media_content_id = attrs.get("media_content_id")
+        sonos_media_artist = attrs.get("media_artist")
+        sonos_media_title = attrs.get("media_title")
+        sonos_source = attrs.get("source")
+        sonos_media_channel = attrs.get("media_channel")
+        sonos_media_playlist = attrs.get("media_playlist")
+        
+        media_header = None
+        media_title = None
+        media_subtitle = None
+        
+        if sonos_media_content_id == "x-rincon-stream:RINCON_804AF2CAFA8001400":
+            dab_radio_attrs = dab_radio_attrs or state.getattr("media_player.argon_radio_2i_305890754e1c")
 
-    attrs = state.getattr(entity_id)
-    sonos_media_content_id = attrs.get("media_content_id")
-    sonos_media_artist = attrs.get("media_artist")
-    sonos_media_title = attrs.get("media_title")
-    sonos_source = attrs.get("source")
-    sonos_media_channel = attrs.get("media_channel")
-    sonos_media_playlist = attrs.get("media_playlist")
-    
-    media_header = None
-    media_title = None
-    media_subtitle = None
-    
-    if sonos_media_content_id == "x-rincon-stream:RINCON_804AF2CAFA8001400":
-        dab_channel = getattr(media_player.argon_radio_2i_305890754e1c, "media_content_id", None)
-        dab_source = getattr(media_player.argon_radio_2i_305890754e1c, "source", None)
-        dab_media_title = getattr(media_player.argon_radio_2i_305890754e1c, "media_title", None)
-        
-        if media_player.argon_radio_2i_305890754e1c != "playing":
-            media_title = str(media_player.argon_radio_2i_305890754e1c)
-            media_subtitle = '-'
-        
-        elif dab_media_title and "-" in dab_media_title:
-            now_playing = dab_media_title.split("-")[1].strip()
+            dab_channel = dab_radio_attrs.get("media_content_id")
+            dab_source = dab_radio_attrs.get("source")
+            dab_media_title = dab_radio_attrs.get("media_title")
+
+            if media_player.argon_radio_2i_305890754e1c != "playing":
+                media_title = str(media_player.argon_radio_2i_305890754e1c)
+                media_subtitle = '-'
             
-            now_playing = ' - '.join([t.strip() for t in dab_media_title.split("-")[1:]])
-            
-            if " / " in now_playing:
-                media_subtitle = now_playing.split(" / ")[0].strip()
-                media_title=now_playing.split(" / ")[1].strip()
-            else:
-                if "Nu:" in now_playing and "-" in now_playing:
-                    media_subtitle = now_playing.split("-")[1].strip()
-                else:
-                    media_subtitle = now_playing
-                    
-        else:
-            media_subtitle = dab_media_title or "-"
-            
-        playlist = None
-        
-        if dab_source == "AUX in":
-            media_header = "Pladespiller"
-        elif dab_source == "Internet radio":
-            if "NPO Radio 2" in dab_media_title:
-                media_header = "NPO Radio 2"
-                media_subtitle = media_subtitle.replace("NPO Radio 2 - ","")
-            elif '-' in dab_media_title:
-                media_header = dab_media_title.split('-')[0].strip()
-            else:
-                media_header = "Internet radio"
+            elif dab_media_title and "-" in dab_media_title:
+                now_playing = dab_media_title.split("-")[1].strip()
                 
-            if " - " in media_subtitle and media_player.argon_radio_2i_305890754e1c == "playing":
-                media_title = media_subtitle.split(" - ")[0].strip()
-                media_subtitle = media_subtitle.replace(f"{media_title} - ","")
-        elif dab_channel == "DAB/preset/3":
-            playlist = "p3"
-            media_header = "DR P3"
-        elif dab_channel == "DAB/preset/4":
-            playlist = "p4aarhus"
-            media_header = "DR P4"
-        elif dab_channel == "DAB/preset/5":
-            playlist = "p6beat"
-            media_header = "DR P6"
-        else:
-            media_header = "DAB Radio"
+                now_playing = ' - '.join([t.strip() for t in dab_media_title.split("-")[1:]])
+                
+                if " / " in now_playing:
+                    media_subtitle = now_playing.split(" / ")[0].strip()
+                    media_title=now_playing.split(" / ")[1].strip()
+                else:
+                    if "Nu:" in now_playing and "-" in now_playing:
+                        media_subtitle = now_playing.split("-")[1].strip()
+                    else:
+                        media_subtitle = now_playing
+                        
+            else:
+                media_subtitle = dab_media_title or "-"
+                
+            playlist = None
             
-        if playlist and not media_title:
-            media_title = await get_dr_media_header(f"https://www.dr.dk/lyd/playlister/{playlist}")
+            if dab_source == "AUX in":
+                media_header = "Pladespiller"
+            elif dab_source == "Internet radio":
+                if "NPO Radio 2" in dab_media_title:
+                    media_header = "NPO Radio 2"
+                    media_subtitle = media_subtitle.replace("NPO Radio 2 - ","")
+                elif '-' in dab_media_title:
+                    media_header = dab_media_title.split('-')[0].strip()
+                else:
+                    media_header = "Internet radio"
+                    
+                if " - " in media_subtitle and media_player.argon_radio_2i_305890754e1c == "playing":
+                    media_title = media_subtitle.split(" - ")[0].strip()
+                    media_subtitle = media_subtitle.replace(f"{media_title} - ","")
+            elif dab_channel == "DAB/preset/3":
+                playlist = "p3"
+                media_header = "DR P3"
+            elif dab_channel == "DAB/preset/4":
+                playlist = "p4aarhus"
+                media_header = "DR P4"
+            elif dab_channel == "DAB/preset/5":
+                playlist = "p6beat"
+                media_header = "DR P6"
+            else:
+                media_header = "DAB Radio"
+                
+            if playlist and not media_title:
+                dr_media_header_url = f"https://www.dr.dk/lyd/playlister/{playlist}"
+                if dr_media_header_url in dr_media_headers:
+                    media_title = dr_media_headers[dr_media_header_url]
+                else:
+                    media_title = await get_dr_media_header(dr_media_header_url)
+                    dr_media_headers[dr_media_header_url] = media_title
+                
+            if dab_media_title == "Music Assistant":
+                media_header = getattr(media_player.argon_radio_2i_305890754e1c_2, "media_album_name", "Apple music playlist")
+                media_title = getattr(media_player.argon_radio_2i_305890754e1c_2, "media_artist", "-")
+                media_subtitle = getattr(media_player.argon_radio_2i_305890754e1c_2, "media_title", "-")
+    
+        if not media_header:
+            media_header = sonos_media_channel or sonos_media_playlist or sonos_source or "???"
             
-        if dab_media_title == "Music Assistant":
-            media_header = getattr(media_player.argon_radio_2i_305890754e1c_2, "media_album_name", "Apple music playlist")
-            media_title = getattr(media_player.argon_radio_2i_305890754e1c_2, "media_artist", "-")
-            media_subtitle = getattr(media_player.argon_radio_2i_305890754e1c_2, "media_title", "-")
-
-    if not media_header:
-        media_header = sonos_media_channel or sonos_media_playlist or sonos_source or "???"
-        
-    if not media_title:
-        media_title = sonos_media_artist or "-"
-        
-    if not media_subtitle:
-        media_subtitle = sonos_media_title or "-"
-
-    if input_text.resume_npo_radio_2_after_commercials == "True" and media_header == get_media_name(input_text.npo_radio_2_filler_playlist_id):
-        media_header = "NPO Radio 2 (Reklame)"
-        
-    set_media_metadata_attributes(
-        entity_id=entity_id,
-        media_header=media_header,
-        media_title=media_title,
-        media_subtitle=media_subtitle
-    )
+        if not media_title:
+            media_title = sonos_media_artist or "-"
+            
+        if not media_subtitle:
+            media_subtitle = sonos_media_title or "-"
+    
+        if input_text.resume_npo_radio_2_after_commercials == "True" and media_header == get_media_name(input_text.npo_radio_2_filler_playlist_id):
+            media_header = "NPO Radio 2 (Reklame)"
+            
+        set_media_metadata_attributes(
+            entity_id=entity_id,
+            media_header=media_header,
+            media_title=media_title,
+            media_subtitle=media_subtitle
+        )
     
 
 @state_trigger("pyscript.media_metadata.kokken_media_title")
@@ -548,25 +567,34 @@ def play_lucky_station(entity_id):
     
     media_player.shuffle_set(entity_id = entity_id, shuffle=True)
     asyncio.sleep(15) # Give automations a chance to reset kokken_feels_lucky
-    input_text.kokken_feels_lucky = "True"
-    service.call('timer', 'start', entity_id='timer.kokken_is_lucky_change_timer')
-    service.call('timer', 'start', entity_id='timer.kokken_is_lucky_force_change_timer')
+    set_media_metadata_attributes(entity_id, feels_lucky=True)
+    service.call('timer', 'start', entity_id='timer.lucky_station_change_timer')
+    service.call('timer', 'start', entity_id='timer.lucky_station_force_change_timer')
 
 
-@state_trigger("timer.kokken_is_lucky_force_change_timer")
+@service
+def test_lucky_attribute():
+    set_media_metadata_attributes("media_player.kokken", feels_lucky=True)
+    attr = get_media_metadata_attribute("media_player.kokken", "feels_lucky")
+    
+    log.info(attr)
+    log.info(type(attr))
+
+@state_trigger("timer.lucky_station_force_change_timer")
 @state_trigger("media_player.kokken.media_title")
 def change_lucky_station_in_kokken():
     task.unique("play_lucky_station", kill_me=True)
-    timer_state = state.get('timer.kokken_is_lucky_change_timer')
-    force_timer_state = state.get('timer.kokken_is_lucky_force_change_timer')
+    timer_state = state.get('timer.lucky_station_change_timer')
+    force_timer_state = state.get('timer.lucky_station_force_change_timer')
     morning_routine_timer_state = state.get('timer.sonos_morning_routine_running')
     
     media_state = state.get('media_player.kokken')
+    kokken_feels_lucky = get_media_metadata_attribute("media_player.kokken", "feels_lucky")
     log.debug(f"Running change_lucky_station_in_kokken - timer_state = {timer_state}; "
-              f"media_state = {media_state}; kokken_feels_lucky = {input_text.kokken_feels_lucky}; "
+              f"media_state = {media_state}; kokken_feels_lucky = {kokken_feels_lucky}; "
               f"force_timer_state = {force_timer_state}")
     if (
-        input_text.kokken_feels_lucky == "True" 
+        kokken_feels_lucky == "True" 
         and timer_state == "idle" 
         and media_state == "playing" 
         and morning_routine_timer_state == "idle"
@@ -574,7 +602,45 @@ def change_lucky_station_in_kokken():
         log.info("playing lucky station in kokken")
         play_lucky_station("media_player.kokken")
 
+
+@state_trigger("pyscript.media_metadata.kokken_media_header")
+def reset_sonos_feels_lucky_when_kokken_media_header_changes():
+    reset_sonos_feels_lucky("kokken")
     
+@state_trigger("pyscript.media_metadata.stue_media_header")
+def reset_sonos_feels_lucky_when_stue_media_header_changes():
+    reset_sonos_feels_lucky("stue")
+
+@state_trigger("pyscript.media_metadata.spisestue_media_header")
+def reset_sonos_feels_lucky_when_spisestue_media_header_changes():
+    reset_sonos_feels_lucky("spisestue")
+
+@state_trigger("pyscript.media_metadata.entre_media_header")
+def reset_sonos_feels_lucky_when_entre_media_header_changes():
+    reset_sonos_feels_lucky("entre")
+
+def reset_sonos_feels_lucky(room):
+    now = datetime.datetime.now().time()
+
+    if now > datetime.time(4, 30):
+        log.info(f"Resetting lucky state for {room}")
+        set_media_metadata_attributes(f"media_player.{room}", feels_lucky=False)
+
+@service
+def toggle_sonos_feels_lucky(entity_id):
+    feels_lucky = get_media_metadata_attribute(entity_id, "feels_lucky")
+    
+    if feels_lucky:
+        set_media_metadata_attributes(entity_id, feels_lucky=False)
+    else:
+        set_media_metadata_attributes(entity_id, feels_lucky=True)
+        service.call('timer', 'start', entity_id='timer.lucky_station_change_timer')
+        service.call('timer', 'start', entity_id='timer.lucky_station_force_change_timer')
+        
+@service
+def disable_sonos_feels_lucky(entity_id):
+    set_media_metadata_attributes(entity_id, feels_lucky=False)
+
 @service
 async def get_npo_radio_2_metadata():
 

@@ -327,9 +327,6 @@
   triggers:
   - trigger: time
     at: 04:00:00
-  - trigger: homeassistant
-    event: start
-    enabled: false
   conditions: []
   actions:
   - action: timer.start
@@ -365,19 +362,6 @@
     target:
       entity_id: scene.radio_is_playing_in_spisestue
     enabled: true
-  - action: scene.turn_on
-    metadata: {}
-    data: {}
-    target:
-      entity_id: scene.kokken_paused_and_media_is_70s_hits
-    enabled: false
-  - action: input_text.set_value
-    metadata: {}
-    data:
-      value: 'True'
-    target:
-      entity_id: input_text.kokken_feels_lucky
-    enabled: false
   - action: input_text.set_value
     metadata: {}
     data:
