@@ -590,11 +590,11 @@ def change_lucky_station_in_kokken():
     
     media_state = state.get('media_player.kokken')
     kokken_feels_lucky = get_media_metadata_attribute("media_player.kokken", "feels_lucky")
-    log.debug(f"Running change_lucky_station_in_kokken - timer_state = {timer_state}; "
+    log.info(f"Running change_lucky_station_in_kokken - timer_state = {timer_state}; "
               f"media_state = {media_state}; kokken_feels_lucky = {kokken_feels_lucky}; "
               f"force_timer_state = {force_timer_state}")
     if (
-        kokken_feels_lucky == "True" 
+        kokken_feels_lucky 
         and timer_state == "idle" 
         and media_state == "playing" 
         and morning_routine_timer_state == "idle"
@@ -1332,13 +1332,13 @@ def handle_radio_playback(trigger_entity_id):
     log.info(f"Handling radio playback for {trigger_entity_id}")
     media_player_obj = get_media_player(trigger_entity_id)
     media_content_id = wait_for(media_player_obj, "media_content_id", "is_not", None)
+
+    if "x-rincon-stream:RINCON_804AF2CAFA8001400" not in media_content_id:
+        log.info(f"{media_player_obj} is not playing line-in. Returning")
+        return
     
     if media_player.argon_radio_2i_305890754e1c == "off":
         service.call('timer', 'start', entity_id='timer.radio_turned_on_by_automation')
-        
-        if "x-rincon-stream:RINCON_804AF2CAFA8001400" not in media_content_id:
-            log.info(f"{media_player_obj} is not playing line-in. Returning")
-            return
         
         if input_text.reset_radio == "True":
             log.info(f"Resetting radio to {default_radio_station}. It is probably the first time it is turned on today")
@@ -1394,10 +1394,14 @@ def handle_radio_playback(trigger_entity_id):
             start_npo_radio_2_filler_playlist(media_player_obj)
         log.info("Handled radio playback successfully")
 
-            
+    elif media_player.argon_radio_2i_305890754e1c == "unavailable":
+        media_player.play_media(
+            media_content_id="FV:2/73", # Radio Vinyl 
+            media_content_type="favorite_item_id",
+            entity_id=trigger_entity_id
+        )
     elif (
-        "x-rincon-stream:RINCON_804AF2CAFA8001400" in media_content_id
-        and input_text.commercials_on_npo_radio_2 == "True" 
+        input_text.commercials_on_npo_radio_2 == "True" 
         and binary_sensor.npo_radio_2_is_playing == "on"
     ):
         log.info("No need to turn on the DAB radio because there are commercials. Starting filler playlist")

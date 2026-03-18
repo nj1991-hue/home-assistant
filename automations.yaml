@@ -1213,6 +1213,11 @@
       metadata: {}
       data:
         trigger_entity_id: '{{ trigger.entity_id }}'
+    enabled: false
+  - action: pyscript.handle_radio_playback
+    metadata: {}
+    data:
+      trigger_entity_id: '{{ trigger.entity_id }}'
   mode: queued
 - id: '1760890086698'
   alias: toggle_duka
