@@ -17,18 +17,6 @@ group_all_and_set_volume:
     data: {}
   alias: group_all_and_set_volume
   description: ''
-toggle_p3_p4:
-  sequence:
-  - action: media_player.play_media
-    metadata: {}
-    data:
-      media_content_type: channel
-      media_content_id: "{% if 'DR P4' in state_attr('media_player.argon_radio_2i_305890754e1c',
-        'media_title') %}\n  DAB/preset/3\n{% else %}\n  DAB/preset/4\n{% endif %}\n"
-    target:
-      entity_id: media_player.argon_radio_2i_305890754e1c
-  alias: toggle_p3_p4
-  description: ''
 add_stue_to_group:
   sequence:
   - if:
@@ -335,15 +323,6 @@ group_all:
     metadata: {}
     data: {}
   alias: group_all
-  description: ''
-remove_spisestue_from_group:
-  sequence:
-  - action: media_player.unjoin
-    metadata: {}
-    data: {}
-    target:
-      entity_id: media_player.spisestue
-  alias: remove_spisestue_from_group
   description: ''
 mute_or_unmute_spisestue:
   sequence:
@@ -696,57 +675,6 @@ play_npo_radio_2:
       entity_id: media_player.argon_radio_2i_305890754e1c
   alias: play_npo_radio_2
   description: ''
-play_npo_radio_2_on_sonos_in_kokken:
-  sequence:
-  - if:
-    - condition: state
-      entity_id: input_text.commercials_on_npo_radio_2
-      state: 'True'
-    then:
-    - action: input_text.set_value
-      metadata: {}
-      data:
-        value: Buffering...
-      target:
-        entity_id: input_text.kokken_media_header
-    - action: media_player.shuffle_set
-      metadata: {}
-      data:
-        shuffle: true
-      target:
-        entity_id: media_player.kokken
-    - action: media_player.play_media
-      data:
-        media:
-          media_content_id: '{{ states(''input_text.npo_radio_2_filler_playlist_id'')
-            }}'
-          media_content_type: favorite_item_id
-          metadata: {}
-      target:
-        entity_id: media_player.kokken
-    - action: input_text.set_value
-      metadata: {}
-      data:
-        value: 'True'
-      target:
-        entity_id: input_text.resume_npo_radio_2_after_commercials
-    - action: media_player.shuffle_set
-      metadata: {}
-      data:
-        shuffle: true
-      target:
-        entity_id: media_player.kokken
-    else:
-    - action: script.play_npo_radio_2
-      metadata: {}
-      data: {}
-    - action: script.force_play_media
-      data:
-        target_media_player: media_player.kokken
-        media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
-        media_content_type: music
-  alias: play_npo_radio_2_on_sonos_in_kokken
-  description: ''
 play_radio_vinyl_and_disable_resume:
   fields:
     entity_id:
@@ -1022,12 +950,6 @@ play_npo_radio_2_on_sonos:
       entity_id: input_text.commercials_on_npo_radio_2
       state: 'True'
     then:
-    - action: input_text.set_value
-      metadata: {}
-      data:
-        value: Buffering...
-      target:
-        entity_id: input_text.kokken_media_header
     - action: media_player.shuffle_set
       metadata: {}
       data:

@@ -1403,8 +1403,18 @@ def handle_radio_playback(trigger_entity_id):
     elif (
         input_text.commercials_on_npo_radio_2 == "True" 
         and binary_sensor.npo_radio_2_is_playing == "on"
+        and input_text.resume_npo_radio_2_after_commercials == "True"
     ):
-        log.info("No need to turn on the DAB radio because there are commercials. Starting filler playlist")
+        # We end up here if:
+        # - The radio is already playing
+        # - It is playing NPO radio 2
+        # - Commercials are playing
+        # 
+        # This can happen if, for example, NPO Radio 2 is playing in the entre, but nowhere else.
+        # Then when pressing play on another speaker, the radio does not need to be turned on.
+        # But rather than play the radio signal, we would like to play the filler playlist.
+        # Because there are commercials on the radio.
+        log.info("Starting filler playlist because NPO radio 2 is already playing and we are in a commercial break")
         start_npo_radio_2_filler_playlist(media_player_obj)
         wait_for(media_player_obj, "media_playlist", "is_not", None)
         wait_for(media_player_obj, "state", "is", "playing")

@@ -5,48 +5,9 @@
   "data": {
     "items": [
       {
-        "id": "media_title_in_spisestue",
-        "name": "media_title_in_spisestue",
-        "mode": "text",
-        "min": 0,
-        "max": 100
-      },
-      {
         "id": "home_state",
         "name": "home_state",
         "icon": "mdi:home",
-        "max": 100,
-        "mode": "text",
-        "min": 0
-      },
-      {
-        "id": "sonos_art_url_kokken",
-        "name": "sonos_art_url_kokken",
-        "icon": "mdi:palette",
-        "max": 100,
-        "mode": "text",
-        "min": 0
-      },
-      {
-        "id": "kokken_media_title",
-        "name": "kokken_media_title",
-        "icon": "mdi:subtitles-outline",
-        "max": 100,
-        "mode": "text",
-        "min": 0
-      },
-      {
-        "id": "kokken_media_subtitle",
-        "name": "kokken_media_subtitle",
-        "icon": "mdi:subtitles-outline",
-        "max": 100,
-        "mode": "text",
-        "min": 0
-      },
-      {
-        "id": "kokken_media_header",
-        "name": "kokken_media_header",
-        "icon": "mdi:subtitles",
         "max": 100,
         "mode": "text",
         "min": 0
@@ -66,14 +27,6 @@
         "min": 0,
         "max": 100,
         "mode": "text"
-      },
-      {
-        "id": "kokken_feels_lucky",
-        "name": "kokken_feels_lucky",
-        "icon": "mdi:clover",
-        "mode": "text",
-        "max": 100,
-        "min": 0
       },
       {
         "id": "commercials_on_npo_radio_2",

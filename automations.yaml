@@ -296,41 +296,6 @@
       - media_player.kokken
       - media_player.spisestue
   mode: single
-- id: '1741464304363'
-  alias: set_media_title_in_spisestue
-  description: ''
-  triggers:
-  - trigger: homeassistant
-    event: start
-  - trigger: state
-    entity_id:
-    - media_player.spisestue
-    attribute: media_title
-  conditions:
-  - condition: template
-    value_template: '{{ state_attr(''media_player.spisestue'', ''media_title'') !=
-      None }}'
-  actions:
-  - if:
-    - condition: state
-      entity_id: media_player.spisestue
-      attribute: media_title
-      state: Line-in
-    then:
-    - action: input_text.set_value
-      metadata: {}
-      data:
-        value: Line-in
-      target:
-        entity_id: input_text.media_title_in_spisestue
-    else:
-    - action: input_text.set_value
-      metadata: {}
-      data:
-        value: Other
-      target:
-        entity_id: input_text.media_title_in_spisestue
-  mode: single
 - id: '1741960678513'
   alias: turn_off_sonos_and_lights_when_alarm_arms
   description: ''
@@ -358,7 +323,7 @@
     data: {}
   mode: single
 - id: '1742300456337'
-  alias: regroup_on_pause
+  alias: regroup_on_state_change
   description: ''
   triggers:
   - trigger: state
@@ -369,33 +334,33 @@
       hours: 0
       minutes: 0
       seconds: 5
-  conditions: []
-  actions:
-  - action: script.group_all
-    metadata: {}
-    data: {}
     enabled: false
+  - trigger: state
+    entity_id:
+    - media_player.kokken
+    - media_player.entre
+    - media_player.spisestue
+    - media_player.stue
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 5
+  conditions:
+  - condition: state
+    entity_id: binary_sensor.sonos_is_playing
+    state:
+    - 'off'
+  actions:
   - action: script.add_kokken_to_group
     metadata: {}
     data: {}
   - action: script.add_stue_to_group
     metadata: {}
     data: {}
-  - if:
-    - condition: not
-      conditions:
-      - condition: state
-        entity_id: binary_sensor.desktop_pc
-        state: 'on'
-    then:
-    - action: script.add_entre_to_group
-      metadata: {}
-      data: {}
-    enabled: false
   - action: script.add_entre_to_group
     metadata: {}
     data: {}
-  mode: single
+  mode: restart
 - id: '1742471573592'
   alias: regroup_entre_on_pause_when_source_is_pc_audio
   description: ''
@@ -440,78 +405,6 @@
         is_volume_muted: true
       target:
         entity_id: media_player.entre
-  mode: single
-- id: '1742824089639'
-  alias: set_variables_on_startup
-  description: ''
-  triggers:
-  - trigger: homeassistant
-    event: start
-  conditions: []
-  actions:
-  - action: input_number.set_value
-    metadata: {}
-    data_template:
-      value: '{{ [[state_attr(''climate.smart_radiator_orangerie'', ''temperature'')|float,
-        15]|max, 25]|min }}'
-    target:
-      entity_id: input_number.orangerie_temperature_helper
-  - action: input_number.set_value
-    metadata: {}
-    data_template:
-      value: '{{ [[state_attr(''climate.smart_radiator_kokken'', ''temperature'')|float,
-        15]|max, 25]|min }}'
-    target:
-      entity_id: input_number.kokken_temperature_helper
-  - action: input_number.set_value
-    metadata: {}
-    data_template:
-      value: '{{ [[state_attr(''climate.smart_radiator_spisestue'', ''temperature'')|float,
-        15]|max, 25]|min }}'
-    target:
-      entity_id: input_number.spisestue_temperature_helper
-  - action: input_number.set_value
-    metadata: {}
-    data_template:
-      value: '{{ [[state_attr(''climate.smart_radiator_stue'', ''temperature'')|float,
-        15]|max, 25]|min }}'
-    target:
-      entity_id: input_number.stue_temperature_helper
-  - action: input_number.set_value
-    metadata: {}
-    data_template:
-      value: '{{ [[state_attr(''climate.smart_radiator_toilet'', ''temperature'')|float,
-        15]|max, 25]|min }}'
-    target:
-      entity_id: input_number.toilet_temperature_helper
-  - action: input_number.set_value
-    metadata: {}
-    data_template:
-      value: '{{ [[state_attr(''climate.smart_radiator_sasha'', ''temperature'')|float,
-        15]|max, 25]|min }}'
-    target:
-      entity_id: input_number.sasha_temperature_helper
-  - action: input_number.set_value
-    metadata: {}
-    data_template:
-      value: '{{ [[state_attr(''climate.smart_radiator_kontor'', ''temperature'')|float,
-        15]|max, 25]|min }}'
-    target:
-      entity_id: input_number.kontor_temperature_helper
-  - action: input_number.set_value
-    metadata: {}
-    data_template:
-      value: '{{ [[state_attr(''climate.smart_radiator_nania'', ''temperature'')|float,
-        15]|max, 25]|min }}'
-    target:
-      entity_id: input_number.nania_temperature_helper
-  - action: input_number.set_value
-    metadata: {}
-    data_template:
-      value: '{{ [[state_attr(''climate.smart_radiator_mattias'', ''temperature'')|float,
-        15]|max, 25]|min }}'
-    target:
-      entity_id: input_number.mattias_temperature_helper
   mode: single
 - id: '1742834228973'
   alias: set_source_to_radio_on_idle_in_spisestue
@@ -991,24 +884,6 @@
     target:
       entity_id: media_player.kokken
   mode: single
-- id: '1751961112615'
-  alias: reset_kokken_feels_lucky
-  description: ''
-  triggers:
-  - trigger: state
-    entity_id:
-    - input_text.kokken_media_header
-  conditions:
-  - condition: time
-    after: 04:30:00
-  actions:
-  - action: input_text.set_value
-    metadata: {}
-    data:
-      value: 'False'
-    target:
-      entity_id: input_text.kokken_feels_lucky
-  mode: single
 - id: '1756061389014'
   alias: play_pc_audio_in_entre_when_pc_turns_on
   description: ''
@@ -1045,43 +920,6 @@
     target:
       entity_id:
       - timer.pc_was_recently_turned_on
-  mode: single
-- id: '1756061533648'
-  alias: play_pc_audio_in_entre_when_entre_pauses
-  description: ''
-  triggers:
-  - trigger: state
-    entity_id:
-    - media_player.entre
-    from: playing
-    to: paused
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 3
-  conditions:
-  - condition: state
-    entity_id: binary_sensor.desktop_pc
-    state: 'on'
-  - condition: time
-    after: 05:00:00
-  - condition: not
-    conditions:
-    - condition: state
-      entity_id: media_player.entre
-      attribute: media_content_id
-      state: x-rincon-stream:RINCON_804AF2CAFA2401400
-  actions:
-  - action: script.remove_entre_from_group
-    metadata: {}
-    data: {}
-  - action: media_player.play_media
-    metadata: {}
-    data:
-      media_content_id: x-rincon-stream:RINCON_804AF2CAFA2401400
-      media_content_type: music
-    target:
-      entity_id: media_player.entre
   mode: single
 - id: '1756129052322'
   alias: pause_pc_audio_in_entre_when_pc_turns_off

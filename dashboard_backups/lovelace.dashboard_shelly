@@ -1002,7 +1002,7 @@
                           "type": "custom:button-card",
                           "template": "square_button",
                           "entity": "media_player.kokken",
-                          "name": "[[[ \n  return states['input_text.kokken_media_header'].state \n]]]\n",
+                          "name": "[[[ \n  return states['pyscript.media_metadata'].attributes[`kokken_media_header`] \n]]]\n",
                           "show_state": true,
                           "state": [
                             {
