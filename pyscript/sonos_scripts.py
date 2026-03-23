@@ -11,8 +11,8 @@ import json
 state.persist('pyscript.media_metadata')
 
 sonos_media = None
-#default_radio_station = "NPO Radio 2"
-default_radio_station = "Random album"
+default_radio_station = "NPO Radio 2"
+#default_radio_station = "Random album"
 
 @service
 @time_trigger("cron(0 3 * * *)")
@@ -448,6 +448,9 @@ def set_sonos_art(entity_id):
     sonos_entity_picture = attrs.get("entity_picture")
 
     art_url = None
+    
+    if not sonos_media_content_id:
+        return
 
     if sonos_media_content_id == "x-rincon-stream:RINCON_804AF2CAFA8001400":
         dab_channel = getattr(media_player.argon_radio_2i_305890754e1c, "media_content_id", None)

@@ -1182,11 +1182,22 @@
   triggers:
   - trigger: time
     at: '10:00:00'
+    enabled: false
+  - trigger: state
+    entity_id:
+    - input_text.home_state
+    to:
+    - Away
+    for:
+      hours: 0
+      minutes: 20
+      seconds: 0
   conditions:
   - condition: state
     entity_id: input_text.home_state
     state:
     - Away
+    enabled: false
   actions:
   - action: vacuum.start
     metadata: {}

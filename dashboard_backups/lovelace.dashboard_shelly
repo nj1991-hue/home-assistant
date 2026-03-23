@@ -2001,6 +2001,59 @@
                           }
                         }
                       ]
+                    },
+                    {
+                      "type": "horizontal-stack",
+                      "cards": [
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_button",
+                          "entity": "media_player.kokken",
+                          "show_name": false,
+                          "show_icon": false,
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "script.play_radio_preset_on_sonos",
+                            "data": {
+                              "entity_id": "media_player.kokken",
+                              "preset_path": "Internet radio/preset/6"
+                            }
+                          },
+                          "entity_picture": "/local/radio_paradise_rock_logo.webp",
+                          "show_entity_picture": true,
+                          "grid_options": {
+                            "columns": 4
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_button",
+                          "entity": "media_player.kokken",
+                          "show_name": false,
+                          "show_icon": false,
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "script.play_radio_preset_on_sonos",
+                            "data": {
+                              "entity_id": "media_player.kokken",
+                              "preset_path": "Internet radio/preset/7"
+                            }
+                          },
+                          "entity_picture": "/local/kya_1260_logo_2.jpeg",
+                          "show_entity_picture": true,
+                          "grid_options": {
+                            "columns": 4
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_button"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_button"
+                        }
+                      ]
                     }
                   ]
                 },
