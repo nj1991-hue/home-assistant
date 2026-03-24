@@ -9,6 +9,7 @@ import datetime, time
 import json
 
 state.persist('pyscript.media_metadata')
+state.persist('pyscript.music_assistant_metadata')
 
 sonos_media = None
 default_radio_station = "NPO Radio 2"
@@ -269,6 +270,21 @@ def media_string_is_valid(artist_or_song):
     if "Omroep" in artist_or_song:
         return False
     return True
+
+def add_item_to_music_assistant_metadata(key, album):
+    set_music_assistant_metadata_attributes(**{
+        f"{key}_uri": album["uri"],
+        f"{key}_thumbnail": album["image"] or "/local/404.png",
+    })
+
+def set_music_assistant_metadata_attributes(**kwargs):
+    attrs = state.getattr("pyscript.music_assistant_metadata") or {}
+
+    for key, value in kwargs.items():
+        attrs[key]=value
+
+    state.set("pyscript.music_assistant_metadata", "ok", attrs)
+
 
 def set_media_metadata_attributes(entity_id, **kwargs):
     attrs = state.getattr("pyscript.media_metadata") or {}
@@ -1087,9 +1103,7 @@ def update_random_album():
         if (album["explicit"] != True) and ("metal" not in genre.lower()):
             log.info(f'Found a non-explicit non-metal album: {album["name"]}; genre = {genre}')
 
-            input_text.random_album_uri = album["uri"]
-            input_text.random_album_thumbnail = album["image"]
-            input_text.random_album_name = album["name"]
+            add_item_to_music_assistant_metadata(f"random_album", album)
             break
         else:
             log.info(f'{album["name"]} is too explicit... Genre = {genre}')
@@ -1105,33 +1119,13 @@ def update_recently_added_albums():
     
     albums = [a for a in album_response if a["image"]]
 
-    input_text.recently_added_album_1_uri = albums[0]["uri"]
-    input_text.recently_added_album_1_thumbnail = albums[0]["image"] or "/local/404.png"
+    for i in range(7):
+        add_item_to_music_assistant_metadata(f"recently_added_album_{i+1}", albums[i])
 
-    input_text.recently_added_album_2_uri = albums[1]["uri"]
-    input_text.recently_added_album_2_thumbnail = albums[1]["image"] or "/local/404.png"
-
-    input_text.recently_added_album_3_uri = albums[2]["uri"]
-    input_text.recently_added_album_3_thumbnail = albums[2]["image"] or "/local/404.png"
-
-    input_text.recently_added_album_4_uri = albums[3]["uri"]
-    input_text.recently_added_album_4_thumbnail = albums[3]["image"] or "/local/404.png"
-
-    input_text.recently_added_album_5_uri = albums[4]["uri"]
-    input_text.recently_added_album_5_thumbnail = albums[4]["image"] or "/local/404.png"
-
-    input_text.recently_added_album_6_uri = albums[5]["uri"]
-    input_text.recently_added_album_6_thumbnail = albums[5]["image"] or "/local/404.png"
-
-    input_text.recently_added_album_7_uri = albums[6]["uri"]
-    input_text.recently_added_album_7_thumbnail = albums[6]["image"] or "/local/404.png"
-
-    
     for album in albums:
         genre = get_genre(album["artists"][0]["name"], album["name"])
         if genre and "metal" not in genre.lower():
-            input_text.spotlight_album_uri = album["uri"]
-            input_text.spotlight_album_thumbnail = album["image"]
+            add_item_to_music_assistant_metadata("spotlight_album", album)
             break
 
 def update_recently_added_playlists():
@@ -1142,17 +1136,8 @@ def update_recently_added_playlists():
         order_by= "timestamp_added_desc",
     )["items"]
 
-    input_text.recently_added_playlist_1_uri = playlists[0]["uri"]
-    input_text.recently_added_playlist_1_thumbnail = playlists[0]["image"] or "/local/404.png"
-
-    input_text.recently_added_playlist_2_uri = playlists[1]["uri"]
-    input_text.recently_added_playlist_2_thumbnail = playlists[1]["image"] or "/local/404.png"
-
-    input_text.recently_added_playlist_3_uri = playlists[2]["uri"]
-    input_text.recently_added_playlist_3_thumbnail = playlists[2]["image"] or "/local/404.png"
-
-    input_text.recently_added_playlist_4_uri = playlists[3]["uri"]
-    input_text.recently_added_playlist_4_thumbnail = playlists[3]["image"] or "/local/404.png"
+    for i in range(4):
+        add_item_to_music_assistant_metadata(f"recently_added_playlist_{i+1}", playlists[i])
 
 
 async def get_music_assistant_access_token():
@@ -1357,7 +1342,7 @@ def handle_radio_playback(trigger_entity_id):
                     play_dab_preset("Internet radio/preset/5") # Paradise radio
                 else:
                     if input_text.apple_music_provider_status == "OK":
-                        music_assistant.play_media(entity_id= "media_player.argon_radio_2i_305890754e1c_2", media_id = input_text.random_album_uri)
+                        music_assistant.play_media(entity_id= "media_player.argon_radio_2i_305890754e1c_2", media_id = pyscript.music_assistant_metadata.random_album_uri)
                         return
                     else:
                         play_dab_preset("Internet radio/preset/5") # Paradise radio

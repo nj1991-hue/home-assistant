@@ -138,30 +138,6 @@
         "min": 0
       },
       {
-        "id": "random_album_uri",
-        "name": "random_album_uri",
-        "icon": "mdi:folder-music",
-        "max": 100,
-        "mode": "text",
-        "min": 0
-      },
-      {
-        "id": "random_album_thumbnail",
-        "name": "random_album_thumbnail",
-        "icon": "mdi:music-box-outline",
-        "max": 100,
-        "mode": "text",
-        "min": 0
-      },
-      {
-        "id": "random_album_name",
-        "name": "random_album_name",
-        "icon": "mdi:music-box",
-        "max": 100,
-        "mode": "text",
-        "min": 0
-      },
-      {
         "id": "apple_music_provider_status",
         "name": "apple_music_provider_status",
         "icon": "mdi:apple",
@@ -173,118 +149,6 @@
         "id": "last_dab_radio_source",
         "name": "last_dab_radio_source",
         "icon": "mdi:radio",
-        "mode": "text",
-        "max": 100,
-        "min": 0
-      },
-      {
-        "id": "recently_added_album_1_uri",
-        "name": "recently_added_album_1_uri",
-        "mode": "text",
-        "max": 100,
-        "min": 0
-      },
-      {
-        "id": "recently_added_album_2_uri",
-        "name": "recently_added_album_2_uri",
-        "mode": "text",
-        "max": 100,
-        "min": 0
-      },
-      {
-        "id": "recently_added_album_3_uri",
-        "name": "recently_added_album_3_uri",
-        "mode": "text",
-        "max": 100,
-        "min": 0
-      },
-      {
-        "id": "recently_added_album_4_uri",
-        "name": "recently_added_album_4_uri",
-        "mode": "text",
-        "max": 100,
-        "min": 0
-      },
-      {
-        "id": "recently_added_album_5_uri",
-        "name": "recently_added_album_5_uri",
-        "mode": "text",
-        "max": 100,
-        "min": 0
-      },
-      {
-        "id": "recently_added_album_1_thumbnail",
-        "name": "recently_added_album_1_thumbnail",
-        "mode": "text",
-        "max": 100,
-        "min": 0
-      },
-      {
-        "id": "recently_added_album_2_thumbnail",
-        "name": "recently_added_album_2_thumbnail",
-        "mode": "text",
-        "max": 100,
-        "min": 0
-      },
-      {
-        "id": "recently_added_album_3_thumbnail",
-        "name": "recently_added_album_3_thumbnail",
-        "mode": "text",
-        "max": 100,
-        "min": 0
-      },
-      {
-        "id": "recently_added_album_4_thumbnail",
-        "name": "recently_added_album_4_thumbnail",
-        "mode": "text",
-        "max": 100,
-        "min": 0
-      },
-      {
-        "id": "recently_added_album_5_thumbnail",
-        "name": "recently_added_album_5_thumbnail",
-        "mode": "text",
-        "max": 100,
-        "min": 0
-      },
-      {
-        "id": "album_of_the_week_uri",
-        "name": "album_of_the_week_uri",
-        "mode": "text",
-        "max": 100,
-        "min": 0
-      },
-      {
-        "id": "album_of_the_week_thumbnail",
-        "name": "album_of_the_week_thumbnail",
-        "mode": "text",
-        "max": 100,
-        "min": 0
-      },
-      {
-        "id": "recently_added_album_6_uri",
-        "name": "recently_added_album_6_uri",
-        "mode": "text",
-        "max": 100,
-        "min": 0
-      },
-      {
-        "id": "recently_added_album_6_thumbnail",
-        "name": "recently_added_album_6_thumbnail",
-        "mode": "text",
-        "max": 100,
-        "min": 0
-      },
-      {
-        "id": "spotlight_album_uri",
-        "name": "spotlight_album_uri",
-        "mode": "text",
-        "max": 100,
-        "min": 0
-      },
-      {
-        "id": "spotlight_album_thumbnail",
-        "name": "spotlight_album_thumbnail",
         "mode": "text",
         "max": 100,
         "min": 0
@@ -330,20 +194,6 @@
         "mode": "text",
         "max": 100,
         "min": 0
-      },
-      {
-        "id": "recently_added_album_7_uri",
-        "name": "recently_added_album_7_uri",
-        "min": 0,
-        "mode": "text",
-        "max": 100
-      },
-      {
-        "id": "recently_added_album_7_thumbnail",
-        "name": "recently_added_album_7_thumbnail",
-        "min": 0,
-        "mode": "text",
-        "max": 100
       },
       {
         "id": "recently_added_playlist_4_uri",

@@ -89,6 +89,42 @@
             ]
           }
         },
+        "radio_button": {
+          "template": "square_button",
+          "entity_id": "media_player.kokken",
+          "variables": {
+            "preset": ""
+          },
+          "show_name": false,
+          "show_icon": false,
+          "tap_action": {
+            "action": "call-service",
+            "service": "script.play_radio_preset_on_sonos",
+            "data": {
+              "entity_id": "media_player.kokken",
+              "preset_path": "[[[\n  return variables.preset\n]]]\n"
+            }
+          },
+          "show_entity_picture": true
+        },
+        "music_assistant_button": {
+          "template": "square_button",
+          "show_name": false,
+          "show_icon": false,
+          "show_entity_picture": true,
+          "variables": {
+            "album": ""
+          },
+          "tap_action": {
+            "action": "call-service",
+            "service": "script.play_music_assistant_on_sonos",
+            "data": {
+              "entity_id": "media_player.kokken",
+              "media_id": "[[[\n  //return states['input_text.' + variables.album + '_uri'].state;\n  return states['pyscript.music_assistant_metadata'].attributes[variables.album + '_uri']\n]]]\n"
+            }
+          },
+          "entity_picture": "[[[\n  //return states['input_text.' + variables.album + '_thumbnail'].state;\n  return states['pyscript.music_assistant_metadata'].attributes[variables.album + '_thumbnail']\n]]]\n"
+        },
         "square_tado_button": {
           "template": "square_button",
           "styles": {
@@ -1838,82 +1874,34 @@
                       "cards": [
                         {
                           "type": "custom:button-card",
-                          "template": "square_button",
-                          "entity": "media_player.kokken",
-                          "show_name": false,
-                          "show_icon": false,
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "script.play_radio_preset_on_sonos",
-                            "data": {
-                              "entity_id": "media_player.kokken",
-                              "preset_path": "DAB/preset/2"
-                            }
-                          },
+                          "template": "radio_button",
                           "entity_picture": "/local/p2_logo.png",
-                          "show_entity_picture": true,
-                          "grid_options": {
-                            "columns": 4
+                          "variables": {
+                            "preset": "DAB/preset/2"
                           }
                         },
                         {
                           "type": "custom:button-card",
-                          "template": "square_button",
-                          "entity": "media_player.kokken",
-                          "show_name": false,
-                          "show_icon": false,
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "script.play_radio_preset_on_sonos",
-                            "data": {
-                              "entity_id": "media_player.kokken",
-                              "preset_path": "DAB/preset/3"
-                            }
-                          },
+                          "template": "radio_button",
                           "entity_picture": "/local/p3_logo.png",
-                          "show_entity_picture": true,
-                          "grid_options": {
-                            "columns": 4
+                          "variables": {
+                            "preset": "DAB/preset/3"
                           }
                         },
                         {
                           "type": "custom:button-card",
-                          "template": "square_button",
-                          "entity": "media_player.kokken",
-                          "show_name": false,
-                          "show_icon": false,
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "script.play_radio_preset_on_sonos",
-                            "data": {
-                              "entity_id": "media_player.kokken",
-                              "preset_path": "DAB/preset/4"
-                            }
-                          },
+                          "template": "radio_button",
                           "entity_picture": "/local/p4_logo.png",
-                          "show_entity_picture": true,
-                          "grid_options": {
-                            "columns": 4
+                          "variables": {
+                            "preset": "DAB/preset/4"
                           }
                         },
                         {
                           "type": "custom:button-card",
-                          "template": "square_button",
-                          "entity": "media_player.kokken",
-                          "show_name": false,
-                          "show_icon": false,
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "script.play_radio_preset_on_sonos",
-                            "data": {
-                              "entity_id": "media_player.kokken",
-                              "preset_path": "DAB/preset/5"
-                            }
-                          },
+                          "template": "radio_button",
                           "entity_picture": "/local/p6_logo.png",
-                          "show_entity_picture": true,
-                          "grid_options": {
-                            "columns": 4
+                          "variables": {
+                            "preset": "DAB/preset/5"
                           }
                         }
                       ]
@@ -1923,22 +1911,10 @@
                       "cards": [
                         {
                           "type": "custom:button-card",
-                          "template": "square_button",
-                          "entity": "media_player.kokken",
-                          "show_name": false,
-                          "show_icon": false,
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "script.play_radio_preset_on_sonos",
-                            "data": {
-                              "entity_id": "media_player.kokken",
-                              "preset_path": "DAB/preset/6"
-                            }
-                          },
+                          "template": "radio_button",
                           "entity_picture": "/local/p8_logo.png",
-                          "show_entity_picture": true,
-                          "grid_options": {
-                            "columns": 4
+                          "variables": {
+                            "preset": "DAB/preset/6"
                           }
                         },
                         {
@@ -1962,42 +1938,18 @@
                         },
                         {
                           "type": "custom:button-card",
-                          "template": "square_button",
-                          "entity": "media_player.kokken",
-                          "show_name": false,
-                          "show_icon": false,
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "script.play_radio_preset_on_sonos",
-                            "data": {
-                              "entity_id": "media_player.kokken",
-                              "preset_path": "Internet radio/preset/1"
-                            }
-                          },
+                          "template": "radio_button",
                           "entity_picture": "/local/radio_bob_logo.png",
-                          "show_entity_picture": true,
-                          "grid_options": {
-                            "columns": 4
+                          "variables": {
+                            "preset": "Internet radio/preset/1"
                           }
                         },
                         {
                           "type": "custom:button-card",
-                          "template": "square_button",
-                          "entity": "media_player.kokken",
-                          "show_name": false,
-                          "show_icon": false,
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "script.play_radio_preset_on_sonos",
-                            "data": {
-                              "entity_id": "media_player.kokken",
-                              "preset_path": "Internet radio/preset/5"
-                            }
-                          },
+                          "template": "radio_button",
                           "entity_picture": "/local/radio_paradise_logo.jpg",
-                          "show_entity_picture": true,
-                          "grid_options": {
-                            "columns": 4
+                          "variables": {
+                            "preset": "Internet radio/preset/5"
                           }
                         }
                       ]
@@ -2007,42 +1959,18 @@
                       "cards": [
                         {
                           "type": "custom:button-card",
-                          "template": "square_button",
-                          "entity": "media_player.kokken",
-                          "show_name": false,
-                          "show_icon": false,
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "script.play_radio_preset_on_sonos",
-                            "data": {
-                              "entity_id": "media_player.kokken",
-                              "preset_path": "Internet radio/preset/6"
-                            }
-                          },
+                          "template": "radio_button",
                           "entity_picture": "/local/radio_paradise_rock_logo.webp",
-                          "show_entity_picture": true,
-                          "grid_options": {
-                            "columns": 4
+                          "variables": {
+                            "preset": "Internet radio/preset/6"
                           }
                         },
                         {
                           "type": "custom:button-card",
-                          "template": "square_button",
-                          "entity": "media_player.kokken",
-                          "show_name": false,
-                          "show_icon": false,
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "script.play_radio_preset_on_sonos",
-                            "data": {
-                              "entity_id": "media_player.kokken",
-                              "preset_path": "Internet radio/preset/7"
-                            }
-                          },
+                          "template": "radio_button",
                           "entity_picture": "/local/kya_1260_logo_2.jpeg",
-                          "show_entity_picture": true,
-                          "grid_options": {
-                            "columns": 4
+                          "variables": {
+                            "preset": "Internet radio/preset/7"
                           }
                         },
                         {
@@ -2092,82 +2020,34 @@
                       "cards": [
                         {
                           "type": "custom:button-card",
-                          "template": "square_button",
+                          "template": "music_assistant_button",
                           "entity": "media_player.kokken",
-                          "show_name": false,
-                          "show_icon": false,
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "script.play_music_assistant_on_sonos",
-                            "data": {
-                              "entity_id": "media_player.kokken",
-                              "media_id": "[[[\n  return states['input_text.recently_added_album_1_uri'].state\n]]]\n"
-                            }
-                          },
-                          "entity_picture": "[[[\n  return states['input_text.recently_added_album_1_thumbnail'].state\n]]]\n",
-                          "show_entity_picture": true,
-                          "grid_options": {
-                            "columns": 4
+                          "variables": {
+                            "album": "recently_added_album_1"
                           }
                         },
                         {
                           "type": "custom:button-card",
-                          "template": "square_button",
+                          "template": "music_assistant_button",
                           "entity": "media_player.kokken",
-                          "show_name": false,
-                          "show_icon": false,
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "script.play_music_assistant_on_sonos",
-                            "data": {
-                              "entity_id": "media_player.kokken",
-                              "media_id": "[[[\n  return states['input_text.recently_added_album_2_uri'].state\n]]]\n"
-                            }
-                          },
-                          "entity_picture": "[[[\n  return states['input_text.recently_added_album_2_thumbnail'].state\n]]]\n",
-                          "show_entity_picture": true,
-                          "grid_options": {
-                            "columns": 4
+                          "variables": {
+                            "album": "recently_added_album_2"
                           }
                         },
                         {
                           "type": "custom:button-card",
-                          "template": "square_button",
+                          "template": "music_assistant_button",
                           "entity": "media_player.kokken",
-                          "show_name": false,
-                          "show_icon": false,
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "script.play_music_assistant_on_sonos",
-                            "data": {
-                              "entity_id": "media_player.kokken",
-                              "media_id": "[[[\n  return states['input_text.recently_added_album_3_uri'].state\n]]]\n"
-                            }
-                          },
-                          "entity_picture": "[[[\n  return states['input_text.recently_added_album_3_thumbnail'].state\n]]]\n",
-                          "show_entity_picture": true,
-                          "grid_options": {
-                            "columns": 4
+                          "variables": {
+                            "album": "recently_added_album_3"
                           }
                         },
                         {
                           "type": "custom:button-card",
-                          "template": "square_button",
+                          "template": "music_assistant_button",
                           "entity": "media_player.kokken",
-                          "show_name": false,
-                          "show_icon": false,
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "script.play_music_assistant_on_sonos",
-                            "data": {
-                              "entity_id": "media_player.kokken",
-                              "media_id": "[[[\n  return states['input_text.recently_added_album_4_uri'].state\n]]]\n"
-                            }
-                          },
-                          "entity_picture": "[[[\n  return states['input_text.recently_added_album_4_thumbnail'].state\n]]]\n",
-                          "show_entity_picture": true,
-                          "grid_options": {
-                            "columns": 4
+                          "variables": {
+                            "album": "recently_added_album_4"
                           }
                         }
                       ]
@@ -2177,82 +2057,34 @@
                       "cards": [
                         {
                           "type": "custom:button-card",
-                          "template": "square_button",
+                          "template": "music_assistant_button",
                           "entity": "media_player.kokken",
-                          "show_name": false,
-                          "show_icon": false,
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "script.play_music_assistant_on_sonos",
-                            "data": {
-                              "entity_id": "media_player.kokken",
-                              "media_id": "[[[\n  return states['input_text.recently_added_album_5_uri'].state\n]]]\n"
-                            }
-                          },
-                          "entity_picture": "[[[\n  return states['input_text.recently_added_album_5_thumbnail'].state\n]]]\n",
-                          "show_entity_picture": true,
-                          "grid_options": {
-                            "columns": 4
+                          "variables": {
+                            "album": "recently_added_album_5"
                           }
                         },
                         {
                           "type": "custom:button-card",
-                          "template": "square_button",
+                          "template": "music_assistant_button",
                           "entity": "media_player.kokken",
-                          "show_name": false,
-                          "show_icon": false,
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "script.play_music_assistant_on_sonos",
-                            "data": {
-                              "entity_id": "media_player.kokken",
-                              "media_id": "[[[\n  return states['input_text.recently_added_album_6_uri'].state\n]]]\n"
-                            }
-                          },
-                          "entity_picture": "[[[\n  return states['input_text.recently_added_album_6_thumbnail'].state\n]]]\n",
-                          "show_entity_picture": true,
-                          "grid_options": {
-                            "columns": 4
+                          "variables": {
+                            "album": "recently_added_album_6"
                           }
                         },
                         {
                           "type": "custom:button-card",
-                          "template": "square_button",
+                          "template": "music_assistant_button",
                           "entity": "media_player.kokken",
-                          "show_name": false,
-                          "show_icon": false,
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "script.play_music_assistant_on_sonos",
-                            "data": {
-                              "entity_id": "media_player.kokken",
-                              "media_id": "[[[\n  return states['input_text.recently_added_album_7_uri'].state\n]]]\n"
-                            }
-                          },
-                          "entity_picture": "[[[\n  return states['input_text.recently_added_album_7_thumbnail'].state\n]]]\n",
-                          "show_entity_picture": true,
-                          "grid_options": {
-                            "columns": 4
+                          "variables": {
+                            "album": "recently_added_album_7"
                           }
                         },
                         {
                           "type": "custom:button-card",
-                          "template": "square_button",
+                          "template": "music_assistant_button",
                           "entity": "media_player.kokken",
-                          "show_name": false,
-                          "show_icon": false,
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "script.play_music_assistant_on_sonos",
-                            "data": {
-                              "entity_id": "media_player.kokken",
-                              "media_id": "[[[\n  return states['input_text.random_album_uri'].state\n]]]\n"
-                            }
-                          },
-                          "entity_picture": "[[[\n  return states['input_text.random_album_thumbnail'].state\n]]]\n",
-                          "show_entity_picture": true,
-                          "grid_options": {
-                            "columns": 4
+                          "variables": {
+                            "album": "random_album"
                           }
                         }
                       ]
@@ -2262,82 +2094,34 @@
                       "cards": [
                         {
                           "type": "custom:button-card",
-                          "template": "square_button",
+                          "template": "music_assistant_button",
                           "entity": "media_player.kokken",
-                          "show_name": false,
-                          "show_icon": false,
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "script.play_music_assistant_on_sonos",
-                            "data": {
-                              "entity_id": "media_player.kokken",
-                              "media_id": "[[[\n  return states['input_text.recently_added_playlist_1_uri'].state\n]]]\n"
-                            }
-                          },
-                          "entity_picture": "[[[\n  return states['input_text.recently_added_playlist_1_thumbnail'].state\n]]]\n",
-                          "show_entity_picture": true,
-                          "grid_options": {
-                            "columns": 4
+                          "variables": {
+                            "album": "recently_added_playlist_1"
                           }
                         },
                         {
                           "type": "custom:button-card",
-                          "template": "square_button",
+                          "template": "music_assistant_button",
                           "entity": "media_player.kokken",
-                          "show_name": false,
-                          "show_icon": false,
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "script.play_music_assistant_on_sonos",
-                            "data": {
-                              "entity_id": "media_player.kokken",
-                              "media_id": "[[[\n  return states['input_text.recently_added_playlist_2_uri'].state\n]]]\n"
-                            }
-                          },
-                          "entity_picture": "[[[\n  return states['input_text.recently_added_playlist_2_thumbnail'].state\n]]]\n",
-                          "show_entity_picture": true,
-                          "grid_options": {
-                            "columns": 4
+                          "variables": {
+                            "album": "recently_added_playlist_2"
                           }
                         },
                         {
                           "type": "custom:button-card",
-                          "template": "square_button",
+                          "template": "music_assistant_button",
                           "entity": "media_player.kokken",
-                          "show_name": false,
-                          "show_icon": false,
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "script.play_music_assistant_on_sonos",
-                            "data": {
-                              "entity_id": "media_player.kokken",
-                              "media_id": "[[[\n  return states['input_text.recently_added_playlist_3_uri'].state\n]]]\n"
-                            }
-                          },
-                          "entity_picture": "[[[\n  return states['input_text.recently_added_playlist_3_thumbnail'].state\n]]]\n",
-                          "show_entity_picture": true,
-                          "grid_options": {
-                            "columns": 4
+                          "variables": {
+                            "album": "recently_added_playlist_3"
                           }
                         },
                         {
                           "type": "custom:button-card",
-                          "template": "square_button",
+                          "template": "music_assistant_button",
                           "entity": "media_player.kokken",
-                          "show_name": false,
-                          "show_icon": false,
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "script.play_music_assistant_on_sonos",
-                            "data": {
-                              "entity_id": "media_player.kokken",
-                              "media_id": "[[[\n  return states['input_text.recently_added_playlist_4_uri'].state\n]]]\n"
-                            }
-                          },
-                          "entity_picture": "[[[\n  return states['input_text.recently_added_playlist_4_thumbnail'].state\n]]]\n",
-                          "show_entity_picture": true,
-                          "grid_options": {
-                            "columns": 4
+                          "variables": {
+                            "album": "recently_added_playlist_4"
                           }
                         }
                       ]
@@ -2556,20 +2340,11 @@
                 },
                 {
                   "type": "custom:button-card",
-                  "template": "square_button",
+                  "template": "music_assistant_button",
                   "entity": "media_player.kokken",
-                  "show_name": false,
-                  "show_icon": false,
-                  "tap_action": {
-                    "action": "call-service",
-                    "service": "script.play_music_assistant_on_sonos",
-                    "data": {
-                      "entity_id": "media_player.kokken",
-                      "media_id": "[[[\n  return states['input_text.random_album_uri'].state\n]]]\n"
-                    }
+                  "variables": {
+                    "album": "random_album"
                   },
-                  "entity_picture": "[[[\n  return states['input_text.random_album_thumbnail'].state\n]]]\n",
-                  "show_entity_picture": true,
                   "grid_options": {
                     "columns": 4
                   },
@@ -2602,20 +2377,11 @@
                 },
                 {
                   "type": "custom:button-card",
-                  "template": "square_button",
+                  "template": "music_assistant_button",
                   "entity": "media_player.kokken",
-                  "show_name": false,
-                  "show_icon": false,
-                  "tap_action": {
-                    "action": "call-service",
-                    "service": "script.play_music_assistant_on_sonos",
-                    "data": {
-                      "entity_id": "media_player.kokken",
-                      "media_id": "[[[\n  return states['input_text.spotlight_album_uri'].state\n]]]\n"
-                    }
+                  "variables": {
+                    "album": "spotlight_album"
                   },
-                  "entity_picture": "[[[\n  return states['input_text.spotlight_album_thumbnail'].state\n]]]\n",
-                  "show_entity_picture": true,
                   "grid_options": {
                     "columns": 4
                   },
