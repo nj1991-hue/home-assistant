@@ -17,136 +17,6 @@ group_all_and_set_volume:
     data: {}
   alias: group_all_and_set_volume
   description: ''
-add_stue_to_group:
-  sequence:
-  - if:
-    - condition: not
-      conditions:
-      - condition: state
-        entity_id: binary_sensor.someone_is_watching_tv
-        state: 'on'
-    then:
-    - action: media_player.join
-      metadata: {}
-      data:
-        group_members:
-        - media_player.stue
-        - media_player.spisestue
-      target:
-        entity_id: media_player.spisestue
-      enabled: false
-    - action: pyscript.add_stue_to_group
-      metadata: {}
-      data: {}
-  alias: add_stue_to_group
-  description: ''
-add_kokken_to_group:
-  sequence:
-  - action: media_player.join
-    metadata: {}
-    data:
-      group_members:
-      - media_player.kokken
-      - media_player.spisestue
-    target:
-      entity_id: media_player.spisestue
-    enabled: false
-  - action: pyscript.add_kokken_to_group
-    metadata: {}
-    data: {}
-  alias: add_kokken_to_group
-  description: ''
-add_entre_to_group:
-  sequence:
-  - action: media_player.join
-    metadata: {}
-    data:
-      group_members:
-      - media_player.entre
-      - media_player.spisestue
-    target:
-      entity_id: media_player.spisestue
-    enabled: false
-  - action: pyscript.add_entre_to_group
-    metadata: {}
-    data: {}
-  alias: add_entre_to_group
-  description: ''
-remove_kokken_from_group:
-  sequence:
-  - action: media_player.unjoin
-    metadata: {}
-    data: {}
-    target:
-      entity_id: media_player.kokken
-  alias: remove_kokken_from_group
-  description: ''
-toggle_kokken_in_group:
-  sequence:
-  - if:
-    - condition: state
-      entity_id: binary_sensor.kokken_is_grouped
-      state: 'on'
-    then:
-    - action: script.remove_kokken_from_group
-      metadata: {}
-      data: {}
-    else:
-    - action: script.add_kokken_to_group
-      metadata: {}
-      data: {}
-  alias: toggle_kokken_in_group
-  description: ''
-remove_stue_from_group:
-  sequence:
-  - action: media_player.unjoin
-    metadata: {}
-    data: {}
-    target:
-      entity_id: media_player.stue
-  alias: remove_stue_from_group
-  description: ''
-remove_entre_from_group:
-  sequence:
-  - action: media_player.unjoin
-    metadata: {}
-    data: {}
-    target:
-      entity_id: media_player.entre
-  alias: remove_entre_from_group
-  description: ''
-toggle_stue_in_group:
-  sequence:
-  - if:
-    - condition: state
-      entity_id: binary_sensor.stue_is_grouped
-      state: 'on'
-    then:
-    - action: script.remove_stue_from_group
-      metadata: {}
-      data: {}
-    else:
-    - action: script.add_stue_to_group
-      metadata: {}
-      data: {}
-  alias: toggle_stue_in_group
-  description: ''
-toggle_entre_in_group:
-  sequence:
-  - if:
-    - condition: state
-      entity_id: binary_sensor.entre_is_grouped
-      state: 'on'
-    then:
-    - action: script.remove_entre_from_group
-      metadata: {}
-      data: {}
-    else:
-    - action: script.add_entre_to_group
-      metadata: {}
-      data: {}
-  alias: toggle_entre_in_group
-  description: ''
 increase_master_volume:
   sequence:
   - if:
@@ -313,15 +183,22 @@ play_pause_all_grouped_speakers:
   description: ''
 group_all:
   sequence:
-  - action: script.add_entre_to_group
+  - action: pyscript.add_media_player_to_group
     metadata: {}
-    data: {}
-  - action: script.add_kokken_to_group
+    data:
+      entity_id: media_player.stue
+  - action: pyscript.add_media_player_to_group
     metadata: {}
-    data: {}
-  - action: script.add_stue_to_group
+    data:
+      entity_id: media_player.spisestue
+  - action: pyscript.add_media_player_to_group
     metadata: {}
-    data: {}
+    data:
+      entity_id: media_player.entre
+  - action: pyscript.add_media_player_to_group
+    metadata: {}
+    data:
+      entity_id: media_player.kokken
   alias: group_all
   description: ''
 mute_or_unmute_spisestue:

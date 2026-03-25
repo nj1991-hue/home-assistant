@@ -15,6 +15,9 @@ sonos_media = None
 default_radio_station = "NPO Radio 2"
 #default_radio_station = "Random album"
 
+# Group leader
+main_media_player = "media_player.kokken"
+
 @service
 @time_trigger("cron(0 3 * * *)")
 def refresh_sonos_media():
@@ -940,9 +943,17 @@ def switch_back_to_npo_radio_2(var_name=None):
         input_text.resume_npo_radio_2_after_commercials = "False"
         
 
+@service
 def add_media_player_to_group(entity_id):
-    group_members = getattr(media_player.spisestue, "group_members", [])
+    global main_media_player
     
+    if binary_sensor.someone_is_watching_tv == "on" and entity_id == "media_player.stue":
+        return
+    if entity_id == main_media_player:
+        return
+
+    group_members = state.getattr(main_media_player).get("group_members")
+
     if group_members and entity_id not in group_members:
         main_player=group_members[0]
         players_to_join = [main_player, entity_id]
@@ -950,49 +961,59 @@ def add_media_player_to_group(entity_id):
         log.info(f"Joining {players_to_join} into {main_player}")
     
         media_player.join(entity_id = main_player, group_members=players_to_join)
+
+
+@service    
+def remove_media_player_from_group(entity_id):
+    media_player.unjoin(entity_id=entity_id)
+
+
+@service
+def toggle_media_player_in_group(entity_id):
+    global main_media_player
+    group_members = state.getattr(main_media_player).get("group_members")
     
-
-@service
-def add_kokken_to_group():
-    add_media_player_to_group("media_player.kokken")
-
-@service
-def add_stue_to_group():
-    add_media_player_to_group("media_player.stue")
-
-@service
-def add_entre_to_group():
-    add_media_player_to_group("media_player.entre")
+    if not group_members:
+        log.warning(f"{entity_id} has no group_members attribute")
+        return
+    
+    if entity_id in group_members:
+        remove_media_player_from_group(entity_id)
+    else:
+        add_media_player_to_group(entity_id)
 
 
 @service
 @time_trigger("cron(*/5 * * * *)")  
 def group_if_same_content():
+    global main_media_player
 
-    content_id = getattr(media_player.spisestue,"media_content_id", None)
-    media_playlist = getattr(media_player.spisestue,"media_playlist", None)
-    group_members = getattr(media_player.spisestue, "group_members", [])
-    
-    other_media_players = [
-        media_player.kokken,
-        media_player.entre,
-        media_player.stue,
+    content_id = state.getattr(main_media_player).get("media_content_id")
+    media_playlist = state.getattr(main_media_player).get("media_playlist")
+    group_members = state.getattr(main_media_player).get("group_members") or []
+
+    all_media_players = [
+        "media_player.kokken",
+        "media_player.entre",
+        "media_player.stue",
+        "media_player.spisestue",
                     ]    
+
+    other_media_player_objects = [get_media_player(e) for e in all_media_players if e != main_media_player]
+    main_media_player_obj = get_media_player(main_media_player)
     
-    for other_media_player in other_media_players:
-        other_content_id = getattr(other_media_player,"media_content_id", None)
-        other_media_playlist = getattr(other_media_player,"media_playlist", None)
-        
-        #log.info(f"media_playlist: {media_playlist}; other_media_playlist: {other_media_playlist}; other_media_player: {other_media_player}, media_player.spisestue: {media_player.spisestue}")
+    for other_media_player_obj in other_media_player_objects:
+        other_content_id = getattr(other_media_player_obj,"media_content_id", None)
+        other_media_playlist = getattr(other_media_player_obj,"media_playlist", None)
         
         if (
             ((other_content_id == content_id) or (media_playlist and media_playlist == other_media_playlist))
-            and media_player.spisestue == "playing" 
-            and other_media_player == "playing"
+            and main_media_player_obj == "playing" 
+            and other_media_player_obj == "playing"
             and group_members
-            and other_media_player.entity_id not in group_members
+            and other_media_player_obj.entity_id not in group_members
         ):
-            add_media_player_to_group(other_media_player.entity_id)
+            add_media_player_to_group(other_media_player_obj.entity_id)
 
 
 def adjust_volume_for_quiet_music(var_name, value, old_value, keywords):
@@ -1330,14 +1351,18 @@ def handle_radio_playback(trigger_entity_id):
         
         if input_text.reset_radio == "True":
             log.info(f"Resetting radio to {default_radio_station}. It is probably the first time it is turned on today")
+
+            now = datetime.datetime.now()
+            weekday = now.weekday()
+
             
             if default_radio_station == "NPO Radio 2":
-                play_dab_preset("Internet radio/preset/2")
+                if weekday in [5, 6]: # weekend
+                    play_dab_preset("Internet radio/preset/7") # KYA
+                else:
+                    play_dab_preset("Internet radio/preset/2") # NPO Radio 2
             elif default_radio_station == "Random album":
-                
-                now = datetime.datetime.now()
-                weekday = now.weekday()
-                
+            
                 if weekday in [5, 6]: # weekend
                     play_dab_preset("Internet radio/preset/5") # Paradise radio
                 else:
@@ -1410,6 +1435,8 @@ def handle_radio_playback(trigger_entity_id):
     
             
 
+
+    
     
     
     

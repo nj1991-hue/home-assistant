@@ -250,10 +250,13 @@
       seconds: 1
   conditions: []
   actions:
-  - action: script.add_kokken_to_group
+  - action: media_player.join
     metadata: {}
-    data: {}
-    enabled: true
+    target:
+      entity_id: media_player.spisestue
+    data:
+      group_members:
+      - media_player.kokken
   - if:
     - condition: not
       conditions:
@@ -261,15 +264,10 @@
         entity_id: binary_sensor.someone_is_watching_tv
         state: 'on'
     then:
-    - action: media_player.volume_mute
+    - action: media_player.unjoin
       metadata: {}
-      data:
-        is_volume_muted: true
       target:
         entity_id: media_player.stue
-      enabled: false
-    - action: script.remove_stue_from_group
-      metadata: {}
       data: {}
     - action: media_player.media_pause
       metadata: {}
@@ -328,15 +326,6 @@
   triggers:
   - trigger: state
     entity_id:
-    - binary_sensor.sonos_is_playing
-    to: 'off'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 5
-    enabled: false
-  - trigger: state
-    entity_id:
     - media_player.kokken
     - media_player.entre
     - media_player.spisestue
@@ -351,15 +340,22 @@
     state:
     - 'off'
   actions:
-  - action: script.add_kokken_to_group
+  - action: pyscript.add_media_player_to_group
     metadata: {}
-    data: {}
-  - action: script.add_stue_to_group
+    data:
+      entity_id: media_player.kokken
+  - action: pyscript.add_media_player_to_group
     metadata: {}
-    data: {}
-  - action: script.add_entre_to_group
+    data:
+      entity_id: media_player.stue
+  - action: pyscript.add_media_player_to_group
     metadata: {}
-    data: {}
+    data:
+      entity_id: media_player.entre
+  - action: pyscript.add_media_player_to_group
+    metadata: {}
+    data:
+      entity_id: media_player.spisestue
   mode: restart
 - id: '1742471573592'
   alias: regroup_entre_on_pause_when_source_is_pc_audio
@@ -389,9 +385,10 @@
       attribute: media_content_id
       state: x-rincon-stream:RINCON_804AF2CAFA2401400
   actions:
-  - action: script.add_entre_to_group
+  - action: pyscript.add_media_player_to_group
     metadata: {}
-    data: {}
+    data:
+      entity_id: media_player.entre
   - if:
     - condition: not
       conditions:
@@ -902,8 +899,10 @@
       entity_id: timer.pc_was_recently_turned_off
       state: active
   actions:
-  - action: script.remove_entre_from_group
+  - action: media_player.unjoin
     metadata: {}
+    target:
+      entity_id: media_player.entre
     data: {}
   - action: media_player.play_media
     data:
@@ -978,7 +977,12 @@
     - media_player.argon_radio_2i_305890754e1c
     to: 'off'
     from: playing
-  conditions: []
+  conditions:
+  - condition: state
+    entity_id: timer.sonos_morning_routine_running
+    state:
+    - idle
+    - paused
   actions:
   - action: input_text.set_value
     metadata: {}

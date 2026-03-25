@@ -269,14 +269,17 @@
                 {
                   "type": "custom:button-card",
                   "template": "square_button",
-                  "entity": "media_player.kokken",
+                  "entity": "pyscript.media_metadata",
+                  "variables": {
+                    "room": "kokken"
+                  },
                   "aspect_ratio": "2.05/1",
-                  "entity_picture": "[[[\n  const room = entity.entity_id.split('.')[1]   \n  return states['pyscript.media_metadata'].attributes[`${room}_art_url`]    \n]]]\n",
+                  "entity_picture": "[[[\n  const room = variables.room   \n  return entity.attributes[`${room}_art_url`]    \n]]]\n",
                   "show_entity_picture": true,
                   "show_name": true,
                   "layout": "icon_name_state2nd",
-                  "name": "[[[\n  const room = entity.entity_id.split('.')[1]    \n  return states['pyscript.media_metadata'].attributes[`${room}_media_header`]    \n]]]\n",
-                  "state_display": "[[[\n  const room = entity.entity_id.split('.')[1]\n  return states['pyscript.media_metadata'].attributes[`${room}_media_title`] + '<br>' + states['pyscript.media_metadata'].attributes[`${room}_media_subtitle`]\n]]]\n",
+                  "name": "[[[\n  const room = variables.room    \n  return entity.attributes[`${room}_media_header`]    \n]]]\n",
+                  "state_display": "[[[\n  const room = variables.room\n  return entity.attributes[`${room}_media_title`] + '<br>' + entity.attributes[`${room}_media_subtitle`]\n]]]\n",
                   "show_state": true,
                   "grid_options": {
                     "columns": 8
@@ -428,9 +431,9 @@
                   },
                   "custom_fields": {
                     "cog": "[[[\n  return `<ha-icon\n    icon=\"mdi:cog\"\n    style=\"width: 20px; height: 20px; color: rgba(249,159,40,255);\">\n    </ha-icon>`\n]]]\n",
-                    "equalizer": "[[[\n  if (\n    entity.state === 'playing'\n  ) {\n    return `\n      <div class=\"eq-bar\"></div>\n      <div class=\"eq-bar\"></div>\n      <div class=\"eq-bar\"></div>\n    `;\n  }\n  return '';\n]]]\n",
-                    "lucky": "[[[\n  const room = entity.entity_id.split('.')[1]\n  if (\n    states['pyscript.media_metadata'].attributes[`${room}_feels_lucky`]\n  ) {\n  return `<ha-icon\n    icon=\"mdi:clover\"\n    style=\"width: 20px; height: 20px; color: rgba(249,159,40,255);\">\n    </ha-icon>`\n  }\n  return '';\n]]]\n",
-                    "volume": "[[[\n  const vol = Math.round(\n    parseFloat(states['input_number.kokken_volume'].state)\n  );\n\n  let icon = 'mdi:volume-mute';\n  if (vol > 12) icon = 'mdi:volume-high';\n  else if (vol >= 5) icon = 'mdi:volume-medium';\n  else if (vol >= 1) icon = 'mdi:volume-low';\n\n  return `\n    <ha-icon\n      icon=\"${icon}\"\n      style=\"width: 18px; height: 18px; color: rgba(249,159,40,255);\">\n    </ha-icon>\n    <span>${vol}%</span>\n  `;\n]]]    \n"
+                    "equalizer": "[[[\n  if (\n    states['media_player.'+variables.room].state === 'playing'\n  ) {\n    return `\n      <div class=\"eq-bar\"></div>\n      <div class=\"eq-bar\"></div>\n      <div class=\"eq-bar\"></div>\n    `;\n  }\n  return '';\n]]]\n",
+                    "lucky": "[[[\n  const room = variables.room\n  if (\n    entity.attributes[`${room}_feels_lucky`]\n  ) {\n  return `<ha-icon\n    icon=\"mdi:clover\"\n    style=\"width: 20px; height: 20px; color: rgba(249,159,40,255);\">\n    </ha-icon>`\n  }\n  return '';\n]]]\n",
+                    "volume": "[[[\n  const room = variables.room\n  const vol = Math.round(\n    parseFloat(states[`input_number.${room}_volume`].state)\n  );\n\n  let icon = 'mdi:volume-mute';\n  if (vol > 12) icon = 'mdi:volume-high';\n  else if (vol >= 5) icon = 'mdi:volume-medium';\n  else if (vol >= 1) icon = 'mdi:volume-low';\n\n  return `\n    <ha-icon\n      icon=\"${icon}\"\n      style=\"width: 18px; height: 18px; color: rgba(249,159,40,255);\">\n    </ha-icon>\n    <span>${vol}%</span>\n  `;\n]]]    \n"
                   },
                   "extra_styles": ".eq-bar {\n  width: 5px;\n  height: 20px;\n  background: rgba(249,159,40,255);\n  animation: eq-bounce 1s infinite ease-in-out;\n  transform-origin: bottom;\n}    \n\n.eq-bar:nth-child(1) { animation-delay: 0s; }\n.eq-bar:nth-child(2) { animation-delay: 0.3s; }\n.eq-bar:nth-child(3) { animation-delay: 0.2s; }\n\n@keyframes eq-bounce {\n  0%, 100% { transform: scaleY(0.3); }\n  50% { transform: scaleY(1); }\n}\n"
                 },
@@ -1028,7 +1031,10 @@
                           },
                           "tap_action": {
                             "action": "perform-action",
-                            "perform_action": "script.toggle_entre_in_group"
+                            "perform_action": "pyscript.toggle_media_player_in_group",
+                            "data": {
+                              "entity_id": "media_player.entre"
+                            }
                           },
                           "grid_options": {
                             "columns": 4
@@ -1186,11 +1192,71 @@
                       "force_icon": false,
                       "tap_action": {
                         "action": "perform-action",
-                        "perform_action": "script.play_pause_all_grouped_speakers",
-                        "target": {}
+                        "target": {
+                          "entity_id": "media_player.spisestue"
+                        },
+                        "perform_action": "media_player.media_play_pause"
                       },
                       "styles": "${icon.setAttribute(\"icon\", hass.states['binary_sensor.any_speaker_in_group_is_playing'].state === 'on' ? 'mdi:power' : 'mdi:play')}\n",
                       "entity": "binary_sensor.any_speaker_in_group_is_playing",
+                      "modules": [
+                        "default"
+                      ],
+                      "button_action": {
+                        "tap_action": {
+                          "action": "none"
+                        }
+                      },
+                      "visibility": [
+                        {
+                          "condition": "not",
+                          "conditions": [
+                            {
+                              "condition": "user",
+                              "users": [
+                                "fc0349e683a1483c8f19af305ac0d079"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "custom:bubble-card",
+                      "card_type": "button",
+                      "entity": "input_number.kokken_volume",
+                      "button_type": "slider",
+                      "name": "Køkken",
+                      "icon": "mdi:speaker",
+                      "grid_options": {
+                        "columns": 12,
+                        "rows": 1
+                      },
+                      "show_state": true,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "target": {
+                          "entity_id": "media_player.kokken"
+                        },
+                        "perform_action": "media_player.media_play_pause"
+                      },
+                      "styles": ".bubble-range-fill {\n  background: ${hass.states['media_player.kokken'].attributes.is_volume_muted ? 'rgba(255, 152, 0, 0.2)' : ''} !important;\n} ${icon.setAttribute(\"icon\", hass.states['media_player.kokken'].state === 'playing' ? 'mdi:power' : 'mdi:play')} ${subButtonIcon[0].setAttribute(\"icon\", hass.states['media_player.kokken'].attributes.is_volume_muted ? 'mdi:volume-mute' : 'mdi:volume-high') }\n",
+                      "sub_button": [
+                        {
+                          "entity": "media_player.kokken",
+                          "icon": "mdi:volume-off",
+                          "tap_action": {
+                            "action": "perform-action",
+                            "perform_action": "script.mute_or_unmute_kokken",
+                            "target": {}
+                          },
+                          "show_state": false,
+                          "show_attribute": false,
+                          "attribute": "is_volume_muted",
+                          "state_background": false,
+                          "show_background": false
+                        }
+                      ],
                       "modules": [
                         "default"
                       ],
@@ -1235,83 +1301,28 @@
                         },
                         "perform_action": "media_player.media_play_pause"
                       },
-                      "styles": ".bubble-range-fill {\n  background: ${hass.states['media_player.spisestue'].attributes.is_volume_muted ? 'rgba(255, 152, 0, 0.2)' : ''} !important;\n} ${icon.setAttribute(\"icon\", hass.states['media_player.spisestue'].state === 'playing' ? 'mdi:power' : 'mdi:play')} ${subButtonIcon[0].setAttribute(\"icon\", hass.states['media_player.spisestue'].attributes.is_volume_muted ? 'mdi:volume-mute' : 'mdi:volume-high') }\n",
-                      "sub_button": [
-                        {
-                          "entity": "media_player.spisestue",
-                          "icon": "mdi:volume-off",
-                          "tap_action": {
-                            "action": "perform-action",
-                            "perform_action": "script.mute_or_unmute_spisestue",
-                            "target": {}
-                          },
-                          "show_state": false,
-                          "show_attribute": false,
-                          "attribute": "is_volume_muted",
-                          "state_background": false,
-                          "show_background": false
-                        }
-                      ],
-                      "modules": [
-                        "default"
-                      ],
-                      "button_action": {
-                        "tap_action": {
-                          "action": "none"
-                        }
-                      },
-                      "visibility": [
-                        {
-                          "condition": "not",
-                          "conditions": [
-                            {
-                              "condition": "user",
-                              "users": [
-                                "fc0349e683a1483c8f19af305ac0d079"
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "custom:bubble-card",
-                      "card_type": "button",
-                      "entity": "input_number.kokken_volume",
-                      "button_type": "slider",
-                      "name": "Køkken",
-                      "icon": "mdi:speaker",
-                      "grid_options": {
-                        "columns": 12,
-                        "rows": 1
-                      },
-                      "show_state": true,
-                      "tap_action": {
-                        "action": "perform-action",
-                        "target": {
-                          "entity_id": "media_player.kokken"
-                        },
-                        "perform_action": "media_player.media_play_pause"
-                      },
-                      "styles": ".bubble-range-fill {\n  background: ${hass.states['binary_sensor.kokken_is_grouped'].state != 'on' ? 'rgb(168, 168, 168)' : hass.states['media_player.kokken'].attributes.is_volume_muted ? 'rgba(255, 152, 0, 0.2)' : ''} !important;\n} ${icon.setAttribute(\"icon\", hass.states['media_player.kokken'].state === 'playing' ? 'mdi:power' : 'mdi:play')} ${subButtonIcon[0].setAttribute(\"icon\", hass.states['binary_sensor.kokken_is_grouped'].state === 'on' ? 'mdi:check-circle' : 'mdi:checkbox-marked-circle-plus-outline')} ${subButtonIcon[1].setAttribute(\"icon\", hass.states['media_player.kokken'].attributes.is_volume_muted ? 'mdi:volume-mute' : 'mdi:volume-high') }\n",
+                      "styles": ".bubble-range-fill {\n  background: ${hass.states['binary_sensor.spisestue_is_grouped'].state != 'on' ? 'rgb(168, 168, 168)' : hass.states['media_player.spisestue'].attributes.is_volume_muted ? 'rgba(255, 152, 0, 0.2)' : ''} !important;\n} ${icon.setAttribute(\"icon\", hass.states['media_player.spisestue'].state === 'playing' ? 'mdi:power' : 'mdi:play')} ${subButtonIcon[0].setAttribute(\"icon\", hass.states['binary_sensor.spisestue_is_grouped'].state === 'on' ? 'mdi:check-circle' : 'mdi:checkbox-marked-circle-plus-outline')} ${subButtonIcon[1].setAttribute(\"icon\", hass.states['media_player.spisestue'].attributes.is_volume_muted ? 'mdi:volume-mute' : 'mdi:volume-high') }\n",
                       "sub_button": [
                         {
                           "icon": "mdi:check-circle-outline",
                           "tap_action": {
                             "action": "perform-action",
-                            "perform_action": "script.toggle_kokken_in_group",
-                            "target": {}
+                            "perform_action": "pyscript.toggle_media_player_in_group",
+                            "target": {},
+                            "data": {
+                              "entity_id": "media_player.spisestue"
+                            }
                           },
                           "state_background": false,
                           "show_background": false,
                           "show_attribute": false
                         },
                         {
-                          "entity": "media_player.kokken",
+                          "entity": "media_player.spisestue",
                           "icon": "mdi:volume-off",
                           "tap_action": {
                             "action": "perform-action",
-                            "perform_action": "script.mute_or_unmute_kokken",
+                            "perform_action": "script.mute_or_unmute_spisestue",
                             "target": {}
                           },
                           "show_state": false,
@@ -1368,8 +1379,11 @@
                           "icon": "mdi:check-circle-outline",
                           "tap_action": {
                             "action": "perform-action",
-                            "perform_action": "script.toggle_entre_in_group",
-                            "target": {}
+                            "perform_action": "pyscript.toggle_media_player_in_group",
+                            "target": {},
+                            "data": {
+                              "entity_id": "media_player.entre"
+                            }
                           },
                           "state_background": false,
                           "show_background": false,
@@ -1437,8 +1451,11 @@
                           "icon": "mdi:check-circle-outline",
                           "tap_action": {
                             "action": "perform-action",
-                            "perform_action": "script.toggle_stue_in_group",
-                            "target": {}
+                            "perform_action": "pyscript.toggle_media_player_in_group",
+                            "target": {},
+                            "data": {
+                              "entity_id": "media_player.stue"
+                            }
                           },
                           "state_background": false,
                           "show_background": false,
@@ -2566,788 +2583,6 @@
             }
           ],
           "icon": "mdi:music"
-        },
-        {
-          "title": "Musik",
-          "sections": [
-            {
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "heading",
-                  "heading_style": "title",
-                  "visibility": [
-                    {
-                      "condition": "screen",
-                      "media_query": "(min-width: 768px)"
-                    }
-                  ]
-                },
-                {
-                  "type": "custom:bubble-card",
-                  "card_type": "separator",
-                  "name": "Controls",
-                  "grid_options": {
-                    "columns": 12,
-                    "rows": 0.45
-                  },
-                  "card_layout": "normal"
-                },
-                {
-                  "type": "custom:bubble-card",
-                  "card_type": "button",
-                  "button_type": "state",
-                  "grid_options": {
-                    "columns": 12,
-                    "rows": 1
-                  },
-                  "icon": "mdi:power",
-                  "sub_button": [
-                    {
-                      "tap_action": {
-                        "action": "perform-action",
-                        "perform_action": "script.group_all",
-                        "target": {}
-                      },
-                      "icon": "mdi:group",
-                      "state_background": false
-                    },
-                    {
-                      "entity": "script.increase_master_volume",
-                      "icon": "mdi:volume-minus",
-                      "tap_action": {
-                        "action": "perform-action",
-                        "perform_action": "script.decrease_master_volume",
-                        "target": {}
-                      }
-                    },
-                    {
-                      "entity": "script.increase_master_volume",
-                      "icon": "mdi:volume-plus",
-                      "tap_action": {
-                        "action": "perform-action",
-                        "perform_action": "script.increase_master_volume",
-                        "target": {}
-                      }
-                    }
-                  ],
-                  "show_icon": true,
-                  "show_name": false,
-                  "show_state": false,
-                  "force_icon": false,
-                  "tap_action": {
-                    "action": "perform-action",
-                    "perform_action": "script.play_pause_all_grouped_speakers",
-                    "target": {}
-                  },
-                  "styles": "${icon.setAttribute(\"icon\", hass.states['binary_sensor.any_speaker_in_group_is_playing'].state === 'on' ? 'mdi:power' : 'mdi:play')}\n",
-                  "entity": "binary_sensor.any_speaker_in_group_is_playing",
-                  "modules": [
-                    "default"
-                  ],
-                  "button_action": {
-                    "tap_action": {
-                      "action": "none"
-                    }
-                  }
-                },
-                {
-                  "type": "custom:bubble-card",
-                  "card_type": "button",
-                  "entity": "input_number.spisestue_volume",
-                  "button_type": "slider",
-                  "name": "Spisestue",
-                  "icon": "mdi:speaker-play",
-                  "grid_options": {
-                    "rows": 1
-                  },
-                  "show_attribute": false,
-                  "show_last_changed": false,
-                  "slider_live_update": false,
-                  "force_icon": false,
-                  "show_state": true,
-                  "tap_action": {
-                    "action": "perform-action",
-                    "target": {
-                      "entity_id": "media_player.spisestue"
-                    },
-                    "perform_action": "media_player.media_play_pause"
-                  },
-                  "styles": ".bubble-range-fill {\n  background: ${hass.states['media_player.spisestue'].attributes.is_volume_muted ? 'rgba(255, 152, 0, 0.2)' : ''} !important;\n} ${icon.setAttribute(\"icon\", hass.states['media_player.spisestue'].state === 'playing' ? 'mdi:power' : 'mdi:play')} ${subButtonIcon[0].setAttribute(\"icon\", hass.states['media_player.spisestue'].attributes.is_volume_muted ? 'mdi:volume-mute' : 'mdi:volume-high') }\n",
-                  "sub_button": [
-                    {
-                      "entity": "media_player.spisestue",
-                      "icon": "mdi:volume-off",
-                      "tap_action": {
-                        "action": "perform-action",
-                        "perform_action": "script.mute_or_unmute_spisestue",
-                        "target": {}
-                      },
-                      "show_state": false,
-                      "show_attribute": false,
-                      "attribute": "is_volume_muted",
-                      "state_background": false,
-                      "show_background": false
-                    }
-                  ],
-                  "modules": [
-                    "default"
-                  ],
-                  "button_action": {
-                    "tap_action": {
-                      "action": "none"
-                    }
-                  }
-                },
-                {
-                  "type": "custom:bubble-card",
-                  "card_type": "button",
-                  "entity": "input_number.kokken_volume",
-                  "button_type": "slider",
-                  "name": "Køkken",
-                  "icon": "mdi:speaker",
-                  "grid_options": {
-                    "columns": 12,
-                    "rows": 1
-                  },
-                  "show_state": true,
-                  "tap_action": {
-                    "action": "perform-action",
-                    "target": {
-                      "entity_id": "media_player.kokken"
-                    },
-                    "perform_action": "media_player.media_play_pause"
-                  },
-                  "styles": ".bubble-range-fill {\n  background: ${hass.states['binary_sensor.kokken_is_grouped'].state != 'on' ? 'rgb(168, 168, 168)' : hass.states['media_player.kokken'].attributes.is_volume_muted ? 'rgba(255, 152, 0, 0.2)' : ''} !important;\n} ${icon.setAttribute(\"icon\", hass.states['media_player.kokken'].state === 'playing' ? 'mdi:power' : 'mdi:play')} ${subButtonIcon[0].setAttribute(\"icon\", hass.states['binary_sensor.kokken_is_grouped'].state === 'on' ? 'mdi:check-circle' : 'mdi:checkbox-marked-circle-plus-outline')} ${subButtonIcon[1].setAttribute(\"icon\", hass.states['media_player.kokken'].attributes.is_volume_muted ? 'mdi:volume-mute' : 'mdi:volume-high') }\n",
-                  "sub_button": [
-                    {
-                      "icon": "mdi:check-circle-outline",
-                      "tap_action": {
-                        "action": "perform-action",
-                        "perform_action": "script.toggle_kokken_in_group",
-                        "target": {}
-                      },
-                      "state_background": false,
-                      "show_background": false,
-                      "show_attribute": false
-                    },
-                    {
-                      "entity": "media_player.kokken",
-                      "icon": "mdi:volume-off",
-                      "tap_action": {
-                        "action": "perform-action",
-                        "perform_action": "script.mute_or_unmute_kokken",
-                        "target": {}
-                      },
-                      "show_state": false,
-                      "show_attribute": false,
-                      "attribute": "is_volume_muted",
-                      "state_background": false,
-                      "show_background": false
-                    }
-                  ],
-                  "modules": [
-                    "default"
-                  ],
-                  "button_action": {
-                    "tap_action": {
-                      "action": "none"
-                    }
-                  }
-                },
-                {
-                  "type": "custom:bubble-card",
-                  "card_type": "button",
-                  "entity": "input_number.entre_volume",
-                  "button_type": "slider",
-                  "name": "Entré",
-                  "icon": "mdi:speaker",
-                  "grid_options": {
-                    "columns": 12,
-                    "rows": 1
-                  },
-                  "show_state": true,
-                  "tap_action": {
-                    "action": "perform-action",
-                    "target": {
-                      "entity_id": "media_player.entre"
-                    },
-                    "perform_action": "media_player.media_play_pause"
-                  },
-                  "styles": ".bubble-range-fill {\n  background: ${hass.states['binary_sensor.entre_is_grouped'].state != 'on' ? 'rgb(168, 168, 168)' : hass.states['media_player.entre'].attributes.is_volume_muted ? 'rgba(255, 152, 0, 0.2)' : ''} !important;\n} ${icon.setAttribute(\"icon\", hass.states['media_player.entre'].state === 'playing' ? 'mdi:power' : 'mdi:play')} ${subButtonIcon[0].setAttribute(\"icon\", hass.states['binary_sensor.entre_is_grouped'].state === 'on' ? 'mdi:check-circle' : 'mdi:checkbox-marked-circle-plus-outline')} ${subButtonIcon[1].setAttribute(\"icon\", hass.states['media_player.entre'].attributes.is_volume_muted ? 'mdi:volume-mute' : 'mdi:volume-high') }\n",
-                  "sub_button": [
-                    {
-                      "icon": "mdi:check-circle-outline",
-                      "tap_action": {
-                        "action": "perform-action",
-                        "perform_action": "script.toggle_entre_in_group",
-                        "target": {}
-                      },
-                      "state_background": false,
-                      "show_background": false,
-                      "show_attribute": false
-                    },
-                    {
-                      "entity": "media_player.entre",
-                      "icon": "mdi:volume-off",
-                      "tap_action": {
-                        "action": "perform-action",
-                        "perform_action": "script.mute_or_unmute_entre",
-                        "target": {}
-                      },
-                      "show_state": false,
-                      "show_attribute": false,
-                      "attribute": "is_volume_muted",
-                      "state_background": false,
-                      "show_background": false
-                    }
-                  ],
-                  "modules": [
-                    "default"
-                  ],
-                  "button_action": {
-                    "tap_action": {
-                      "action": "none"
-                    }
-                  }
-                },
-                {
-                  "type": "custom:bubble-card",
-                  "card_type": "button",
-                  "entity": "input_number.stue_volume",
-                  "button_type": "slider",
-                  "name": "Stue",
-                  "icon": "mdi:speaker",
-                  "grid_options": {
-                    "columns": 12,
-                    "rows": 1
-                  },
-                  "show_state": true,
-                  "tap_action": {
-                    "action": "perform-action",
-                    "target": {
-                      "entity_id": "media_player.stue"
-                    },
-                    "perform_action": "media_player.media_play_pause"
-                  },
-                  "styles": ".bubble-range-fill {\n  background: ${hass.states['binary_sensor.stue_is_grouped'].state != 'on' ? 'rgb(168, 168, 168)' : hass.states['media_player.stue'].attributes.is_volume_muted ? 'rgba(255, 152, 0, 0.2)' : ''} !important;\n} ${icon.setAttribute(\"icon\", hass.states['media_player.stue'].state === 'playing' ? 'mdi:power' : 'mdi:play')} ${subButtonIcon[0].setAttribute(\"icon\", hass.states['binary_sensor.stue_is_grouped'].state === 'on' ? 'mdi:check-circle' : 'mdi:checkbox-marked-circle-plus-outline')} ${subButtonIcon[1].setAttribute(\"icon\", hass.states['media_player.stue'].attributes.is_volume_muted ? 'mdi:volume-mute' : 'mdi:volume-high') }\n",
-                  "sub_button": [
-                    {
-                      "icon": "mdi:check-circle-outline",
-                      "tap_action": {
-                        "action": "perform-action",
-                        "perform_action": "script.toggle_stue_in_group",
-                        "target": {}
-                      },
-                      "state_background": false,
-                      "show_background": false,
-                      "show_attribute": false
-                    },
-                    {
-                      "entity": "media_player.stue",
-                      "icon": "mdi:volume-off",
-                      "tap_action": {
-                        "action": "perform-action",
-                        "perform_action": "script.mute_or_unmute_stue",
-                        "target": {}
-                      },
-                      "show_state": false,
-                      "show_attribute": false,
-                      "attribute": "is_volume_muted",
-                      "state_background": false,
-                      "show_background": false
-                    }
-                  ],
-                  "visibility": [
-                    {
-                      "condition": "state",
-                      "entity": "binary_sensor.someone_is_watching_tv",
-                      "state_not": "on"
-                    }
-                  ],
-                  "modules": [
-                    "default"
-                  ],
-                  "button_action": {
-                    "tap_action": {
-                      "action": "none"
-                    }
-                  }
-                },
-                {
-                  "type": "custom:bubble-card",
-                  "card_type": "media-player",
-                  "entity": "media_player.spisestue",
-                  "hide": {
-                    "play_pause_button": true,
-                    "volume_button": true,
-                    "power_button": true,
-                    "previous_button": true,
-                    "next_button": true
-                  },
-                  "show_attribute": false,
-                  "show_state": false,
-                  "attribute": "group_members",
-                  "visibility": [
-                    {
-                      "condition": "state",
-                      "entity": "binary_sensor.source_in_spisestue_is_line_in",
-                      "state_not": "on"
-                    },
-                    {
-                      "condition": "state",
-                      "entity": "media_player.spisestue",
-                      "state": "playing"
-                    }
-                  ],
-                  "show_name": false,
-                  "show_icon": true,
-                  "scrolling_effect": true,
-                  "tap_action": {
-                    "action": "none"
-                  }
-                },
-                {
-                  "type": "custom:bubble-card",
-                  "card_type": "media-player",
-                  "entity": "media_player.argon_radio_2i_305890754e1c",
-                  "hide": {
-                    "next_button": true,
-                    "previous_button": true,
-                    "volume_button": true,
-                    "play_pause_button": true,
-                    "power_button": true
-                  },
-                  "show_last_changed": false,
-                  "show_state": true,
-                  "show_attribute": true,
-                  "force_icon": false,
-                  "attribute": "media_title",
-                  "visibility": [
-                    {
-                      "condition": "state",
-                      "entity": "binary_sensor.source_in_spisestue_is_line_in",
-                      "state": "on"
-                    },
-                    {
-                      "condition": "state",
-                      "entity": "binary_sensor.source_of_radio_is_aux_in",
-                      "state_not": "on"
-                    }
-                  ],
-                  "modules": [
-                    "default"
-                  ]
-                },
-                {
-                  "type": "custom:bubble-card",
-                  "card_type": "button",
-                  "entity": "media_player.entre",
-                  "button_type": "state",
-                  "show_attribute": true,
-                  "attribute": "media_title",
-                  "visibility": [
-                    {
-                      "condition": "state",
-                      "entity": "binary_sensor.entre_is_grouped",
-                      "state_not": "on"
-                    },
-                    {
-                      "condition": "state",
-                      "entity": "media_player.entre",
-                      "state": "playing"
-                    }
-                  ],
-                  "tap_action": {
-                    "action": "none"
-                  }
-                },
-                {
-                  "type": "custom:bubble-card",
-                  "card_type": "media-player",
-                  "entity": "media_player.argon_radio_2i_305890754e1c",
-                  "hide": {
-                    "next_button": true,
-                    "previous_button": true,
-                    "volume_button": true,
-                    "play_pause_button": true,
-                    "power_button": true
-                  },
-                  "show_last_changed": false,
-                  "show_state": true,
-                  "show_attribute": true,
-                  "force_icon": false,
-                  "attribute": "source",
-                  "visibility": [
-                    {
-                      "condition": "state",
-                      "entity": "binary_sensor.source_in_spisestue_is_line_in",
-                      "state": "on"
-                    },
-                    {
-                      "condition": "state",
-                      "entity": "binary_sensor.source_of_radio_is_aux_in",
-                      "state": "on"
-                    }
-                  ],
-                  "modules": [
-                    "default"
-                  ]
-                },
-                {
-                  "type": "custom:bubble-card",
-                  "card_type": "button",
-                  "entity": "media_player.kokken",
-                  "button_type": "state",
-                  "show_attribute": true,
-                  "attribute": "media_title",
-                  "visibility": [
-                    {
-                      "condition": "state",
-                      "entity": "binary_sensor.kokken_is_grouped",
-                      "state_not": "on"
-                    },
-                    {
-                      "condition": "state",
-                      "entity": "media_player.kokken",
-                      "state": "playing"
-                    }
-                  ],
-                  "tap_action": {
-                    "action": "none"
-                  }
-                },
-                {
-                  "type": "custom:bubble-card",
-                  "card_type": "button",
-                  "entity": "media_player.stue",
-                  "button_type": "state",
-                  "show_attribute": true,
-                  "attribute": "media_title",
-                  "visibility": [
-                    {
-                      "condition": "state",
-                      "entity": "binary_sensor.stue_is_grouped",
-                      "state_not": "on"
-                    },
-                    {
-                      "condition": "state",
-                      "entity": "media_player.stue",
-                      "state": "playing"
-                    }
-                  ],
-                  "tap_action": {
-                    "action": "none"
-                  }
-                }
-              ]
-            },
-            {
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "heading",
-                  "heading_style": "title",
-                  "visibility": [
-                    {
-                      "condition": "screen",
-                      "media_query": "(min-width: 768px)"
-                    }
-                  ]
-                },
-                {
-                  "type": "custom:bubble-card",
-                  "card_type": "separator",
-                  "name": "DAB",
-                  "grid_options": {
-                    "columns": 12,
-                    "rows": 0.45
-                  },
-                  "card_layout": "normal"
-                },
-                {
-                  "type": "custom:button-card",
-                  "show_name": false,
-                  "show_icon": true,
-                  "aspect_ratio": "1/1",
-                  "tap_action": {
-                    "action": "call-service",
-                    "service": "script.play_radio_preset_on_sonos",
-                    "data": {
-                      "entity_id": "media_player.spisestue",
-                      "preset_path": "DAB/preset/3"
-                    }
-                  },
-                  "name": "P3 (DAB)",
-                  "entity_picture": "/local/p3_logo.png",
-                  "show_entity_picture": true,
-                  "grid_options": {
-                    "columns": 3
-                  },
-                  "styles": {
-                    "card": [
-                      {
-                        "border-radius": "10%"
-                      },
-                      {
-                        "padding": "0%"
-                      },
-                      {
-                        "margin-left": "2%"
-                      },
-                      {
-                        "margin-right": "0.5%"
-                      }
-                    ],
-                    "img_cell": [
-                      {
-                        "justify-content": "start"
-                      },
-                      {
-                        "align-items": "start"
-                      },
-                      {
-                        "margin": "none"
-                      }
-                    ],
-                    "icon": [
-                      {
-                        "width": "100%"
-                      },
-                      {
-                        "margin-top": "0%"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "type": "custom:button-card",
-                  "show_name": false,
-                  "show_icon": true,
-                  "aspect_ratio": "1/1",
-                  "tap_action": {
-                    "action": "call-service",
-                    "service": "script.play_radio_preset_on_sonos",
-                    "data": {
-                      "entity_id": "media_player.spisestue",
-                      "preset_path": "DAB/preset/4"
-                    }
-                  },
-                  "name": "P3 (DAB)",
-                  "entity_picture": "/local/p4_logo.png",
-                  "show_entity_picture": true,
-                  "grid_options": {
-                    "columns": 3
-                  },
-                  "styles": {
-                    "card": [
-                      {
-                        "border-radius": "10%"
-                      },
-                      {
-                        "padding": "0%"
-                      },
-                      {
-                        "margin-left": "0.5%"
-                      },
-                      {
-                        "margin-right": "0.5%"
-                      }
-                    ],
-                    "img_cell": [
-                      {
-                        "justify-content": "start"
-                      },
-                      {
-                        "align-items": "start"
-                      },
-                      {
-                        "margin": "none"
-                      }
-                    ],
-                    "icon": [
-                      {
-                        "width": "100%"
-                      },
-                      {
-                        "margin-top": "0%"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "type": "custom:button-card",
-                  "show_name": false,
-                  "show_icon": true,
-                  "aspect_ratio": "1/1",
-                  "tap_action": {
-                    "action": "call-service",
-                    "service": "script.play_radio_preset_on_sonos",
-                    "data": {
-                      "entity_id": "media_player.spisestue",
-                      "preset_path": "DAB/preset/5"
-                    }
-                  },
-                  "name": "P3 (DAB)",
-                  "entity_picture": "/local/p6_logo.png",
-                  "show_entity_picture": true,
-                  "grid_options": {
-                    "columns": 3
-                  },
-                  "styles": {
-                    "card": [
-                      {
-                        "border-radius": "10%"
-                      },
-                      {
-                        "padding": "0%"
-                      },
-                      {
-                        "margin-left": "0.5%"
-                      },
-                      {
-                        "margin-right": "0.5%"
-                      }
-                    ],
-                    "img_cell": [
-                      {
-                        "justify-content": "start"
-                      },
-                      {
-                        "align-items": "start"
-                      },
-                      {
-                        "margin": "none"
-                      }
-                    ],
-                    "icon": [
-                      {
-                        "width": "100%"
-                      },
-                      {
-                        "margin-top": "0%"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "type": "custom:button-card",
-                  "show_name": false,
-                  "show_icon": true,
-                  "aspect_ratio": "1/1",
-                  "tap_action": {
-                    "action": "call-service",
-                    "service": "script.play_radio_preset_on_sonos",
-                    "data": {
-                      "entity_id": "media_player.spisestue",
-                      "preset_path": "DAB/preset/6"
-                    }
-                  },
-                  "name": "P3 (DAB)",
-                  "entity_picture": "/local/p8_logo.png",
-                  "show_entity_picture": true,
-                  "grid_options": {
-                    "columns": 3
-                  },
-                  "styles": {
-                    "card": [
-                      {
-                        "border-radius": "10%"
-                      },
-                      {
-                        "padding": "0%"
-                      },
-                      {
-                        "margin-left": "0.5%"
-                      },
-                      {
-                        "margin-right": "2%"
-                      }
-                    ],
-                    "img_cell": [
-                      {
-                        "justify-content": "start"
-                      },
-                      {
-                        "align-items": "start"
-                      },
-                      {
-                        "margin": "none"
-                      }
-                    ],
-                    "icon": [
-                      {
-                        "width": "100%"
-                      },
-                      {
-                        "margin-top": "0%"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "type": "custom:bubble-card",
-                  "card_type": "separator",
-                  "name": "Internet",
-                  "grid_options": {
-                    "columns": 12,
-                    "rows": 0.45
-                  },
-                  "card_layout": "normal"
-                },
-                {
-                  "type": "custom:sonos-card",
-                  "sections": [
-                    "media browser"
-                  ],
-                  "mediaBrowser": {
-                    "itemsPerRow": 4,
-                    "hideHeader": true,
-                    "onlyFavorites": true,
-                    "favorites": {
-                      "title": " ",
-                      "hideTitleForThumbnailIcons": true,
-                      "iconPadding": 0,
-                      "exclude": [
-                        "NPO Radio 2",
-                        "Radio Vinyl",
-                        "Rainy Morning Mix",
-                        "Crazy Train",
-                        "Karaoke"
-                      ],
-                      "customThumbnails": {
-                        "NPO Radio 2": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/NPO_Radio_2_logo.svg/1200px-NPO_Radio_2_logo.svg.png"
-                      }
-                    }
-                  },
-                  "startSection": "media browser",
-                  "entityId": "media_player.spisestue",
-                  "entities": [
-                    "media_player.spisestue"
-                  ],
-                  "heightPercentage": 400,
-                  "card_mod": {
-                    "debug": true,
-                    "style": {
-                      "sonos-media-browser$": {
-                        "sonos-favorites$": {
-                          "sonos-favorites-icons$": {
-                            "ha-control-button": ".thumbnail {\n  margin: 0px 0% !important;\n}\n"
-                          }
-                        }
-                      },
-                      ".": "ha-card {\n  background: rgba(0, 0, 0, 0);\n  border: 0px;\n  padding: 0px;\n  margin: 0%;\n}\n"
-                    }
-                  }
-                }
-              ]
-            }
-          ],
-          "type": "sections",
-          "max_columns": 4,
-          "cards": [],
-          "icon": "mdi:music-off",
-          "visible": []
         },
         {
           "type": "sections",
