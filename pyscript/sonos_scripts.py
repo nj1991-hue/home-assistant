@@ -909,6 +909,11 @@ def switch_back_to_npo_radio_2(var_name=None):
                 entity_id=media_player_obj.entity_id
             )
             input_text.resume_npo_radio_2_after_commercials = "False"
+            
+            if media_player.argon_radio_2i_305890754e1c == "off":
+                service.call('timer', 'start', entity_id='timer.radio_turned_on_by_automation')
+                play_dab_preset("Internet radio/preset/2")
+            
         elif (
             (media_playlist and media_playlist != filler_playlist_title) 
             or (media_player_state == "playing" and not media_playlist)
