@@ -222,18 +222,18 @@
   - action: script.group_all_and_set_volume
     metadata: {}
     data: {}
-  - action: scene.turn_on
-    metadata: {}
-    data: {}
-    target:
-      entity_id: scene.radio_is_playing_in_spisestue
-    enabled: true
   - action: input_text.set_value
     metadata: {}
     data:
       value: 'True'
     target:
       entity_id: input_text.reset_radio
+  - action: scene.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: scene.radio_is_playing_in_spisestue
+    enabled: true
   mode: single
 - id: '1741286126492'
   alias: add_kitchen_when_airplaying_to_spisestue
