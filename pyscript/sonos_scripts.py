@@ -1073,11 +1073,11 @@ def adjust_volume_for_quiet_music(var_name, value, old_value, keywords):
 def adjust_volume_when_quiet_music_plays(var_name=None, value=None, old_value=None):
     adjust_volume_for_quiet_music(var_name, value, old_value, ["Klassisk","P8 Jazz"])
 
-
-@state_trigger("media_player.kokken.queue_position")
-@state_trigger("media_player.entre.queue_position")
-@state_trigger("media_player.spisestue.queue_position")
-@state_trigger("media_player.stue.queue_position")
+# Commented out because repeat_set occasionally pauses playback
+#@state_trigger("media_player.kokken.queue_position")
+#@state_trigger("media_player.entre.queue_position")
+#@state_trigger("media_player.spisestue.queue_position")
+#@state_trigger("media_player.stue.queue_position")
 def set_repeat_to_true(var_name=None):
     """
     Makes sure repeat is always set to True
