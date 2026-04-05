@@ -902,7 +902,7 @@ def switch_back_to_npo_radio_2(var_name=None):
             and media_player_obj.entity_id == var_name
         ):
             log.info("Switching back to NPO Radio 2")
-            media_player.media_pause(entity_id = media_player_obj.entity_id)
+            #media_player.media_pause(entity_id = media_player_obj.entity_id)
             media_player.play_media(
                 media_content_id="x-rincon-stream:RINCON_804AF2CAFA8001400", 
                 media_content_type="music",
