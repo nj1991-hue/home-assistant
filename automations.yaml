@@ -18,14 +18,10 @@
       volume_level: 0.02
     target:
       entity_id: media_player.stue
-  - action: media_player.join
+  - action: pyscript.add_media_player_to_group
     metadata: {}
     data:
-      group_members:
-      - media_player.spisestue
-      - media_player.stue
-    target:
-      entity_id: media_player.spisestue
+      entity_id: media_player.stue
   mode: single
 - id: '1741252430255'
   alias: turn_off_radio
@@ -1444,7 +1440,7 @@
     data: {}
   mode: single
 - id: '1771269470928'
-  alias: reset_sonos_volume_when_home_state_changes_to_away
+  alias: reset_sonos_volume
   description: ''
   triggers:
   - trigger: state
@@ -1452,6 +1448,15 @@
     - input_text.home_state
     to:
     - Away
+  - trigger: state
+    entity_id:
+    - binary_sensor.sonos_is_playing
+    to:
+    - 'off'
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
   conditions: []
   actions:
   - action: script.reset_spisestue_volume
@@ -1494,5 +1499,30 @@
     metadata: {}
     target:
       entity_id: media_player.argon_radio_2i_305890754e1c_2
+    data: {}
+  mode: single
+- id: '1775408682813'
+  alias: turn_sonos_off_at_night
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - input_text.home_state
+    to:
+    - Home - Night
+    for:
+      hours: 1
+      minutes: 0
+      seconds: 0
+  conditions: []
+  actions:
+  - action: media_player.media_pause
+    metadata: {}
+    target:
+      entity_id:
+      - media_player.entre
+      - media_player.kokken
+      - media_player.spisestue
+      - media_player.stue
     data: {}
   mode: single
