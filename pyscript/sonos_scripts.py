@@ -314,9 +314,9 @@ def get_media_metadata_attribute(entity_id, attribute):
 def set_meta_data(var_name=None):
     set_sonos_meta_data([var_name])
 
-
+# Commented because music assistant now sends meta data to radio entity
+#@state_trigger("media_player.argon_radio_2i_305890754e1c_3.*")
 @state_trigger("media_player.argon_radio_2i_305890754e1c.*")
-@state_trigger("media_player.argon_radio_2i_305890754e1c_2.*")
 def set_sonos_metadata_when_radio_changes_state_or_attribute(var_name = None):
 
     dab_radio_attrs = state.getattr(var_name)
@@ -395,6 +395,10 @@ def set_sonos_meta_data(entity_ids):
                 if " - " in media_subtitle and media_player.argon_radio_2i_305890754e1c == "playing":
                     media_title = media_subtitle.split(" - ")[0].strip()
                     media_subtitle = media_subtitle.replace(f"{media_title} - ","")
+            elif dab_source == "Local Music":
+                media_header = getattr(media_player.argon_radio_2i_305890754e1c, "media_album_name", "Apple music playlist")
+                media_title = getattr(media_player.argon_radio_2i_305890754e1c, "media_artist", "-")
+                media_subtitle = getattr(media_player.argon_radio_2i_305890754e1c, "media_title", "-")                
             elif dab_channel == "DAB/preset/3":
                 playlist = "p3"
                 media_header = "DR P3"
@@ -415,11 +419,7 @@ def set_sonos_meta_data(entity_ids):
                     media_title = await get_dr_media_header(dr_media_header_url)
                     dr_media_headers[dr_media_header_url] = media_title
                 
-            if dab_media_title == "Music Assistant":
-                media_header = getattr(media_player.argon_radio_2i_305890754e1c_2, "media_album_name", "Apple music playlist")
-                media_title = getattr(media_player.argon_radio_2i_305890754e1c_2, "media_artist", "-")
-                media_subtitle = getattr(media_player.argon_radio_2i_305890754e1c_2, "media_title", "-")
-    
+
         if not media_header:
             media_header = sonos_media_channel or sonos_media_playlist or sonos_source or "???"
             
@@ -475,6 +475,7 @@ def set_sonos_art(entity_id):
         dab_channel = getattr(media_player.argon_radio_2i_305890754e1c, "media_content_id", None)
         dab_source = getattr(media_player.argon_radio_2i_305890754e1c, "source", None)
         dab_media_title = getattr(media_player.argon_radio_2i_305890754e1c, "media_title", None)
+        dab_art_url = getattr(media_player.argon_radio_2i_305890754e1c, "entity_picture", None)
 
         if dab_source != "DAB":
             playlist = None
@@ -489,8 +490,8 @@ def set_sonos_art(entity_id):
 
         if playlist:
             art_url = await get_dr_pic(f"https://www.dr.dk/lyd/playlister/{playlist}")
-        elif dab_media_title == "Music Assistant":
-            art_url = getattr(media_player.argon_radio_2i_305890754e1c_2, "entity_picture", None)
+        elif dab_art_url:
+            art_url = dab_art_url
         if not art_url:
             if dab_source == "AUX in":
                 art_url = "https://i.pinimg.com/736x/94/ca/e0/94cae02ce1205a5ebefba850c0ccbf47.jpg"
@@ -1088,8 +1089,7 @@ def set_repeat_to_true(var_name=None):
         media_player.repeat_set(entity_id = var_name, repeat="all")
 
 
-
-@state_trigger("media_player.argon_radio_2i_305890754e1c_2")
+@state_trigger("media_player.argon_radio_2i_305890754e1c_3")
 def dont_stop_the_music_for_music_assistant_speakers():
     """
     Makes sure Music Assitant speakers never stop playing
@@ -1271,7 +1271,7 @@ def dont_stop_the_music(player_name):
         dont_stop_the_music_enabled = True
     )
     
-@state_trigger("media_player.argon_radio_2i_305890754e1c_2")
+@state_trigger("media_player.argon_radio_2i_305890754e1c_3")
 def update_apple_music_provider_status_when_radio_changes_state(value = None, old_value=None):
     if old_value == "unavailable" or value == "unavailable":
         set_apple_music_provider_status()
@@ -1289,7 +1289,7 @@ def set_apple_music_provider_status():
     if last_error:
         input_text.apple_music_provider_status = last_error[:255]
     else:
-        if media_player.argon_radio_2i_305890754e1c_2 == "unavailable":
+        if media_player.argon_radio_2i_305890754e1c_3 == "unavailable":
             input_text.apple_music_provider_status = "UNAVAILABLE"
         else:
             input_text.apple_music_provider_status = "OK"
@@ -1298,15 +1298,11 @@ def set_apple_music_provider_status():
 @state_trigger("media_player.argon_radio_2i_305890754e1c.source")
 def update_last_dab_radio_source():
     dab_source = getattr(media_player.argon_radio_2i_305890754e1c, "source", None)
-    dab_media_title = getattr(media_player.argon_radio_2i_305890754e1c, "media_title", None)
-    
-    if not dab_source or not dab_media_title:
+
+    if not dab_source:
         return
     
-    if dab_source == "Local Music" and dab_media_title == "Music Assistant":
-        input_text.last_dab_radio_source = dab_media_title
-    else:
-        input_text.last_dab_radio_source = dab_source
+    input_text.last_dab_radio_source = dab_source
     
     
 def wait_for(obj, attribute, is_or_is_not, desired_value, timeout=20):
@@ -1372,7 +1368,7 @@ def handle_radio_playback(trigger_entity_id):
                     play_dab_preset("Internet radio/preset/5") # Paradise radio
                 else:
                     if input_text.apple_music_provider_status == "OK":
-                        music_assistant.play_media(entity_id= "media_player.argon_radio_2i_305890754e1c_2", media_id = pyscript.music_assistant_metadata.random_album_uri)
+                        music_assistant.play_media(entity_id= "media_player.argon_radio_2i_305890754e1c_3", media_id = pyscript.music_assistant_metadata.random_album_uri)
                         return
                     else:
                         play_dab_preset("Internet radio/preset/5") # Paradise radio
@@ -1383,9 +1379,9 @@ def handle_radio_playback(trigger_entity_id):
 
             input_text.reset_radio = "False"
         else:
-            if input_text.last_dab_radio_source == "Music Assistant" and input_text.apple_music_provider_status == "OK":
+            if input_text.last_dab_radio_source == "Local Music" and input_text.apple_music_provider_status == "OK":
                 log.info("Resuming Music Assistant playback")
-                media_player.media_play(entity_id="media_player.argon_radio_2i_305890754e1c_2")
+                media_player.media_play(entity_id="media_player.argon_radio_2i_305890754e1c_3")
                 return
             else:
                 log.info("Turning on radio")
