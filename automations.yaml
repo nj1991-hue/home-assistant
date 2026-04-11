@@ -971,8 +971,12 @@
   - trigger: state
     entity_id:
     - media_player.argon_radio_2i_305890754e1c
-    to: 'off'
-    from: playing
+    to:
+    - playing
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
   conditions:
   - condition: state
     entity_id: timer.sonos_morning_routine_running

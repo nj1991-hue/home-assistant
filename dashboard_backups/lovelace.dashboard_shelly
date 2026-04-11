@@ -2011,8 +2011,8 @@
                       "modules": [
                         "default"
                       ],
-                      "slide_to_close_distance": "40000",
-                      "close_on_click": false,
+                      "slide_to_close_distance": "200",
+                      "close_on_click": true,
                       "background_update": true,
                       "close_by_clicking_outside": true,
                       "show_header": true,
