@@ -7,6 +7,14 @@
       {
         "id": "hide_radio_vinyl_button_on_shelly",
         "name": "hide_radio_vinyl_button_on_shelly"
+      },
+      {
+        "id": "allow_apple_music_popup_on_shelly",
+        "name": "allow_apple_music_popup_on_shelly"
+      },
+      {
+        "id": "allow_radio_popup_on_shelly",
+        "name": "allow_radio_popup_on_shelly"
       }
     ]
   }

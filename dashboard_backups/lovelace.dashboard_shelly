@@ -1867,7 +1867,7 @@
                       ],
                       "slide_to_close_distance": "40000",
                       "close_on_click": true,
-                      "background_update": true,
+                      "background_update": false,
                       "close_by_clicking_outside": true,
                       "show_header": true,
                       "hash": "#radio-controls",
@@ -1884,7 +1884,30 @@
                       },
                       "slider_fill_orientation": "left",
                       "slider_value_position": "right",
-                      "auto_close": "300000"
+                      "auto_close": "300000",
+                      "trigger": [
+                        {
+                          "condition": "state",
+                          "entity": "input_boolean.allow_radio_popup_on_shelly",
+                          "state": "on"
+                        },
+                        {
+                          "condition": "user",
+                          "users": [
+                            "fc0349e683a1483c8f19af305ac0d079"
+                          ]
+                        }
+                      ],
+                      "open_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.allow_radio_popup_on_shelly_2",
+                        "target": {}
+                      },
+                      "close_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.disallow_radio_popup_on_shelly",
+                        "target": {}
+                      }
                     },
                     {
                       "type": "horizontal-stack",
@@ -2011,9 +2034,9 @@
                       "modules": [
                         "default"
                       ],
-                      "slide_to_close_distance": "200",
+                      "slide_to_close_distance": "40000",
                       "close_on_click": true,
-                      "background_update": true,
+                      "background_update": false,
                       "close_by_clicking_outside": true,
                       "show_header": true,
                       "hash": "#apple-music-media",
@@ -2030,7 +2053,30 @@
                       },
                       "slider_fill_orientation": "left",
                       "slider_value_position": "right",
-                      "auto_close": "300000"
+                      "auto_close": "300000",
+                      "open_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.allow_apple_music_popup_on_shelly_2",
+                        "target": {}
+                      },
+                      "trigger": [
+                        {
+                          "condition": "state",
+                          "entity": "input_boolean.allow_apple_music_popup_on_shelly",
+                          "state": "on"
+                        },
+                        {
+                          "condition": "user",
+                          "users": [
+                            "fc0349e683a1483c8f19af305ac0d079"
+                          ]
+                        }
+                      ],
+                      "close_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.disallow_apple_music_popup_on_shelly",
+                        "target": {}
+                      }
                     },
                     {
                       "type": "horizontal-stack",

@@ -775,6 +775,11 @@ play_radio_preset_on_sonos:
       target_media_player: '{{ entity_id }}'
       media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
       media_content_type: music
+  - action: input_boolean.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: input_boolean.allow_radio_popup_on_shelly
   alias: play_radio_preset_on_sonos
   description: ''
 play_music_assistant_on_sonos:
@@ -799,6 +804,11 @@ play_music_assistant_on_sonos:
       target_media_player: '{{ entity_id }}'
       media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
       media_content_type: music
+  - action: input_boolean.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: input_boolean.allow_apple_music_popup_on_shelly
   alias: play_music_assistant_on_sonos
   description: ''
   fields:
@@ -863,5 +873,46 @@ play_npo_radio_2_on_sonos:
         target_media_player: '{{ entity_id }}'
         media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
         media_content_type: music
+  - action: input_boolean.turn_off
+    metadata: {}
+    target:
+      entity_id: input_boolean.allow_radio_popup_on_shelly
+    data: {}
   alias: play_npo_radio_2_on_sonos
+  description: ''
+disallow_apple_music_popup_on_shelly:
+  sequence:
+  - action: input_boolean.turn_off
+    metadata: {}
+    target:
+      entity_id: input_boolean.allow_apple_music_popup_on_shelly
+    data: {}
+  alias: disallow_apple_music_popup_on_shelly
+  description: ''
+allow_apple_music_popup_on_shelly_2:
+  sequence:
+  - action: input_boolean.turn_on
+    metadata: {}
+    target:
+      entity_id: input_boolean.allow_apple_music_popup_on_shelly
+    data: {}
+  alias: allow_apple_music_popup_on_shelly
+  description: ''
+disallow_radio_popup_on_shelly:
+  sequence:
+  - action: input_boolean.turn_off
+    metadata: {}
+    target:
+      entity_id: input_boolean.allow_radio_popup_on_shelly
+    data: {}
+  alias: disallow_radio_popup_on_shelly
+  description: ''
+allow_radio_popup_on_shelly_2:
+  sequence:
+  - action: input_boolean.turn_on
+    metadata: {}
+    target:
+      entity_id: input_boolean.allow_radio_popup_on_shelly
+    data: {}
+  alias: allow_radio_popup_on_shelly
   description: ''
