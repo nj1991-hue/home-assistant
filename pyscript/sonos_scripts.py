@@ -10,6 +10,7 @@ import json
 
 state.persist('pyscript.media_metadata')
 state.persist('pyscript.music_assistant_metadata')
+state.persist('pyscript.dab_radio_art_urls')
 
 sonos_media = None
 default_radio_station = "NPO Radio 2"
@@ -458,6 +459,24 @@ def add_song_to_kokken_history():
 def set_kokken_art():
     set_sonos_art("media_player.kokken")
 
+
+@state_trigger("media_player.argon_radio_2i_305890754e1c.entity_picture")
+def store_dab_radio_preset_image():
+    channel = getattr(media_player.argon_radio_2i_305890754e1c, "media_content_id", None)
+    entity_picture = getattr(media_player.argon_radio_2i_305890754e1c, "entity_picture", None)
+    
+    if not channel or not entity_picture:
+        return
+    
+    machine_friendly_channel = channel.replace(" ","_").replace("/","-")
+    filename = machine_friendly_channel + ".png"
+    await download_file(entity_picture, f"/config/www/{filename}")
+
+    attrs = state.getattr("pyscript.dab_radio_art_urls") or {}
+
+    attrs[channel] = f"/local/{filename}?v={time.time()}"
+    state.set("pyscript.dab_radio_art_urls", "ok", attrs)
+
 def set_sonos_art(entity_id):
 
     attrs = state.getattr(entity_id)
@@ -793,7 +812,7 @@ async def stop_npo_radio_2_commercial_break():
     if minute > 30:
         timeout = 3 * 60
     else:
-        timeout = 7 * 60
+        timeout = 9 * 60
     
     if input_text.resume_npo_radio_2_after_commercials == "True":
         interval = 15
@@ -903,7 +922,6 @@ def switch_back_to_npo_radio_2(var_name=None):
             and media_player_obj.entity_id == var_name
         ):
             log.info("Switching back to NPO Radio 2")
-            #media_player.media_pause(entity_id = media_player_obj.entity_id)
             media_player.play_media(
                 media_content_id="x-rincon-stream:RINCON_804AF2CAFA8001400", 
                 media_content_type="music",
@@ -911,9 +929,15 @@ def switch_back_to_npo_radio_2(var_name=None):
             )
             input_text.resume_npo_radio_2_after_commercials = "False"
             
+            dab_channel = getattr(media_player.argon_radio_2i_305890754e1c, "media_content_id", None)
             if media_player.argon_radio_2i_305890754e1c == "off":
                 service.call('timer', 'start', entity_id='timer.radio_turned_on_by_automation')
                 play_dab_preset("Internet radio/preset/2")
+            elif dab_channel != "Internet radio/preset/2":
+                play_dab_preset("Internet radio/preset/2")
+            else:
+                log.info(f"No need to start the radio or switch channel, dab_channel='{dab_channel}'")
+                
             
         elif (
             (media_playlist and media_playlist != filler_playlist_title) 
@@ -1219,11 +1243,10 @@ def sync_music_assistant_when_we_get_home_or_wake_up(old_value = None):
         run_music_assistant_command("music/sync")
 
 @state_trigger("sensor.shellywalldisplay_0008225bc076_illuminance_level")
-def update_albums_and_playlists_when_shelly_is_interacted_with(value = None):
-    if not value or "dark" in value.lower():
-        return
-    update_recently_added_playlists()
-    update_recently_added_albums()
+def update_albums_and_playlists_when_shelly_lid_is_closed(value = None):
+    if "dark" in value.lower():
+        update_recently_added_playlists()
+        update_recently_added_albums()
 
 @service
 def sync_music_assistant_library():

@@ -92,6 +92,7 @@
         "radio_button": {
           "template": "square_button",
           "entity_id": "media_player.kokken",
+          "entity_picture": "[[[\n  return states['pyscript.dab_radio_art_urls'].attributes[variables.preset]\n]]]\n",
           "variables": {
             "preset": ""
           },
@@ -1939,9 +1940,9 @@
                         {
                           "type": "custom:button-card",
                           "template": "radio_button",
-                          "entity_picture": "/local/p6_logo.png",
+                          "entity_picture": "/local/p5_logo.png?v=2",
                           "variables": {
-                            "preset": "DAB/preset/5"
+                            "preset": "DAB/preset/7"
                           }
                         }
                       ]
@@ -1952,9 +1953,24 @@
                         {
                           "type": "custom:button-card",
                           "template": "radio_button",
+                          "entity_picture": "/local/p6_logo.png",
+                          "variables": {
+                            "preset": "DAB/preset/5"
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "radio_button",
                           "entity_picture": "/local/p8_logo.png",
                           "variables": {
                             "preset": "DAB/preset/6"
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "radio_button",
+                          "variables": {
+                            "preset": "Internet radio/preset/1"
                           }
                         },
                         {
@@ -1975,21 +1991,39 @@
                           "grid_options": {
                             "columns": 4
                           }
-                        },
+                        }
+                      ]
+                    },
+                    {
+                      "type": "horizontal-stack",
+                      "cards": [
                         {
                           "type": "custom:button-card",
                           "template": "radio_button",
-                          "entity_picture": "/local/radio_bob_logo.png",
                           "variables": {
-                            "preset": "Internet radio/preset/1"
+                            "preset": "Internet radio/preset/3"
                           }
                         },
                         {
                           "type": "custom:button-card",
                           "template": "radio_button",
-                          "entity_picture": "/local/radio_paradise_logo.jpg",
+                          "variables": {
+                            "preset": "Internet radio/preset/4"
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "radio_button",
                           "variables": {
                             "preset": "Internet radio/preset/5"
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "radio_button",
+                          "entity_picture": "/local/radio_paradise_rock_logo.webp",
+                          "variables": {
+                            "preset": "Internet radio/preset/6"
                           }
                         }
                       ]
@@ -2000,26 +2034,30 @@
                         {
                           "type": "custom:button-card",
                           "template": "radio_button",
-                          "entity_picture": "/local/radio_paradise_rock_logo.webp",
-                          "variables": {
-                            "preset": "Internet radio/preset/6"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "entity_picture": "/local/kya_1260_logo_2.jpeg",
                           "variables": {
                             "preset": "Internet radio/preset/7"
                           }
                         },
                         {
                           "type": "custom:button-card",
-                          "template": "square_button"
+                          "template": "radio_button",
+                          "variables": {
+                            "preset": "Internet radio/preset/8"
+                          }
                         },
                         {
                           "type": "custom:button-card",
-                          "template": "square_button"
+                          "template": "radio_button",
+                          "variables": {
+                            "preset": "Internet radio/preset/9"
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "radio_button",
+                          "variables": {
+                            "preset": "Internet radio/preset/10"
+                          }
                         }
                       ]
                     }
