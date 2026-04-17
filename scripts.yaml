@@ -789,12 +789,54 @@ play_music_assistant_on_sonos:
     target:
       entity_id: timer.radio_turned_on_by_automation
     data: {}
-  - action: music_assistant.play_media
-    metadata: {}
-    data:
-      media_id: '{{ media_id }}'
-    target:
-      entity_id: media_player.argon_radio_2i_305890754e1c_3
+  - if:
+    - condition: template
+      value_template: '{{ enqueue | default('''') == ''next'' }}'
+    then:
+    - if:
+      - condition: state
+        entity_id: media_player.argon_radio_2i_305890754e1c_3
+        state:
+        - playing
+      then:
+      - action: music_assistant.play_media
+        metadata: {}
+        data:
+          media_id: '{{ media_id }}'
+          enqueue: next
+        target:
+          entity_id: media_player.argon_radio_2i_305890754e1c_3
+      - action: input_boolean.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.allow_apple_music_popup_on_shelly
+      - action: input_boolean.turn_on
+        metadata: {}
+        target:
+          entity_id: input_boolean.album_added_to_queue
+        data: {}
+      - action: input_text.set_value
+        metadata: {}
+        target:
+          entity_id: input_text.next_album_picture
+        data:
+          value: '{{ next_album_picture }}'
+      - stop: Radio is already playing
+      else:
+      - action: music_assistant.play_media
+        metadata: {}
+        data:
+          media_id: '{{ media_id }}'
+        target:
+          entity_id: media_player.argon_radio_2i_305890754e1c_3
+    else:
+    - action: music_assistant.play_media
+      metadata: {}
+      data:
+        media_id: '{{ media_id }}'
+      target:
+        entity_id: media_player.argon_radio_2i_305890754e1c_3
   - wait_template: '{{ states(''media_player.argon_radio_2i_305890754e1c'') == "playing"
       }}'
     continue_on_timeout: false
@@ -822,6 +864,16 @@ play_music_assistant_on_sonos:
       description: The entity ID of the sonos player to stream the queue to.
       required: true
       example: media_player.kokken
+    enqueue:
+      name: Enqueue boolean
+      description: Wether to play immediately (play) or add to the queue (next)
+      required: false
+      example: next
+    next_album_picture:
+      name: album art URL
+      description: album art of the album to be queued
+      required: false
+      example: /local/sonos_art.png
 play_npo_radio_2_on_sonos:
   fields:
     entity_id:

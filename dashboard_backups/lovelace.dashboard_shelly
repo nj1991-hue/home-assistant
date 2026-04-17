@@ -121,10 +121,20 @@
             "service": "script.play_music_assistant_on_sonos",
             "data": {
               "entity_id": "media_player.kokken",
-              "media_id": "[[[\n  //return states['input_text.' + variables.album + '_uri'].state;\n  return states['pyscript.music_assistant_metadata'].attributes[variables.album + '_uri']\n]]]\n"
+              "media_id": "[[[\n  return states['pyscript.music_assistant_metadata'].attributes[variables.album + '_uri']\n]]]\n"
             }
           },
-          "entity_picture": "[[[\n  //return states['input_text.' + variables.album + '_thumbnail'].state;\n  return states['pyscript.music_assistant_metadata'].attributes[variables.album + '_thumbnail']\n]]]\n"
+          "hold_action": {
+            "action": "call-service",
+            "service": "script.play_music_assistant_on_sonos",
+            "data": {
+              "entity_id": "media_player.kokken",
+              "enqueue": "next",
+              "next_album_picture": "[[[\n  return variables.album + '_thumbnail'\n]]]\n",
+              "media_id": "[[[\n  return states['pyscript.music_assistant_metadata'].attributes[variables.album + '_uri']\n]]]\n"
+            }
+          },
+          "entity_picture": "[[[\n  return states['pyscript.music_assistant_metadata'].attributes[variables.album + '_thumbnail']\n]]]\n"
         },
         "square_tado_button": {
           "template": "square_button",
@@ -399,6 +409,32 @@
                           "line-height": "10px"
                         }
                       ],
+                      "next_album": [
+                        {
+                          "border-radius": "0%"
+                        },
+                        {
+                          "position": "absolute"
+                        },
+                        {
+                          "left": "32%"
+                        },
+                        {
+                          "top": "2%"
+                        },
+                        {
+                          "height": "30px"
+                        },
+                        {
+                          "width": "30px"
+                        },
+                        {
+                          "font-size": "4px"
+                        },
+                        {
+                          "line-height": "12px"
+                        }
+                      ],
                       "volume": [
                         {
                           "position": "absolute"
@@ -434,6 +470,7 @@
                     "cog": "[[[\n  return `<ha-icon\n    icon=\"mdi:cog\"\n    style=\"width: 20px; height: 20px; color: rgba(249,159,40,255);\">\n    </ha-icon>`\n]]]\n",
                     "equalizer": "[[[\n  if (\n    states['media_player.'+variables.room].state === 'playing'\n  ) {\n    return `\n      <div class=\"eq-bar\"></div>\n      <div class=\"eq-bar\"></div>\n      <div class=\"eq-bar\"></div>\n    `;\n  }\n  return '';\n]]]\n",
                     "lucky": "[[[\n  const room = variables.room\n  if (\n    entity.attributes[`${room}_feels_lucky`]\n  ) {\n  return `<ha-icon\n    icon=\"mdi:clover\"\n    style=\"width: 20px; height: 20px; color: rgba(249,159,40,255);\">\n    </ha-icon>`\n  }\n  return '';\n]]]\n",
+                    "next_album": "[[[\n  const room = variables.room\n  if (\n    states[`input_boolean.album_added_to_queue`].state === \"on\"\n  ) {\n  const pictureKey = states['input_text.next_album_picture'].state;\n  const url = states['pyscript.music_assistant_metadata'].attributes[pictureKey];\n\n  if (url) {\n    return `\n      <img src=\"${url}\"\n        style=\"\n          width: 30px;\n          height: 30px;\n          border-radius: 14px;\n          object-fit: cover;\n        \"\n      />\n    `;\n  }\n  }\n  return '';\n]]]\n",
                     "volume": "[[[\n  const room = variables.room\n  const vol = Math.round(\n    parseFloat(states[`input_number.${room}_volume`].state)\n  );\n\n  let icon = 'mdi:volume-mute';\n  if (vol > 12) icon = 'mdi:volume-high';\n  else if (vol >= 5) icon = 'mdi:volume-medium';\n  else if (vol >= 1) icon = 'mdi:volume-low';\n\n  return `\n    <ha-icon\n      icon=\"${icon}\"\n      style=\"width: 18px; height: 18px; color: rgba(249,159,40,255);\">\n    </ha-icon>\n    <span>${vol}%</span>\n  `;\n]]]    \n"
                   },
                   "extra_styles": ".eq-bar {\n  width: 5px;\n  height: 20px;\n  background: rgba(249,159,40,255);\n  animation: eq-bounce 1s infinite ease-in-out;\n  transform-origin: bottom;\n}    \n\n.eq-bar:nth-child(1) { animation-delay: 0s; }\n.eq-bar:nth-child(2) { animation-delay: 0.3s; }\n.eq-bar:nth-child(3) { animation-delay: 0.2s; }\n\n@keyframes eq-bounce {\n  0%, 100% { transform: scaleY(0.3); }\n  50% { transform: scaleY(1); }\n}\n"

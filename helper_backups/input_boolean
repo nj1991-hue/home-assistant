@@ -15,6 +15,11 @@
       {
         "id": "allow_radio_popup_on_shelly",
         "name": "allow_radio_popup_on_shelly"
+      },
+      {
+        "id": "album_added_to_queue",
+        "name": "album_added_to_queue",
+        "icon": "mdi:playlist-music"
       }
     ]
   }

@@ -208,6 +208,14 @@
         "min": 0,
         "mode": "text",
         "max": 100
+      },
+      {
+        "id": "next_album_picture",
+        "name": "next_album_picture",
+        "icon": "mdi:image-album",
+        "max": 100,
+        "min": 0,
+        "mode": "text"
       }
     ]
   }

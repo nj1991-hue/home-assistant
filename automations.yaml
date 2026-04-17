@@ -1530,3 +1530,23 @@
       - media_player.stue
     data: {}
   mode: single
+- id: '1776364329502'
+  alias: reset_album_added_to_queue
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - media_player.argon_radio_2i_305890754e1c_3
+    attribute: media_content_id
+  - trigger: state
+    entity_id:
+    - media_player.argon_radio_2i_305890754e1c
+    attribute: media_content_id
+  conditions: []
+  actions:
+  - action: input_boolean.turn_off
+    metadata: {}
+    target:
+      entity_id: input_boolean.album_added_to_queue
+    data: {}
+  mode: single
