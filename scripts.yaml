@@ -803,7 +803,7 @@ play_music_assistant_on_sonos:
         metadata: {}
         data:
           media_id: '{{ media_id }}'
-          enqueue: next
+          enqueue: add
         target:
           entity_id: media_player.argon_radio_2i_305890754e1c_3
       - action: input_boolean.turn_off
