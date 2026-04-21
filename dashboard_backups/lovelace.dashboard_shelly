@@ -1953,90 +1953,6 @@
                         {
                           "type": "custom:button-card",
                           "template": "radio_button",
-                          "entity_picture": "/local/p2_logo.png",
-                          "variables": {
-                            "preset": "DAB/preset/2"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "entity_picture": "/local/p3_logo.png",
-                          "variables": {
-                            "preset": "DAB/preset/3"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "entity_picture": "/local/p4_logo.png",
-                          "variables": {
-                            "preset": "DAB/preset/4"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "entity_picture": "/local/p5_logo.png?v=2",
-                          "variables": {
-                            "preset": "DAB/preset/7"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "type": "horizontal-stack",
-                      "cards": [
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "entity_picture": "/local/p6_logo.png",
-                          "variables": {
-                            "preset": "DAB/preset/5"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "entity_picture": "/local/p8_logo.png",
-                          "variables": {
-                            "preset": "DAB/preset/6"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "variables": {
-                            "preset": "Internet radio/preset/1"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "square_button",
-                          "entity": "media_player.kokken",
-                          "show_name": false,
-                          "show_icon": false,
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "script.play_npo_radio_2_on_sonos",
-                            "data": {
-                              "entity_id": "media_player.kokken"
-                            }
-                          },
-                          "entity_picture": "/local/npo_radio_2_logo.webp",
-                          "show_entity_picture": true,
-                          "grid_options": {
-                            "columns": 4
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "type": "horizontal-stack",
-                      "cards": [
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
                           "variables": {
                             "preset": "Internet radio/preset/3"
                           }
@@ -2094,6 +2010,90 @@
                           "template": "radio_button",
                           "variables": {
                             "preset": "Internet radio/preset/10"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "horizontal-stack",
+                      "cards": [
+                        {
+                          "type": "custom:button-card",
+                          "template": "radio_button",
+                          "variables": {
+                            "preset": "Internet radio/preset/1"
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_button",
+                          "entity": "media_player.kokken",
+                          "show_name": false,
+                          "show_icon": false,
+                          "tap_action": {
+                            "action": "call-service",
+                            "service": "script.play_npo_radio_2_on_sonos",
+                            "data": {
+                              "entity_id": "media_player.kokken"
+                            }
+                          },
+                          "entity_picture": "/local/npo_radio_2_logo.webp",
+                          "show_entity_picture": true,
+                          "grid_options": {
+                            "columns": 4
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "radio_button",
+                          "entity_picture": "/local/p6_logo.png",
+                          "variables": {
+                            "preset": "DAB/preset/5"
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "radio_button",
+                          "entity_picture": "/local/p8_logo.png",
+                          "variables": {
+                            "preset": "DAB/preset/6"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "horizontal-stack",
+                      "cards": [
+                        {
+                          "type": "custom:button-card",
+                          "template": "radio_button",
+                          "entity_picture": "/local/p2_logo.png",
+                          "variables": {
+                            "preset": "DAB/preset/2"
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "radio_button",
+                          "entity_picture": "/local/p3_logo.png",
+                          "variables": {
+                            "preset": "DAB/preset/3"
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "radio_button",
+                          "entity_picture": "/local/p4_logo.png",
+                          "variables": {
+                            "preset": "DAB/preset/4"
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "radio_button",
+                          "entity_picture": "/local/p5_logo.png?v=2",
+                          "variables": {
+                            "preset": "DAB/preset/7"
                           }
                         }
                       ]

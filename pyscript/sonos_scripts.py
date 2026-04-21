@@ -13,8 +13,9 @@ state.persist('pyscript.music_assistant_metadata')
 state.persist('pyscript.dab_radio_art_urls')
 
 sonos_media = None
-default_radio_station = "NPO Radio 2"
+#default_radio_station = "NPO Radio 2"
 #default_radio_station = "Random album"
+default_radio_station = "Random station"
 
 # Group leader
 main_media_player = "media_player.kokken"
@@ -319,6 +320,7 @@ def set_meta_data(var_name=None):
 #@state_trigger("media_player.argon_radio_2i_305890754e1c_3.*")
 @state_trigger("media_player.argon_radio_2i_305890754e1c.*")
 def set_sonos_metadata_when_radio_changes_state_or_attribute(var_name = None):
+    task.unique("set_sonos_metadata_when_radio_changes_state_or_attribute")
 
     dab_radio_attrs = state.getattr(var_name)
     dab_media_title = dab_radio_attrs.get("media_title")
@@ -462,10 +464,16 @@ def set_kokken_art():
 
 @state_trigger("media_player.argon_radio_2i_305890754e1c.entity_picture")
 def store_dab_radio_preset_image():
+    task.unique("store_dab_radio_preset_image")
+    asyncio.sleep(4) # Wait for the data to stabilize
     channel = getattr(media_player.argon_radio_2i_305890754e1c, "media_content_id", None)
     entity_picture = getattr(media_player.argon_radio_2i_305890754e1c, "entity_picture", None)
+    source = getattr(media_player.argon_radio_2i_305890754e1c, "source", None)
     
     if not channel or not entity_picture:
+        return
+    
+    if source != "Internet radio":
         return
     
     machine_friendly_channel = channel.replace(" ","_").replace("/","-")
@@ -1395,7 +1403,10 @@ def handle_radio_playback(trigger_entity_id):
                         return
                     else:
                         play_dab_preset("Internet radio/preset/5") # Paradise radio
-                        
+            elif default_radio_station == "Random station":
+                station_to_play=random.choice([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+                play_dab_preset(f"Internet radio/preset/{station_to_play}")
+
             else:
                 log.warning(f"Unsupported value for default_radio_station: {default_radio_station}; Playing p3")
                 play_dab_preset("DAB/preset/3")

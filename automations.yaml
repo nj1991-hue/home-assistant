@@ -215,6 +215,11 @@
       - media_player.kokken
       - media_player.spisestue
       - media_player.stue
+  - action: media_player.unjoin
+    metadata: {}
+    target:
+      entity_id: media_player.kontor
+    data: {}
   - action: script.group_all_and_set_volume
     metadata: {}
     data: {}
