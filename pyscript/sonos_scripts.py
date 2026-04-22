@@ -7,9 +7,9 @@ import time
 import random
 import datetime, time
 import json
+from utils import download_file, fetch,  get_album_art, determine_if_song_exists
 
 state.persist('pyscript.media_metadata')
-state.persist('pyscript.music_assistant_metadata')
 state.persist('pyscript.dab_radio_art_urls')
 
 sonos_media = None
@@ -72,9 +72,6 @@ def get_media_name(media_content_id):
     return sonos_media_inverted[media_content_id]
     
     
-@service
-def test_get_media_content_id():
-    log.info(get_media_content_id("The Voice"))
 
 def get_media_player(entity_id):
     """
@@ -126,103 +123,7 @@ def get_media_players():
            
     return media_players_to_return
 
-async def download_file(url, filename):
-    
-    if url.startswith("/api"):
-        url = "http://homeassistant.local:8123" + url
-    
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as response:
-            data = await response.read()
-            async with aiofiles.open(filename, mode='wb') as f:
-                f.write(data)
 
-async def fetch(session, url, *args, **kwargs):
-    async with session.get(url, *args, **kwargs) as response:
-        return await response.text()
- 
-async def fetch_json(session, url, *args, **kwargs):
-    async with session.get(url, *args, **kwargs) as response:
-        return await response.json() 
- 
-async def post(session, url, **kwargs):
-    response = await session.post(url, **kwargs)
-    return await response.json()
-
-
-async def get_metadata_from_itunes(params):
-
-    base_url = "https://itunes.apple.com/search"
-
-    async with aiohttp.ClientSession() as session:
-        async with session.get(base_url, params=params) as response:
-            data = await response.json(content_type=None)
-
-    if not data["results"]:
-        return None
-
-    return data["results"][0]
-    
-
-async def get_song_metadata_from_itunes(artist, track):
-    base_url = "https://itunes.apple.com/search"
-    query = f"{artist} {track}"
-
-    params = {
-        "term": query,
-        "entity": "song",
-        "limit": 1
-    }
-    return get_metadata_from_itunes(params)
-
-
-async def get_album_metadata_from_itunes(artist, album):
-    base_url = "https://itunes.apple.com/search"
-    query = f"{artist} {album}"
-
-    params = {
-        "term": query,
-        "entity": "album",
-        "limit": 1
-    }
-    return get_metadata_from_itunes(params)
-
-
-def get_album_art(artist, track, size=600):
-    metadata = get_song_metadata_from_itunes(artist, track)
-    if metadata:
-        artwork_url = metadata["artworkUrl100"]
-        return artwork_url.replace("100x100", f"{size}x{size}")
-    else:
-        return None
-
-def determine_if_song_exists(artist, track):
-    
-    if not media_string_is_valid(artist) or not media_string_is_valid(track):
-        return False
-        
-    metadata = get_song_metadata_from_itunes(artist, track)
-    song_exists = True if metadata else False
-    input_text.song_exists_log = f"{song_exists} ({artist} - {track})"
-
-    return song_exists
-
-def get_genre(artist, album):
-    metadata = get_album_metadata_from_itunes(artist, album)
-    if metadata:
-        return metadata["primaryGenreName"]
-    return None
-    
-@service
-def test_itunes_api():
-
-    log.info(get_album_art("The beatles", "Yellow submarine"))
-    
-    log.info(determine_if_song_exists("KRO NCRV", "Radio 2"))
-    log.info(determine_if_song_exists("The beatles", "Yellow submarine"))
-    
-    log.info(get_genre("Lorna shore", "I Feel the Everblack Festering Within Me"))    
-    
 
 async def parse_pic(html):
     soup = BeautifulSoup(html, 'html.parser')
@@ -276,20 +177,6 @@ def media_string_is_valid(artist_or_song):
         return False
     return True
 
-def add_item_to_music_assistant_metadata(key, album):
-    set_music_assistant_metadata_attributes(**{
-        f"{key}_uri": album["uri"],
-        f"{key}_thumbnail": album["image"] or "/local/404.png",
-    })
-
-def set_music_assistant_metadata_attributes(**kwargs):
-    attrs = state.getattr("pyscript.music_assistant_metadata") or {}
-
-    for key, value in kwargs.items():
-        attrs[key]=value
-
-    state.set("pyscript.music_assistant_metadata", "ok", attrs)
-
 
 def set_media_metadata_attributes(entity_id, **kwargs):
     attrs = state.getattr("pyscript.media_metadata") or {}
@@ -316,9 +203,8 @@ def get_media_metadata_attribute(entity_id, attribute):
 def set_meta_data(var_name=None):
     set_sonos_meta_data([var_name])
 
-# Commented because music assistant now sends meta data to radio entity
-#@state_trigger("media_player.argon_radio_2i_305890754e1c_3.*")
 @state_trigger("media_player.argon_radio_2i_305890754e1c.*")
+@state_trigger("media_player.argon_radio_2i_305890754e1c")
 def set_sonos_metadata_when_radio_changes_state_or_attribute(var_name = None):
     task.unique("set_sonos_metadata_when_radio_changes_state_or_attribute")
 
@@ -622,13 +508,6 @@ def play_lucky_station(entity_id):
     service.call('timer', 'start', entity_id='timer.lucky_station_force_change_timer')
 
 
-@service
-def test_lucky_attribute():
-    set_media_metadata_attributes("media_player.kokken", feels_lucky=True)
-    attr = get_media_metadata_attribute("media_player.kokken", "feels_lucky")
-    
-    log.info(attr)
-    log.info(type(attr))
 
 @state_trigger("timer.lucky_station_force_change_timer")
 @state_trigger("media_player.kokken.media_title")
@@ -1121,209 +1000,6 @@ def set_repeat_to_true(var_name=None):
         media_player.repeat_set(entity_id = var_name, repeat="all")
 
 
-@state_trigger("media_player.argon_radio_2i_305890754e1c_3")
-def dont_stop_the_music_for_music_assistant_speakers():
-    """
-    Makes sure Music Assitant speakers never stop playing
-    """
-    dont_stop_the_music("Argon Radio 2i 305890754e1c")
-
-
-@service    
-@time_trigger("cron(0 3 * * *)")
-@state_trigger("input_text.apple_music_provider_status")
-@time_trigger("startup")
-def update_music_assistant_uris():
-    update_random_album()
-    update_recently_added_albums()
-    update_recently_added_playlists()
-
-def update_random_album():
-    for i in range(30):
-        album = music_assistant.get_library(
-            config_entry_id="01KJD55JFR0EVEB6YP6869PN0Y",
-            media_type= "album",
-            limit= 1,
-            order_by= "random",
-            album_type=["album"]
-        )["items"][0]
-        
-        if not album["artists"]:
-            continue
-        if not album["image"]:
-            continue
-        
-        genre = get_genre(album["artists"][0]["name"], album["name"])
-        
-        if not genre:
-            continue
-        
-        if (album["explicit"] != True) and ("metal" not in genre.lower()):
-            log.info(f'Found a non-explicit non-metal album: {album["name"]}; genre = {genre}')
-
-            add_item_to_music_assistant_metadata(f"random_album", album)
-            break
-        else:
-            log.info(f'{album["name"]} is too explicit... Genre = {genre}')
-    
-
-def update_recently_added_albums():
-    album_response = music_assistant.get_library(
-        config_entry_id="01KJD55JFR0EVEB6YP6869PN0Y",
-        media_type= "album",
-        limit= 25,
-        order_by= "timestamp_added_desc",
-    )["items"]
-    
-    albums = [a for a in album_response if a["image"]]
-
-    for i in range(7):
-        add_item_to_music_assistant_metadata(f"recently_added_album_{i+1}", albums[i])
-
-    for album in albums:
-        genre = get_genre(album["artists"][0]["name"], album["name"])
-        if genre and "metal" not in genre.lower():
-            add_item_to_music_assistant_metadata("spotlight_album", album)
-            break
-
-def update_recently_added_playlists():
-    playlists = music_assistant.get_library(
-        config_entry_id="01KJD55JFR0EVEB6YP6869PN0Y",
-        media_type= "playlist",
-        limit= 25,
-        order_by= "timestamp_added_desc",
-    )["items"]
-
-    for i in range(4):
-        add_item_to_music_assistant_metadata(f"recently_added_playlist_{i+1}", playlists[i])
-
-
-async def get_music_assistant_access_token():
-    url = "http://localhost:8095/auth/login"
-    data = {
-      "provider_id": "builtin",
-      "credentials": {
-        "username": pyscript.config["global"]["music_assistant_username"],
-        "password": pyscript.config["global"]["music_assistant_password"]
-      }
-    }
-    
-    async with aiohttp.ClientSession() as session:
-        response_data = await post(session, url, json=data)
-
-    if "token" in response_data:
-        return response_data["token"]
-    else:
-        log.warning(f"Error obtaining access token: {response_data}")
-        return None
-    
-
-def run_music_assistant_command(command, **kwargs):
-    """
-    Runs a music assistant command on the API
-    
-    A list of commands can be found at http://192.168.1.199:8095/api-docs/commands
-    """
-    token = get_music_assistant_access_token()
-    
-    url = "http://localhost:8095/api"
-
-    headers = {
-        "accept": "application/json",
-        "Authorization": f"Bearer {token}",
-        "Content-Type": "application/json"
-    }
-    
-    payload = {
-        "command": command,
-        "args": kwargs
-    }
-    
-    async with aiohttp.ClientSession() as session:
-        response_data = await post(session, url, json=payload, headers=headers)
-    return response_data
-
-@state_trigger("input_text.home_state")
-def sync_music_assistant_when_we_get_home_or_wake_up(old_value = None):
-    old_home_state = old_value.lower()
-    if "away" in old_home_state or "night" in old_home_state:
-        log.info("Refreshing music database")
-        run_music_assistant_command("music/sync")
-
-@state_trigger("sensor.shellywalldisplay_0008225bc076_illuminance_level")
-def update_albums_and_playlists_when_shelly_lid_is_closed(value = None):
-    if "dark" in value.lower():
-        update_recently_added_playlists()
-        update_recently_added_albums()
-
-@service
-def sync_music_assistant_library():
-    log.info("Refreshing music database")
-    run_music_assistant_command("music/sync")
-    asyncio.sleep(4)
-    update_recently_added_playlists()
-    update_recently_added_albums()
-        
-
-@service
-def get_music_assistant_provider_data(provider):
-
-    for provider_data in run_music_assistant_command("config/providers"):
-        if provider_data["domain"] == provider:
-            return provider_data
-    
-@service
-def dont_stop_the_music(player_name):
-    """
-    Set don't stop the music = True for a music assistant player
-    """
-    
-    player_info = run_music_assistant_command(
-        "players/get_by_name",
-        name = player_name)
-    
-    player_id = player_info["player_id"]
-    
-    player_queue = run_music_assistant_command(
-        "player_queues/get_active_queue",
-        player_id = player_id)
-    
-    queue_id = player_queue["queue_id"]
-
-    run_music_assistant_command(
-        "player_queues/repeat",
-        queue_id = queue_id,
-        repeat_mode = "off"
-    )
-    
-    run_music_assistant_command(
-        "player_queues/dont_stop_the_music",
-        queue_id = queue_id,
-        dont_stop_the_music_enabled = True
-    )
-    
-@state_trigger("media_player.argon_radio_2i_305890754e1c_3")
-def update_apple_music_provider_status_when_radio_changes_state(value = None, old_value=None):
-    if old_value == "unavailable" or value == "unavailable":
-        set_apple_music_provider_status()
-
-def update_apple_music_provider_status_when_shelly_changes_state(value=None):
-    if not value or "dark" in value.lower():
-        return
-    set_apple_music_provider_status()
-    
-    
-def set_apple_music_provider_status():
-    provider_data = get_music_assistant_provider_data("apple_music")
-    last_error = provider_data["last_error"]
-    
-    if last_error:
-        input_text.apple_music_provider_status = last_error[:255]
-    else:
-        if media_player.argon_radio_2i_305890754e1c_3 == "unavailable":
-            input_text.apple_music_provider_status = "UNAVAILABLE"
-        else:
-            input_text.apple_music_provider_status = "OK"
     
     
 @state_trigger("media_player.argon_radio_2i_305890754e1c.source")
