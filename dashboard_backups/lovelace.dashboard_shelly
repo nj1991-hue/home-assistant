@@ -4845,6 +4845,18 @@
             }
           ],
           "cards": []
+        },
+        {
+          "type": "sections",
+          "max_columns": 4,
+          "icon": "mdi:window-closed",
+          "path": "",
+          "sections": [
+            {
+              "type": "grid",
+              "cards": []
+            }
+          ]
         }
       ]
     }

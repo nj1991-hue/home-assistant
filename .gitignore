@@ -4,6 +4,8 @@
 !configuration.yaml
 !pyscript/ 
 !pyscript/**
+!esphome/
+!esphome/**
 !dashboard_backups/ 
 !dashboard_backups/**
 !helper_backups/ 

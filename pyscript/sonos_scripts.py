@@ -7,7 +7,7 @@ import time
 import random
 import datetime, time
 import json
-from utils import download_file, fetch,  get_album_art, determine_if_song_exists
+from utils import download_file, fetch,  get_album_art, determine_if_song_exists, media_string_is_valid
 
 state.persist('pyscript.media_metadata')
 state.persist('pyscript.dab_radio_art_urls')
@@ -156,26 +156,6 @@ async def get_dr_media_header(url):
         media_header = await parse_media_header(html)
 
     return media_header
-    
-    
-def media_string_is_valid(artist_or_song):
-    if artist_or_song == "-":
-        return False
-    if "NPO" in artist_or_song:
-        return False
-    if "P3" in artist_or_song:
-        return False
-    if "P4" in artist_or_song:
-        return False
-    if "BNNVARA" in artist_or_song:
-        return False
-    if "NCRV" in artist_or_song:
-        return False
-    if "TROS" in artist_or_song:
-        return False
-    if "Omroep" in artist_or_song:
-        return False
-    return True
 
 
 def set_media_metadata_attributes(entity_id, **kwargs):

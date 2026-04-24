@@ -91,6 +91,24 @@ def get_genre(artist, album):
     return None
     
     
+def media_string_is_valid(artist_or_song):
+    if artist_or_song == "-":
+        return False
+    if "NPO" in artist_or_song:
+        return False
+    if "P3" in artist_or_song:
+        return False
+    if "P4" in artist_or_song:
+        return False
+    if "BNNVARA" in artist_or_song:
+        return False
+    if "NCRV" in artist_or_song:
+        return False
+    if "TROS" in artist_or_song:
+        return False
+    if "Omroep" in artist_or_song:
+        return False
+    return True
     
     
     

@@ -1362,11 +1362,26 @@
         - 2
         attribute: totalNumberOfPressesCounted
       then:
-      - action: media_player.media_play_pause
-        metadata: {}
-        target:
+      - if:
+        - condition: state
           entity_id: media_player.kokken
-        data: {}
+          state:
+          - idle
+        then:
+        - action: media_player.play_media
+          target:
+            entity_id: media_player.kokken
+          data:
+            media:
+              media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
+              media_content_type: music
+              metadata: {}
+        else:
+        - action: media_player.media_play_pause
+          metadata: {}
+          target:
+            entity_id: media_player.kokken
+          data: {}
   mode: single
 - id: '1770923084869'
   alias: toggle_hide_radio_vinyl_button_on_shelly_boolean
