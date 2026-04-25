@@ -1,4 +1,25 @@
 
+def mute_or_play(media_player_obj):
+    if media_player_obj == "playing":
+        mute = not media_player_obj.is_volume_muted
+        
+        if mute:
+            log.info(f"Muting {media_player_obj.entity_id}")
+        else:
+            log.info(f"Unmuting {media_player_obj.entity_id}")
+        media_player.volume_mute(entity_id=media_player_obj.entity_id, is_volume_muted=mute)
+
+    elif media_player_obj == "idle":
+        media_player.play_media(
+            media_content_id="x-rincon-stream:RINCON_804AF2CAFA8001400", 
+            media_content_type="music",
+            entity_id=media_player_obj.entity_id
+        )
+
+    else:
+        log.info(f"Starting playback on {media_player_obj.entity_id}")
+        media_player.media_play(entity_id=media_player_obj.entity_id)
+
 
 @event_trigger("esphome.ir_signal")
 def handle_edifier_remote_events(**kwargs):
@@ -8,17 +29,7 @@ def handle_edifier_remote_events(**kwargs):
     log.info(f"Received {event_name} event from edifier remote")
     
     if event_name == "toggle_power":
-        if media_player_obj == "playing":
-            mute = not media_player_obj.is_volume_muted
-            
-            if mute:
-                log.info(f"Muting {media_player_obj.entity_id}")
-            else:
-                log.info(f"Unmuting {media_player_obj.entity_id}")
-            media_player.volume_mute(entity_id=media_player_obj.entity_id, is_volume_muted=mute)
-        else:
-            log.info(f"Starting playback on {media_player_obj.entity_id}")
-            media_player.media_play(entity_id=media_player_obj.entity_id)
+        mute_or_play(media_player_obj)
     elif event_name == "volume_up":
         if media_player_obj.is_volume_muted:
             log.info(f"Unmuting {media_player_obj.entity_id}")
@@ -37,25 +48,9 @@ def handle_edifier_remote_events(**kwargs):
 
 @event_trigger("esphome.ir_touch")
 def handle_ir_blaster_touch_event(**kwargs):
-    
     event_name = kwargs.get("name", "")
     media_player_obj = media_player.entre
-    
-    if media_player_obj == "playing": 
-        if media_player_obj.is_volume_muted:
-            log.info(f"Unmuting {media_player_obj.entity_id}")
-            media_player.volume_mute(entity_id=media_player_obj.entity_id, is_volume_muted=False)
-        else:
-            log.info(f"Pausing playback on {media_player_obj.entity_id}")
-            media_player.media_pause(entity_id=media_player_obj.entity_id)
-    elif media_player_obj == "idle":
-        media_player.play_media(
-            media_content_id="x-rincon-stream:RINCON_804AF2CAFA8001400", 
-            media_content_type="music",
-            entity_id=media_player_obj.entity_id
-        )
-    else:
-        log.info(f"Starting playback on {media_player_obj.entity_id}")
-        media_player.media_play(entity_id=media_player_obj.entity_id)
-        
-        
+    mute_or_play(media_player_obj)
+
+
+

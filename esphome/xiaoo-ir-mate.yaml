@@ -6,7 +6,7 @@ substitutions:
 esphome:
   name: "${name}"
   friendly_name: "${friendly_name}"
-  name_add_mac_suffix: True
+  name_add_mac_suffix: False
   project:
     name: "xiao.smart-ir-mate"
     version: "2.0"
@@ -27,6 +27,11 @@ globals:
 
   - id: reset_press_time
     type: uint32_t
+    initial_value: '0'
+
+  - id: touch_timer
+    type: unsigned long
+    restore_value: no
     initial_value: '0'
 
   # open or close the learning mode
@@ -113,7 +118,7 @@ remote_receiver:
     # For such a case, you must send the infrared signal strictly according to the corresponding timing, otherwise it will fail
     # If you don't want it to be segmented, you can reduce the frequency and adjust the idle parameter to make it receive as complete as possible
     clock_resolution: "500000"
-    # dump: raw
+    #dump: raw
     # Receive data: using raw data
     # In the infrared parsing of esphome, a signal (e.g., NEC) may be parsed into multiple signals (e.g., JVC, Pronto, etc.).
     # Here, we only retain the original signal and do not decode the protocol.
@@ -137,21 +142,6 @@ remote_receiver:
                 id(fire_ir_event).execute("volume_down");
               }
             }
-
-    on_raw:
-      - switch.turn_off: vibration_switch
-      - lambda: |-
-          if (id(is_learning_mode)) {
-            if (x.size() > id(filter_size)){
-              ESP_LOGI("ir", "Saved signal index: %d", id(signal_select_index));
-              id(signal_nvs).save_to_nvs(id(signal_select_index), x);
-              id(send_data_vector).clear();
-              id(send_data_vector) = id(signal_nvs).load_from_nvs<long int>(id(signal_select_index)); 
-              id(is_learning_mode) = false;
-              // Learned the signal, turn on the switch
-              id(is_learned_signal_script).execute(true);
-            }
-          }
 
 button:
   # Button in learning mode, you need to open learning mode first, and the signal will be saved
@@ -188,19 +178,20 @@ button:
     on_press:
       - remote_transmitter.transmit_raw:
           code: [
-            516, -1142, 516, -1144, 1354, -296, 538, -1120, 514, -1144, 1310, -342,
-            468, -1190, 468, -1190, 468, -1190, 470, -1190, 468, -1190, 1308, -342,
-            468, -1190, 1308, -342, 1308, -342, 1308, -342, 470, -1190, 468, -1190,
-            1308, -342, 1308, -342, 1308, -340, 470, -1190, 470, -1190, 466, -25948,
-            470, -1188, 470, -1188, 1310, -340, 470, -1190, 468, -1190, 1308, -342,
-            470, -1188, 470, -1188, 470, -1188, 470, -1190, 470, -1188, 1310, -340,
-            470, -1190, 1308, -340, 1308, -344, 1308, -342, 468, -1190, 468, -1190,
-            1310, -340, 1310, -340, 1310, -340, 470, -1190, 470, -1188, 468
+            520, -1140, 520, -1140, 1310, -340, 520, -1140, 520, -1140, 1310, -340,
+            470, -1190, 470, -1190, 470, -1190, 470, -1190, 470, -1190, 1310, -340,
+            470, -1190, 1310, -340, 1310, -340, 1310, -340, 470, -1190, 470, -1190,
+            1310, -340, 1310, -340, 1310, -340, 470, -1190, 470, -1190, 470, -25950,
+
+            470, -1190, 470, -1190, 1310, -340, 470, -1190, 470, -1190, 1310, -340,
+            470, -1190, 470, -1190, 470, -1190, 470, -1190, 470, -1190, 1310, -340,
+            470, -1190, 1310, -340, 1310, -340, 1310, -340, 470, -1190, 470, -1190,
+            1310, -340, 1310, -340, 1310, -340, 470, -1190, 470, -1190, 470
           ]
           carrier_frequency: 38kHz
           repeat:
-            times: 2
-            wait_time: 16ms
+            times: 4
+            wait_time: 30ms
 
   - platform: template
     name: "Close Window"
@@ -208,19 +199,20 @@ button:
     on_press:
       - remote_transmitter.transmit_raw:
           code: [
-            538, -1120, 1354, -298, 1376, -272, 512, -1148, 468, -1190, 1308, -342,
-            468, -1190, 470, -1188, 470, -1190, 468, -1190, 468, -1190, 1308, -342,
-            468, -1192, 1308, -342, 1308, -342, 1308, -342, 468, -1190, 470, -1188,
-            1310, -342, 1306, -344, 1308, -342, 1306, -342, 470, -1190, 1308, -25096,
-            470, -1190, 1308, -342, 1308, -342, 470, -1188, 470, -1188, 1310, -342,
-            468, -1190, 470, -1188, 470, -1188, 470, -1190, 468, -1190, 1308, -342,
-            470, -1188, 1308, -342, 1310, -340, 1310, -340, 470, -1188, 470, -1190,
-            1308, -342, 1308, -342, 1308, -342, 1308, -344, 466, -1190, 1308
+            520, -1140, 1310, -340, 1310, -340, 470, -1190, 470, -1190, 1310, -340,
+            470, -1190, 470, -1190, 470, -1190, 470, -1190, 470, -1190, 1310, -340,
+            470, -1190, 1310, -340, 1310, -340, 1310, -340, 470, -1190, 470, -1190,
+            1310, -340, 1310, -340, 1310, -340, 1310, -340, 470, -1190, 1310, -25100,
+
+            470, -1190, 1310, -340, 1310, -340, 470, -1190, 470, -1190, 1310, -340,
+            470, -1190, 470, -1190, 470, -1190, 470, -1190, 470, -1190, 1310, -340,
+            470, -1190, 1310, -340, 1310, -340, 1310, -340, 470, -1190, 470, -1190,
+            1310, -340, 1310, -340, 1310, -340, 1310, -340, 470, -1190, 1310
           ]
           carrier_frequency: 38kHz
           repeat:
-            times: 2
-            wait_time: 16ms
+            times: 4
+            wait_time: 30ms
 
 
 # Signal selection dropdown list
@@ -289,15 +281,16 @@ binary_sensor:
       number: GPIO5
       mode: INPUT_PULLDOWN
 
-    on_press:
+    on_state:
       then:
-        - script.execute:
-            id: vibe
-            delay_ms: 100
-
-        - script.execute:
-            id: fire_touch_event
-            action: "single"
+        - lambda: |-
+            id(vibe).execute(100);
+            id(touch_timer) = millis();
+            if (id(check_touch_delay).is_running()) {
+              id(check_touch_delay).stop();
+              delay(10);
+            }
+            id(check_touch_delay).execute();
 
   - platform: gpio
     id: reset_button
@@ -361,6 +354,16 @@ script:
       - switch.turn_on: vibration_switch
       - delay: !lambda return delay_ms;
       - switch.turn_off: vibration_switch
+
+  - id: check_touch_delay
+    then:
+      - delay: 300ms
+      - lambda: |-
+          unsigned long current_time = millis();
+          if (current_time - id(touch_timer) >= 300) {
+            ESP_LOGI("check click", "single click action");
+            id(fire_touch_event).execute("single");
+          }
 
   # Send infrared signal
   # The saved signal is the original signal, we do not encode or decode, just send
