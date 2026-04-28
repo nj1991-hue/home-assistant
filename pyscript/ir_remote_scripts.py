@@ -22,7 +22,7 @@ def mute_or_play(media_player_obj):
 
 
 @event_trigger("esphome.ir_signal")
-def handle_ir_remote_events(**kwargs):
+def handle_edifier_remote_events(**kwargs):
     event_name = kwargs.get("name", "")
     media_player_obj = media_player.entre
     
@@ -45,15 +45,6 @@ def handle_ir_remote_events(**kwargs):
         current_volume = media_player_obj.volume_level
         new_volume = max(current_volume - 0.02, 0.01)
         service.call("media_player", "volume_set", entity_id=media_player_obj.entity_id, volume_level=new_volume)
-
-    elif event_name == "pause":
-        media_player.media_pause(entity_id=media_player_obj.entity_id)
-    elif event_name == "play":
-        media_player.media_play(entity_id=media_player_obj.entity_id)
-    elif event_name == "mute":
-        media_player.volume_mute(entity_id=media_player_obj.entity_id, is_volume_muted = not media_player_obj.is_volume_muted)
-
-
 
 @event_trigger("esphome.ir_touch")
 def handle_ir_blaster_touch_event(**kwargs):

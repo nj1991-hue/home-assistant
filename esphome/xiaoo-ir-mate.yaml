@@ -119,6 +119,7 @@ remote_receiver:
     # If you don't want it to be segmented, you can reduce the frequency and adjust the idle parameter to make it receive as complete as possible
     clock_resolution: "500000"
     #dump: raw
+    dump: all
     # Receive data: using raw data
     # In the infrared parsing of esphome, a signal (e.g., NEC) may be parsed into multiple signals (e.g., JVC, Pronto, etc.).
     # Here, we only retain the original signal and do not decode the protocol.
@@ -142,6 +143,53 @@ remote_receiver:
                 id(fire_ir_event).execute("volume_down");
               }
             }
+    on_sony:
+      then:
+        - lambda: |-
+            uint32_t data = x.data;
+            uint8_t nbits = x.nbits;
+
+            ESP_LOGI("ir", "Sony received: data=0x%lX nbits=%d", data, nbits);
+
+            if (nbits == 12) {
+              if (data == 0x0A90) {
+                ESP_LOGI("ir", "firing toggle_power");
+                id(fire_ir_event).execute("toggle_power");
+              } else if (data == 0x0490) {
+                ESP_LOGI("ir", "firing volume_up");
+                id(fire_ir_event).execute("volume_up");
+              } else if (data == 0x0C90) {
+                ESP_LOGI("ir", "firing volume_down");
+                id(fire_ir_event).execute("volume_down");
+              } else if (data == 0x290) {
+                ESP_LOGI("ir", "firing mute");
+                id(fire_ir_event).execute("mute");
+              } 
+            } else if (nbits==15){
+              if (data == 0x2CE9) {
+                ESP_LOGI("ir", "firing play");
+                id(fire_ir_event).execute("play");
+              } else if (data == 0x4CE9) {
+                ESP_LOGI("ir", "firing pause");
+                id(fire_ir_event).execute("pause");
+              } else if (data == 0xCE9) {
+                ESP_LOGI("ir", "firing stop");
+                id(fire_ir_event).execute("stop");
+              } else if (data == 0x6CE9) {
+                ESP_LOGI("ir", "firing last_song");
+                id(fire_ir_event).execute("last_song");
+              } else if (data == 0x1CE9) {
+                ESP_LOGI("ir", "firing next_song");
+                id(fire_ir_event).execute("next_song");
+              } else if (data == 0x1EE9) {
+                ESP_LOGI("ir", "firing skip_to_start");
+                id(fire_ir_event).execute("skip_to_start");
+              } else if (data == 0x5EE9) {
+                ESP_LOGI("ir", "firing skip_to_end");
+                id(fire_ir_event).execute("skip_to_end");
+              }
+            }
+
 
 button:
   # Button in learning mode, you need to open learning mode first, and the signal will be saved
