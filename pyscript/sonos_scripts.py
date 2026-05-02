@@ -209,7 +209,7 @@ def set_sonos_meta_data(entity_ids):
         media_players = [m.entity_id for m in get_media_players()]
     
         attrs = state.getattr(entity_id)
-        sonos_media_content_id = attrs.get("media_content_id")
+        sonos_media_content_id = attrs.get("media_content_id", "")
         sonos_media_artist = attrs.get("media_artist")
         sonos_media_title = attrs.get("media_title")
         sonos_source = attrs.get("source")
@@ -220,7 +220,7 @@ def set_sonos_meta_data(entity_ids):
         media_title = None
         media_subtitle = None
         
-        if sonos_media_content_id == "x-rincon-stream:RINCON_804AF2CAFA8001400":
+        if "x-rincon-stream:RINCON_804AF2CAFA8001400" in sonos_media_content_id:
             dab_radio_attrs = dab_radio_attrs or state.getattr("media_player.argon_radio_2i_305890754e1c")
 
             dab_channel = dab_radio_attrs.get("media_content_id")
@@ -364,7 +364,7 @@ def set_sonos_art(entity_id):
     if not sonos_media_content_id:
         return
 
-    if sonos_media_content_id == "x-rincon-stream:RINCON_804AF2CAFA8001400":
+    if "x-rincon-stream:RINCON_804AF2CAFA8001400" in sonos_media_content_id:
         dab_channel = getattr(media_player.argon_radio_2i_305890754e1c, "media_content_id", None)
         dab_source = getattr(media_player.argon_radio_2i_305890754e1c, "source", None)
         dab_media_title = getattr(media_player.argon_radio_2i_305890754e1c, "media_title", None)

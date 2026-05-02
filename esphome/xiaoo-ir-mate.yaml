@@ -164,6 +164,26 @@ remote_receiver:
               } else if (data == 0x290) {
                 ESP_LOGI("ir", "firing mute");
                 id(fire_ir_event).execute("mute");
+              } else if (data == 0x10) {
+                id(fire_ir_event).execute("preset_1");
+              } else if (data == 0x810) {
+                id(fire_ir_event).execute("preset_2");
+              } else if (data == 0x410) {
+                id(fire_ir_event).execute("preset_3");
+              } else if (data == 0xC10) {
+                id(fire_ir_event).execute("preset_4");
+              } else if (data == 0x210) {
+                id(fire_ir_event).execute("preset_5");
+              } else if (data == 0xA10) {
+                id(fire_ir_event).execute("preset_6");
+              } else if (data == 0x610) {
+                id(fire_ir_event).execute("preset_7");
+              } else if (data == 0xE10) {
+                id(fire_ir_event).execute("preset_8");
+              } else if (data == 0x110) {
+                id(fire_ir_event).execute("preset_9");
+              } else if (data == 0x910) {
+                id(fire_ir_event).execute("preset_0");
               } 
             } else if (nbits==15){
               if (data == 0x2CE9) {

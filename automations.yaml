@@ -1570,3 +1570,36 @@
       entity_id: input_boolean.album_added_to_queue
     data: {}
   mode: single
+- id: '1777658707853'
+  alias: close_entre_window_when_home_state_changes
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - input_text.home_state
+    to:
+    - Away
+    - Home - Night
+  conditions: []
+  actions:
+  - action: pyscript.close_entre_window
+    metadata: {}
+    data: {}
+  mode: single
+- id: '1777659237059'
+  alias: close_entre_window_when_rain_is_likely
+  description: ''
+  triggers:
+  - trigger: time_pattern
+    minutes: /5
+    hours: '*'
+  conditions:
+  - condition: numeric_state
+    entity_id: weather.forecast_home
+    attribute: humidity
+    above: 80
+  actions:
+  - action: pyscript.close_entre_window
+    metadata: {}
+    data: {}
+  mode: single

@@ -1954,73 +1954,6 @@
                           "type": "custom:button-card",
                           "template": "radio_button",
                           "variables": {
-                            "preset": "Internet radio/preset/3"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "variables": {
-                            "preset": "Internet radio/preset/4"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "variables": {
-                            "preset": "Internet radio/preset/5"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "entity_picture": "/local/radio_paradise_rock_logo.webp",
-                          "variables": {
-                            "preset": "Internet radio/preset/6"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "type": "horizontal-stack",
-                      "cards": [
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "variables": {
-                            "preset": "Internet radio/preset/7"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "variables": {
-                            "preset": "Internet radio/preset/8"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "variables": {
-                            "preset": "Internet radio/preset/9"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "variables": {
-                            "preset": "Internet radio/preset/10"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "type": "horizontal-stack",
-                      "cards": [
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "variables": {
                             "preset": "Internet radio/preset/1"
                           }
                         },
@@ -2041,6 +1974,72 @@
                           "show_entity_picture": true,
                           "grid_options": {
                             "columns": 4
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "radio_button",
+                          "variables": {
+                            "preset": "Internet radio/preset/3"
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "radio_button",
+                          "variables": {
+                            "preset": "Internet radio/preset/4"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "horizontal-stack",
+                      "cards": [
+                        {
+                          "type": "custom:button-card",
+                          "template": "radio_button",
+                          "variables": {
+                            "preset": "Internet radio/preset/5"
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "radio_button",
+                          "variables": {
+                            "preset": "Internet radio/preset/6"
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "radio_button",
+                          "variables": {
+                            "preset": "Internet radio/preset/7"
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "radio_button",
+                          "variables": {
+                            "preset": "Internet radio/preset/8"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "horizontal-stack",
+                      "cards": [
+                        {
+                          "type": "custom:button-card",
+                          "template": "radio_button",
+                          "variables": {
+                            "preset": "Internet radio/preset/9"
+                          }
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "radio_button",
+                          "variables": {
+                            "preset": "Internet radio/preset/10"
                           }
                         },
                         {
