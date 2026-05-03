@@ -53,6 +53,7 @@ def run_music_assistant_command(command, **kwargs):
 def add_item_to_music_assistant_metadata(key, album):
     set_music_assistant_metadata_attributes(**{
         f"{key}_uri": album["uri"],
+        f"{key}_name": album["name"],
         f"{key}_thumbnail": album["image"] or "/local/404.png",
     })
 
@@ -225,3 +226,33 @@ def update_apple_music_provider_status_when_shelly_lid_is_closed(value=None):
         set_apple_music_provider_status()
     
     
+
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

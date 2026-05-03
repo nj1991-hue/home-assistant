@@ -746,6 +746,11 @@ force_play_media:
       entity_id: '{{ target_media_player }}'
     data:
       is_volume_muted: false
+  - action: input_boolean.turn_off
+    metadata: {}
+    target:
+      entity_id: input_boolean.album_added_to_queue
+    data: {}
   alias: force_play_media
   description: 'Plays media on the selected media player. If the source was AirPlay
     before starting, waits 1 second and retries if not playing.
@@ -782,98 +787,6 @@ play_radio_preset_on_sonos:
       entity_id: input_boolean.allow_radio_popup_on_shelly
   alias: play_radio_preset_on_sonos
   description: ''
-play_music_assistant_on_sonos:
-  sequence:
-  - action: timer.start
-    metadata: {}
-    target:
-      entity_id: timer.radio_turned_on_by_automation
-    data: {}
-  - if:
-    - condition: template
-      value_template: '{{ enqueue | default('''') == ''next'' }}'
-    then:
-    - if:
-      - condition: state
-        entity_id: media_player.argon_radio_2i_305890754e1c_3
-        state:
-        - playing
-      then:
-      - action: music_assistant.play_media
-        metadata: {}
-        data:
-          media_id: '{{ media_id }}'
-          enqueue: add
-        target:
-          entity_id: media_player.argon_radio_2i_305890754e1c_3
-      - action: input_boolean.turn_off
-        metadata: {}
-        data: {}
-        target:
-          entity_id: input_boolean.allow_apple_music_popup_on_shelly
-      - action: input_boolean.turn_on
-        metadata: {}
-        target:
-          entity_id: input_boolean.album_added_to_queue
-        data: {}
-      - action: input_text.set_value
-        metadata: {}
-        target:
-          entity_id: input_text.next_album_picture
-        data:
-          value: '{{ next_album_picture }}'
-      - stop: Radio is already playing
-      else:
-      - action: music_assistant.play_media
-        metadata: {}
-        data:
-          media_id: '{{ media_id }}'
-        target:
-          entity_id: media_player.argon_radio_2i_305890754e1c_3
-    else:
-    - action: music_assistant.play_media
-      metadata: {}
-      data:
-        media_id: '{{ media_id }}'
-      target:
-        entity_id: media_player.argon_radio_2i_305890754e1c_3
-  - wait_template: '{{ states(''media_player.argon_radio_2i_305890754e1c'') == "playing"
-      }}'
-    continue_on_timeout: false
-    timeout: '10'
-  - action: script.force_play_media
-    data:
-      target_media_player: '{{ entity_id }}'
-      media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
-      media_content_type: music
-  - action: input_boolean.turn_off
-    metadata: {}
-    data: {}
-    target:
-      entity_id: input_boolean.allow_apple_music_popup_on_shelly
-  alias: play_music_assistant_on_sonos
-  description: ''
-  fields:
-    media_id:
-      name: Media ID
-      description: The media ID to play
-      required: true
-      example: spotify:track:123456789
-    entity_id:
-      name: Sonos player entity ID
-      description: The entity ID of the sonos player to stream the queue to.
-      required: true
-      example: media_player.kokken
-    enqueue:
-      name: Enqueue boolean
-      description: Wether to play immediately (play) or add to the queue (next)
-      required: false
-      example: next
-    next_album_picture:
-      name: album art URL
-      description: album art of the album to be queued
-      required: false
-      example: /local/sonos_art.png
 play_npo_radio_2_on_sonos:
   fields:
     entity_id:

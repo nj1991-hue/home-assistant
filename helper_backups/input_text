@@ -210,12 +210,12 @@
         "max": 100
       },
       {
-        "id": "next_album_picture",
-        "name": "next_album_picture",
-        "icon": "mdi:image-album",
-        "max": 100,
+        "id": "next_album",
+        "name": "next_album",
+        "icon": "mdi:album",
         "min": 0,
-        "mode": "text"
+        "mode": "text",
+        "max": 100
       }
     ]
   }

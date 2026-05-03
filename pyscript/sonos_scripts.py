@@ -1124,12 +1124,54 @@ def handle_radio_playback(trigger_entity_id):
         wait_for(media_player_obj, "state", "is", "playing")
         group_if_same_content()
     
+
+@state_trigger("media_player.argon_radio_2i_305890754e1c")
+@state_trigger("media_player.argon_radio_2i_305890754e1c.media_content_id")
+@state_trigger("media_player.argon_radio_2i_305890754e1c_3.media_content_id")
+def reset_album_added_to_queue():
+    if media_player.argon_radio_2i_305890754e1c != "playing":
+        input_boolean.turn_off(entity_id="input_boolean.album_added_to_queue")
+    elif getattr(media_player.argon_radio_2i_305890754e1c, "source", "") != "Local Music":
+        input_boolean.turn_off(entity_id="input_boolean.album_added_to_queue")
+    else:
+        album_name = getattr(media_player.argon_radio_2i_305890754e1c_3, "media_album_name", "")
+        next_album_name=getattr(pyscript.music_assistant_metadata, input_text.next_album + "_name")
+        
+        if album_name == next_album_name:
+            input_boolean.turn_off(entity_id="input_boolean.album_added_to_queue")
             
 
+@service
+def play_music_assistant_on_sonos(entity_id, album, enqueue=None):
 
+    media_id = getattr(pyscript.music_assistant_metadata, album+ "_uri")
+    timer.start(entity_id= "timer.radio_turned_on_by_automation")
     
+    if enqueue and media_player.argon_radio_2i_305890754e1c_3 == "playing":
+        music_assistant.play_media(
+            entity_id="media_player.argon_radio_2i_305890754e1c_3",
+            media_id = media_id, 
+            enqueue=enqueue
+        )
+        input_boolean.turn_off(entity_id="input_boolean.allow_apple_music_popup_on_shelly")
+        input_boolean.turn_on(entity_id="input_boolean.album_added_to_queue")
+        input_text.set_value(entity_id="input_text.next_album", value=album)
+    else:
+        music_assistant.play_media(
+            entity_id="media_player.argon_radio_2i_305890754e1c_3",
+            media_id = media_id
+        )
+        input_boolean.turn_off(entity_id="input_boolean.album_added_to_queue")
+            
+        wait_for(media_player.argon_radio_2i_305890754e1c_3, "state", "is", "playing")
     
-    
+        script.force_play_media(
+            target_media_player=entity_id,
+            media_content_id="x-rincon-stream:RINCON_804AF2CAFA8001400",
+            media_content_type="music"
+        )
+        
+        input_boolean.turn_off(entity_id="input_boolean.allow_apple_music_popup_on_shelly")
     
     
     
