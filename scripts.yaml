@@ -772,19 +772,38 @@ play_radio_preset_on_sonos:
       selector:
         text:
   sequence:
-  - action: script.play_preset_on_dab_radio
-    data:
-      preset_path: '{{ preset_path }}'
-  - action: script.force_play_media
-    data:
-      target_media_player: '{{ entity_id }}'
-      media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
-      media_content_type: music
-  - action: input_boolean.turn_off
-    metadata: {}
-    data: {}
-    target:
-      entity_id: input_boolean.allow_radio_popup_on_shelly
+  - if:
+    - condition: template
+      value_template: '{{ preset_path == ''Internet radio/preset/2''  }}'
+    then:
+    - action: script.play_npo_radio_2_on_sonos
+      metadata: {}
+      data:
+        entity_id: '{{ entity_id }}'
+    else:
+    - action: script.play_preset_on_dab_radio
+      data:
+        preset_path: '{{ preset_path }}'
+    - action: script.force_play_media
+      data:
+        target_media_player: '{{ entity_id }}'
+        media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
+        media_content_type: music
+    - action: input_boolean.turn_off
+      metadata: {}
+      data: {}
+      target:
+        entity_id: input_boolean.allow_radio_popup_on_shelly
+  - if:
+    - condition: template
+      value_template: '{{ ''Internet radio'' in preset_path }}'
+    then:
+    - action: input_text.set_value
+      metadata: {}
+      target:
+        entity_id: input_text.last_selected_radio_preset
+      data:
+        value: '{{ preset_path }}'
   alias: play_radio_preset_on_sonos
   description: ''
 play_npo_radio_2_on_sonos:

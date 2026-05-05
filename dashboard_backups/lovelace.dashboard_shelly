@@ -1958,21 +1958,9 @@
                         },
                         {
                           "type": "custom:button-card",
-                          "template": "square_button",
-                          "entity": "media_player.kokken",
-                          "show_name": false,
-                          "show_icon": false,
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "script.play_npo_radio_2_on_sonos",
-                            "data": {
-                              "entity_id": "media_player.kokken"
-                            }
-                          },
-                          "entity_picture": "/local/npo_radio_2_logo.webp",
-                          "show_entity_picture": true,
-                          "grid_options": {
-                            "columns": 4
+                          "template": "radio_button",
+                          "variables": {
+                            "preset": "Internet radio/preset/2"
                           }
                         },
                         {
@@ -2392,19 +2380,10 @@
                 },
                 {
                   "type": "custom:button-card",
-                  "template": "square_button",
-                  "entity": "media_player.kokken",
-                  "show_name": false,
-                  "show_icon": false,
-                  "tap_action": {
-                    "action": "call-service",
-                    "service": "script.play_npo_radio_2_on_sonos",
-                    "data": {
-                      "entity_id": "media_player.kokken"
-                    }
+                  "template": "radio_button",
+                  "variables": {
+                    "preset": "Internet radio/preset/2"
                   },
-                  "entity_picture": "/local/npo_radio_2_logo.webp",
-                  "show_entity_picture": true,
                   "grid_options": {
                     "columns": 4
                   },
@@ -2448,19 +2427,10 @@
               "cards": [
                 {
                   "type": "custom:button-card",
-                  "template": "square_button",
-                  "entity": "media_player.kokken",
-                  "show_name": false,
-                  "show_icon": false,
-                  "tap_action": {
-                    "action": "call-service",
-                    "service": "script.play_radio_preset_on_sonos",
-                    "data": {
-                      "entity_id": "media_player.kokken",
-                      "preset_path": "DAB/preset/3"
-                    }
+                  "template": "radio_button",
+                  "variables": {
+                    "preset": "DAB/preset/3"
                   },
-                  "name": "P3 (DAB)",
                   "entity_picture": "/local/p3_logo.png",
                   "show_entity_picture": true,
                   "grid_options": {
@@ -2494,19 +2464,10 @@
                 },
                 {
                   "type": "custom:button-card",
-                  "template": "square_button",
-                  "entity": "media_player.kokken",
-                  "show_name": false,
-                  "show_icon": false,
-                  "tap_action": {
-                    "action": "call-service",
-                    "service": "script.play_npo_radio_2_on_sonos",
-                    "data": {
-                      "entity_id": "media_player.kokken"
-                    }
+                  "template": "radio_button",
+                  "variables": {
+                    "preset": "[[[\n  return states['input_text.last_selected_radio_preset'].state\n]]]\n"
                   },
-                  "entity_picture": "/local/npo_radio_2_logo.webp",
-                  "show_entity_picture": true,
                   "grid_options": {
                     "columns": 4
                   }
@@ -2531,19 +2492,10 @@
                 },
                 {
                   "type": "custom:button-card",
-                  "template": "square_button",
-                  "entity": "media_player.kokken",
-                  "show_name": false,
-                  "show_icon": false,
-                  "tap_action": {
-                    "action": "call-service",
-                    "service": "script.play_radio_preset_on_sonos",
-                    "data": {
-                      "entity_id": "media_player.kokken",
-                      "preset_path": "DAB/preset/4"
-                    }
+                  "template": "radio_button",
+                  "variables": {
+                    "preset": "DAB/preset/4"
                   },
-                  "name": "P4 (DAB)",
                   "entity_picture": "/local/p4_logo.png",
                   "show_entity_picture": true,
                   "grid_options": {

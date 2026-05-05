@@ -216,6 +216,14 @@
         "min": 0,
         "mode": "text",
         "max": 100
+      },
+      {
+        "id": "last_selected_radio_preset",
+        "name": "last_selected_radio_preset",
+        "icon": "mdi:radio",
+        "mode": "text",
+        "min": 0,
+        "max": 100
       }
     ]
   }
