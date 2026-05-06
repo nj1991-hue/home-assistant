@@ -231,17 +231,15 @@ def set_sonos_meta_data(entity_ids):
                 media_title = str(media_player.argon_radio_2i_305890754e1c)
                 media_subtitle = '-'
             
-            elif dab_media_title and "-" in dab_media_title:
-                now_playing = dab_media_title.split("-")[1].strip()
-                
-                now_playing = ' - '.join([t.strip() for t in dab_media_title.split("-")[1:]])
+            elif dab_media_title and " - " in dab_media_title:
+                now_playing = ' - '.join([t.strip() for t in dab_media_title.split(" - ")[1:]])
                 
                 if " / " in now_playing:
                     media_subtitle = now_playing.split(" / ")[0].strip()
                     media_title=now_playing.split(" / ")[1].strip()
                 else:
-                    if "Nu:" in now_playing and "-" in now_playing:
-                        media_subtitle = now_playing.split("-")[1].strip()
+                    if "Nu:" in now_playing and " - " in now_playing:
+                        media_subtitle = now_playing.split(" - ")[1].strip()
                     else:
                         media_subtitle = now_playing
                         
@@ -250,20 +248,31 @@ def set_sonos_meta_data(entity_ids):
                 
             playlist = None
             
+            log.info(f"SOURCE: {dab_source}")
+            
             if dab_source == "AUX in":
                 media_header = "Pladespiller"
             elif dab_source == "Internet radio":
+                
+                if "SomaFM - " in dab_media_title:
+                    dab_media_title = dab_media_title.replace("SomaFM - ","")
+                
                 if "NPO Radio 2" in dab_media_title:
                     media_header = "NPO Radio 2"
                     media_subtitle = media_subtitle.replace("NPO Radio 2 - ","")
-                elif '-' in dab_media_title:
-                    media_header = dab_media_title.split('-')[0].strip()
+                elif ' - ' in dab_media_title:
+                    media_header = dab_media_title.split(' - ')[0].strip()
                 else:
                     media_header = "Internet radio"
+                    
+                media_subtitle = media_subtitle.replace(media_header + " - ", "")
                     
                 if " - " in media_subtitle and media_player.argon_radio_2i_305890754e1c == "playing":
                     media_title = media_subtitle.split(" - ")[0].strip()
                     media_subtitle = media_subtitle.replace(f"{media_title} - ","")
+                    
+                    
+                    log.info(f"TITLE: {media_title}, SUBTITLE: {media_subtitle}")
             elif dab_source == "Local Music":
                 media_header = getattr(media_player.argon_radio_2i_305890754e1c, "media_album_name", "Apple music playlist")
                 media_title = getattr(media_player.argon_radio_2i_305890754e1c, "media_artist", "-")
