@@ -226,6 +226,9 @@ def set_sonos_meta_data(entity_ids):
             dab_channel = dab_radio_attrs.get("media_content_id")
             dab_source = dab_radio_attrs.get("source")
             dab_media_title = dab_radio_attrs.get("media_title")
+            
+            if dab_media_title and dab_media_title.startswith("SomaFM - "):
+                dab_media_title = ' - '.join([t.strip() for t in dab_media_title.split(" - ")[1:]])
 
             if media_player.argon_radio_2i_305890754e1c != "playing":
                 media_title = str(media_player.argon_radio_2i_305890754e1c)
@@ -248,14 +251,9 @@ def set_sonos_meta_data(entity_ids):
                 
             playlist = None
             
-            log.info(f"SOURCE: {dab_source}")
-            
             if dab_source == "AUX in":
                 media_header = "Pladespiller"
             elif dab_source == "Internet radio":
-                
-                if "SomaFM - " in dab_media_title:
-                    dab_media_title = dab_media_title.replace("SomaFM - ","")
                 
                 if "NPO Radio 2" in dab_media_title:
                     media_header = "NPO Radio 2"
@@ -264,15 +262,12 @@ def set_sonos_meta_data(entity_ids):
                     media_header = dab_media_title.split(' - ')[0].strip()
                 else:
                     media_header = "Internet radio"
-                    
-                media_subtitle = media_subtitle.replace(media_header + " - ", "")
-                    
+
                 if " - " in media_subtitle and media_player.argon_radio_2i_305890754e1c == "playing":
                     media_title = media_subtitle.split(" - ")[0].strip()
                     media_subtitle = media_subtitle.replace(f"{media_title} - ","")
                     
-                    
-                    log.info(f"TITLE: {media_title}, SUBTITLE: {media_subtitle}")
+
             elif dab_source == "Local Music":
                 media_header = getattr(media_player.argon_radio_2i_305890754e1c, "media_album_name", "Apple music playlist")
                 media_title = getattr(media_player.argon_radio_2i_305890754e1c, "media_artist", "-")
