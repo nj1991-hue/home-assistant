@@ -1085,7 +1085,7 @@ def handle_radio_playback(trigger_entity_id):
         
         log.info(f"Obtained DAB source: {dab_source}")
         
-        if media_player.argon_radio_2i_305890754e1c.media_title == "Music Assistant":
+        if media_player.argon_radio_2i_305890754e1c.media_title == media_player.argon_radio_2i_305890754e1c_3.media_title:
             log.info("DAB radio is playing Music Assistant. Returning")
             return
         
