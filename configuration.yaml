@@ -33,6 +33,7 @@ logger:
   default: info
   logs:
     custom_components.pyscript: info
+    #homeassistant.components.roomba: debug
 
 automation: !include automations.yaml
 script: !include scripts.yaml

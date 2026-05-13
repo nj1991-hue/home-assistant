@@ -829,17 +829,14 @@
     to: idle
     from: active
   actions:
-  - action: shell_command.get_tado_token
-    data: {}
-    enabled: false
-  - action: pyscript.refresh_tado_token
-    metadata: {}
-    data: {}
   - action: timer.start
     metadata: {}
     data: {}
     target:
       entity_id: timer.tado_token_expiration_timer
+  - action: pyscript.refresh_tado_token
+    metadata: {}
+    data: {}
   - action: pyscript.check_tado_response
     metadata: {}
     data: {}
@@ -1189,9 +1186,6 @@
   alias: start_sheldon
   description: ''
   triggers:
-  - trigger: time
-    at: '10:00:00'
-    enabled: false
   - trigger: state
     entity_id:
     - input_text.home_state
@@ -1201,17 +1195,16 @@
       hours: 0
       minutes: 20
       seconds: 0
-  conditions:
-  - condition: state
-    entity_id: input_text.home_state
-    state:
-    - Away
-    enabled: false
+  conditions: []
   actions:
   - action: vacuum.start
     metadata: {}
     target:
       entity_id: vacuum.sheldon
+    data: {}
+    enabled: false
+  - action: script.clean_kokken_and_spisestue
+    metadata: {}
     data: {}
   mode: single
 - id: '1767702250196'

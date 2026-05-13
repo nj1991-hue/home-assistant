@@ -628,6 +628,7 @@ def authorize_tado_api():
             if "refresh_token" in completed_flow_response:
                 await dump_tado_response(completed_flow_response)
                 input_text.tado_verification_uri_complete = ""
+                timer.start(entity_id= "timer.tado_token_expiration_timer")
                 break
             await asyncio.sleep(interval)
     check_tado_response()

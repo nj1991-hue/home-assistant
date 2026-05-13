@@ -900,3 +900,26 @@ allow_radio_popup_on_shelly_2:
     data: {}
   alias: allow_radio_popup_on_shelly
   description: ''
+clean_kokken_and_spisestue:
+  sequence:
+  - action: vacuum.send_command
+    metadata: {}
+    target:
+      entity_id: vacuum.sheldon
+    data:
+      command: start
+      params:
+        pmap_id: Bg__3bWFSjSY_RhTWad-jQ
+        regions:
+        - params:
+            noAutoPasses: true
+            twoPass: true
+          region_id: '1'
+          type: rid
+        - params:
+            noAutoPasses: true
+            twoPass: true
+          region_id: '5'
+          type: rid
+  alias: clean_only_kokken_and_spisestue_with_sheldon
+  description: ''

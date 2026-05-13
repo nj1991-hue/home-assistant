@@ -4462,6 +4462,12 @@
                     "bottom": []
                   }
                 }
+              ],
+              "visibility": [
+                {
+                  "condition": "user",
+                  "users": []
+                }
               ]
             }
           ],
