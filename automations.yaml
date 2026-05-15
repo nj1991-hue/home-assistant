@@ -234,7 +234,12 @@
     data: {}
     target:
       entity_id: scene.radio_is_playing_in_spisestue
-    enabled: true
+    enabled: false
+  - action: scene.turn_on
+    metadata: {}
+    target:
+      entity_id: scene.kokken_paused_and_set_to_default_media
+    data: {}
   mode: single
 - id: '1741286126492'
   alias: add_kitchen_when_airplaying_to_spisestue

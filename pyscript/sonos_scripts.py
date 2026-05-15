@@ -8,6 +8,8 @@ import random
 import datetime, time
 import json
 from utils import download_file, fetch,  get_album_art, determine_if_song_exists, media_string_is_valid
+import yaml
+from pathlib import Path
 
 state.persist('pyscript.media_metadata')
 state.persist('pyscript.dab_radio_art_urls')
@@ -1177,7 +1179,86 @@ def play_music_assistant_on_sonos(entity_id, album, enqueue=None):
         
         input_boolean.turn_off(entity_id="input_boolean.allow_apple_music_popup_on_shelly")
     
+@pyscript_compile
+def update_scene_file(media_content_id, media_content_type):
+    SCENES_FILE = "/config/scenes.yaml"
+    TARGET_SCENE = "kokken_paused_and_set_to_default_media"
+
+    scenes_path = Path(SCENES_FILE)
+
+    with scenes_path.open("r") as f:
+        scenes = yaml.safe_load(f)
+
+    for scene in scenes:
+        if scene.get("name") == TARGET_SCENE:
+            entity = scene["entities"]["media_player.kokken"]
+
+            entity["media_content_id"] = media_content_id
+            entity["media_content_type"] = media_content_type
+            entity["state"] = "paused"
+            break
+    else:
+        raise ValueError(f"Scene '{TARGET_SCENE_ID}' not found")
+
+    with scenes_path.open("w") as f:
+        yaml.safe_dump(
+            scenes,
+            f,
+            allow_unicode=True,
+            sort_keys=False,
+        )
     
+@service
+@time_trigger("cron(0 2 * * *)")
+async def set_default_media():
+    """
+    Updates the scene yaml which sets the default media (kokken_paused_and_set_to_default_media)
+    """
+    media_content_ids = ["x-rincon-stream:RINCON_804AF2CAFA8001400"]*10 # One for each radio preset
+    media_content_ids += [get_media_content_id("New Music Daily")]
+    media_content_ids  += [get_media_content_id("Radio 100")]
+    
+    media_content_id = random.choice(media_content_ids)
+    media_content_type = "favorite_item_id" if "FV:" in media_content_id else "music"
+
+    await task.executor(
+        update_scene_file,
+        media_content_id,
+        media_content_type,
+    )
+
+    await service.call("scene", "reload")
+
+    log.info(
+        f"Updated default media scene: "
+        f"{media_content_type=} {media_content_id=}"
+    )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
     
     
