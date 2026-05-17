@@ -1,0 +1,30 @@
+- id: '1742888060251'
+  name: spisestue_paused_and_source_is_line_in
+  entities:
+    media_player.spisestue:
+      group_members:
+      - media_player.kokken
+      - media_player.spisestue
+      - media_player.stue
+      - media_player.entre
+      volume_level: 0.02
+      is_volume_muted: false
+      media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
+      media_content_type: music
+      media_title: Line-in
+      shuffle: false
+      repeat: 'off'
+      queue_size: 1
+      device_class: speaker
+      friendly_name: Spisestue
+      supported_features: 4127295
+      state: paused
+  metadata: {}
+- id: '1778779663630'
+  name: kokken_paused_and_set_to_default_media
+  entities:
+    media_player.kokken:
+      media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
+      media_content_type: music
+      state: paused
+  metadata: {}

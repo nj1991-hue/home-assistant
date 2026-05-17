@@ -1,6 +1,7 @@
 *
 !automations.yaml
 !scripts.yaml
+!scenes.yaml
 !configuration.yaml
 !pyscript/ 
 !pyscript/**

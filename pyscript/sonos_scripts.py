@@ -1216,7 +1216,10 @@ async def set_default_media():
     """
     media_content_ids = ["x-rincon-stream:RINCON_804AF2CAFA8001400"]*10 # One for each radio preset
     media_content_ids += [get_media_content_id("New Music Daily")]
-    media_content_ids  += [get_media_content_id("Radio 100")]
+    media_content_ids += [get_media_content_id("Radio 100")]
+    media_content_ids += [get_media_content_id("The Voice")]
+    media_content_ids += [get_media_content_id("NOVA")]
+    media_content_ids += [get_media_content_id("myROCK")]
     
     media_content_id = random.choice(media_content_ids)
     media_content_type = "favorite_item_id" if "FV:" in media_content_id else "music"
