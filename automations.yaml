@@ -1030,39 +1030,11 @@
     entity_id: timer.sonos_morning_routine_running
     state:
     - idle
+  - condition: state
+    entity_id: timer.radio_turned_on_by_automation
+    state:
+    - idle
   actions:
-  - if:
-    - condition: state
-      entity_id: media_player.argon_radio_2i_305890754e1c
-      state:
-      - unavailable
-    then:
-    - action: media_player.play_media
-      metadata: {}
-      target:
-        entity_id: '{{ trigger.entity_id }}'
-      data:
-        media:
-          media_content_id: FV:2/73
-          media_content_type: favorite_item_id
-          metadata:
-            title: Radio Vinyl
-            thumbnail: https://dtu8ldmaopof3.cloudfront.net/i/b64aHR0cHM6Ly9hc3NldHMucGxhbmV0cmFkaW8uY28udWsvaW1nL0NvbmZpZ0xvY2tTY3JlZW5JbWFnZVVybC80MjUuanBnP3Zlcj0xNTgyMDM3MTE4_640.jpg
-            media_class: genre
-            children_media_class:
-            navigateIds:
-            - {}
-            - media_content_type: favorites
-              media_content_id: ''
-            - media_content_type: favorites_folder
-              media_content_id: object.item.audioItem.audioBroadcast
-            browse_entity_id: media_player.stue
-    else:
-    - action: pyscript.handle_radio_playback
-      metadata: {}
-      data:
-        trigger_entity_id: '{{ trigger.entity_id }}'
-    enabled: false
   - action: pyscript.handle_radio_playback
     metadata: {}
     data:

@@ -823,35 +823,32 @@
                   ]
                 },
                 {
-                  "type": "vertical-stack",
+                  "type": "custom:bubble-card",
+                  "card_type": "pop-up",
+                  "modules": [
+                    "default"
+                  ],
+                  "slide_to_close_distance": "40000",
+                  "close_on_click": true,
+                  "background_update": false,
+                  "close_by_clicking_outside": true,
+                  "show_header": true,
+                  "hash": "#more-media",
+                  "margin": "0px",
+                  "bg_opacity": "0",
+                  "bg_blur": "9",
+                  "margin_top_desktop": "-56px",
+                  "margin_top_mobile": "-56px",
+                  "hide_backdrop": true,
+                  "button_type": "name",
+                  "sub_button": {
+                    "main": [],
+                    "bottom": []
+                  },
+                  "slider_fill_orientation": "left",
+                  "slider_value_position": "right",
+                  "auto_close": "300000",
                   "cards": [
-                    {
-                      "type": "custom:bubble-card",
-                      "card_type": "pop-up",
-                      "modules": [
-                        "default"
-                      ],
-                      "slide_to_close_distance": "40000",
-                      "close_on_click": true,
-                      "background_update": true,
-                      "close_by_clicking_outside": true,
-                      "show_header": true,
-                      "hash": "#more-media",
-                      "margin": "0px",
-                      "bg_opacity": "0",
-                      "bg_blur": "9",
-                      "margin_top_desktop": "-56px",
-                      "margin_top_mobile": "-56px",
-                      "hide_backdrop": true,
-                      "button_type": "name",
-                      "sub_button": {
-                        "main": [],
-                        "bottom": []
-                      },
-                      "slider_fill_orientation": "left",
-                      "slider_value_position": "right",
-                      "auto_close": "300000"
-                    },
                     {
                       "type": "custom:sonos-card",
                       "sections": [
@@ -908,289 +905,263 @@
                         }
                       }
                     }
-                  ]
+                  ],
+                  "performance_mode": "performance"
                 },
                 {
-                  "type": "vertical-stack",
+                  "type": "custom:bubble-card",
+                  "card_type": "pop-up",
+                  "hash": "#sonos-controls",
+                  "button_type": "name",
+                  "modules": [
+                    "default"
+                  ],
+                  "slide_to_close_distance": "40000",
+                  "close_on_click": false,
+                  "background_update": false,
+                  "close_by_clicking_outside": true,
+                  "show_header": true,
+                  "margin": "0px",
+                  "bg_opacity": "0",
+                  "bg_blur": "9",
+                  "margin_top_desktop": "-56px",
+                  "margin_top_mobile": "-56px",
+                  "hide_backdrop": true,
+                  "name": "",
+                  "show_icon": false,
+                  "card_layout": "large",
+                  "auto_close": "300000",
+                  "sub_button": {
+                    "main": [],
+                    "bottom": []
+                  },
                   "cards": [
                     {
-                      "type": "custom:bubble-card",
-                      "card_type": "pop-up",
-                      "hash": "#sonos-controls",
-                      "button_type": "name",
-                      "modules": [
-                        "default"
-                      ],
-                      "slide_to_close_distance": "40000",
-                      "close_on_click": false,
-                      "background_update": true,
-                      "close_by_clicking_outside": true,
-                      "show_header": true,
-                      "margin": "0px",
-                      "bg_opacity": "0",
-                      "bg_blur": "9",
-                      "margin_top_desktop": "-56px",
-                      "margin_top_mobile": "-56px",
-                      "hide_backdrop": true,
-                      "name": "",
-                      "show_icon": false,
-                      "card_layout": "large",
-                      "auto_close": "300000",
-                      "sub_button": {
-                        "main": [],
-                        "bottom": []
+                      "type": "custom:button-card",
+                      "template": "square_button",
+                      "entity": "input_number.kokken_volume",
+                      "icon": "mdi:volume-minus",
+                      "show_name": false,
+                      "styles": {
+                        "card": [
+                          {
+                            "padding": "12%"
+                          }
+                        ]
+                      },
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "input_number.decrement",
+                        "target": {
+                          "entity_id": "input_number.kokken_volume"
+                        }
+                      },
+                      "grid_options": {
+                        "columns": 4
                       }
                     },
                     {
-                      "type": "horizontal-stack",
-                      "cards": [
-                        {
-                          "type": "custom:button-card",
-                          "template": "square_button",
-                          "entity": "input_number.kokken_volume",
-                          "icon": "mdi:volume-minus",
-                          "show_name": false,
-                          "grid_options": {
-                            "columns": 4
-                          },
-                          "styles": {
-                            "card": [
-                              {
-                                "padding": "12%"
-                              }
-                            ]
-                          },
-                          "tap_action": {
-                            "action": "perform-action",
-                            "perform_action": "input_number.decrement",
-                            "target": {
-                              "entity_id": "input_number.kokken_volume"
-                            }
+                      "type": "custom:button-card",
+                      "template": "square_button",
+                      "entity": "input_number.kokken_volume",
+                      "show_name": false,
+                      "show_state": true,
+                      "state_display": "[[[\n  return parseInt(entity.state) + '%'\n]]]\n",
+                      "show_icon": false,
+                      "styles": {
+                        "state": [
+                          {
+                            "font-size": "60px"
                           }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "square_button",
-                          "entity": "input_number.kokken_volume",
-                          "show_name": false,
-                          "show_state": true,
-                          "state_display": "[[[\n  return parseInt(entity.state) + '%'\n]]]\n",
-                          "show_icon": false,
-                          "grid_options": {
-                            "columns": 4
-                          },
-                          "styles": {
-                            "state": [
-                              {
-                                "font-size": "60px"
-                              }
-                            ],
-                            "card": [
-                              {
-                                "--button-card-ripple-press-opacity": 0
-                              }
-                            ]
-                          },
-                          "tap_action": {
-                            "action": "none"
+                        ],
+                        "card": [
+                          {
+                            "--button-card-ripple-press-opacity": 0
                           }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "square_button",
-                          "entity": "input_number.kokken_volume",
-                          "icon": "mdi:volume-plus",
-                          "show_name": false,
-                          "grid_options": {
-                            "columns": 4
-                          },
-                          "styles": {
-                            "card": [
-                              {
-                                "padding": "12%"
-                              }
-                            ]
-                          },
-                          "tap_action": {
-                            "action": "perform-action",
-                            "perform_action": "input_number.increment",
-                            "target": {
-                              "entity_id": "input_number.kokken_volume"
-                            }
-                          }
-                        }
-                      ],
-                      "visibility": [
-                        {
-                          "condition": "state",
-                          "entity": "input_text.show_media_player_controls_on_shelly",
-                          "state": "False"
-                        },
-                        {
-                          "condition": "user",
-                          "users": [
-                            "fc0349e683a1483c8f19af305ac0d079"
-                          ]
-                        }
-                      ]
+                        ]
+                      },
+                      "tap_action": {
+                        "action": "none"
+                      },
+                      "grid_options": {
+                        "columns": 4
+                      }
                     },
                     {
-                      "type": "horizontal-stack",
-                      "cards": [
-                        {
-                          "type": "custom:button-card",
-                          "template": "square_button",
-                          "entity": "binary_sensor.entre_is_grouped_with_kokken",
-                          "name": "Entré",
-                          "show_name": true,
-                          "show_state": true,
-                          "state_display": "[[[\n  if (entity.state === 'on')\n    return \"Grouped\"\n  else\n    return \"Not grouped\"\n]]]\n",
-                          "state": [
-                            {
-                              "value": "off",
-                              "color": "rgba(249,159,40,255)",
-                              "icon": "mdi:checkbox-marked-circle-plus-outline"
-                            },
-                            {
-                              "value": "on",
-                              "icon": "mdi:check-circle"
-                            }
-                          ],
-                          "styles": {
-                            "card": [
-                              {
-                                "padding": "7%"
-                              },
-                              {
-                                "font-size": "12px"
-                              }
-                            ]
-                          },
-                          "tap_action": {
-                            "action": "perform-action",
-                            "perform_action": "pyscript.toggle_media_player_in_group",
-                            "data": {
-                              "entity_id": "media_player.entre"
-                            }
-                          },
-                          "grid_options": {
-                            "columns": 4
+                      "type": "custom:button-card",
+                      "template": "square_button",
+                      "entity": "input_number.kokken_volume",
+                      "icon": "mdi:volume-plus",
+                      "show_name": false,
+                      "styles": {
+                        "card": [
+                          {
+                            "padding": "12%"
                           }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "square_button",
-                          "entity": "media_player.kokken",
-                          "name": "[[[ \n  return states['pyscript.media_metadata'].attributes[`kokken_media_header`] \n]]]\n",
-                          "show_state": true,
-                          "state": [
-                            {
-                              "value": "playing",
-                              "icon": "mdi:pause"
-                            },
-                            {
-                              "value": "paused",
-                              "icon": "mdi:play"
-                            }
-                          ],
-                          "styles": {
-                            "card": [
-                              {
-                                "padding": "7%"
-                              },
-                              {
-                                "font-size": "12px"
-                              }
-                            ]
-                          },
-                          "hold_action": {
-                            "action": "more-info"
-                          },
-                          "tap_action": {
-                            "action": "perform-action",
-                            "perform_action": "media_player.media_play_pause",
-                            "target": {
-                              "entity_id": "media_player.kokken"
-                            }
-                          },
-                          "grid_options": {
-                            "columns": 4
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "square_button",
-                          "entity": "binary_sensor.kokken_is_on_shuffle",
-                          "name": "Entré",
-                          "show_name": false,
-                          "show_state": true,
-                          "state_display": "[[[\n  if (entity.state === 'on')\n    return \"Shuffling\"\n  else\n    return \"No shuffle\"\n]]]\n",
-                          "state": [
-                            {
-                              "value": "off",
-                              "color": "rgba(249,159,40,255)",
-                              "icon": "mdi:shuffle-disabled"
-                            },
-                            {
-                              "value": "on",
-                              "icon": "mdi:shuffle-variant"
-                            }
-                          ],
-                          "styles": {
-                            "card": [
-                              {
-                                "padding": "7%"
-                              },
-                              {
-                                "font-size": "12px"
-                              }
-                            ]
-                          },
-                          "tap_action": {
-                            "action": "perform-action",
-                            "perform_action": "script.toggle_shuffle_kokken"
-                          },
-                          "grid_options": {
-                            "columns": 4
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "square_button",
-                          "entity": "pyscript.media_metadata",
-                          "show_name": false,
-                          "show_state": true,
-                          "state_display": "[[[\n  if (states['pyscript.media_metadata'].attributes[`kokken_feels_lucky`])\n    return \"Lucky\"\n  else\n    return \"Not lucky\"\n]]]\n",
-                          "icon": "[[[\n  return states['pyscript.media_metadata'].attributes.kokken_feels_lucky\n    ? \"mdi:clover\"\n    : \"mdi:clover-outline\";\n]]]\n",
-                          "styles": {
-                            "card": [
-                              {
-                                "padding": "7%"
-                              },
-                              {
-                                "font-size": "12px"
-                              }
-                            ]
-                          },
-                          "tap_action": {
-                            "action": "call-service",
-                            "perform_action": "pyscript.toggle_sonos_feels_lucky",
-                            "data": {
-                              "entity_id": "media_player.kokken"
-                            }
-                          },
-                          "grid_options": {
-                            "columns": 4
-                          }
+                        ]
+                      },
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "input_number.increment",
+                        "target": {
+                          "entity_id": "input_number.kokken_volume"
                         }
-                      ]
+                      },
+                      "grid_options": {
+                        "columns": 4
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "square_button",
+                      "entity": "binary_sensor.entre_is_grouped_with_kokken",
+                      "name": "Entré",
+                      "show_name": true,
+                      "show_state": true,
+                      "state_display": "[[[\n  if (entity.state === 'on')\n    return \"Grouped\"\n  else\n    return \"Not grouped\"\n]]]\n",
+                      "state": [
+                        {
+                          "value": "off",
+                          "color": "rgba(249,159,40,255)",
+                          "icon": "mdi:checkbox-marked-circle-plus-outline"
+                        },
+                        {
+                          "value": "on",
+                          "icon": "mdi:check-circle"
+                        }
+                      ],
+                      "styles": {
+                        "card": [
+                          {
+                            "padding": "7%"
+                          },
+                          {
+                            "font-size": "12px"
+                          }
+                        ]
+                      },
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "pyscript.toggle_media_player_in_group",
+                        "data": {
+                          "entity_id": "media_player.entre"
+                        }
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "square_button",
+                      "entity": "media_player.kokken",
+                      "name": "[[[ \n  return states['pyscript.media_metadata'].attributes[`kokken_media_header`] \n]]]\n",
+                      "show_state": true,
+                      "state": [
+                        {
+                          "value": "playing",
+                          "icon": "mdi:pause"
+                        },
+                        {
+                          "value": "paused",
+                          "icon": "mdi:play"
+                        }
+                      ],
+                      "styles": {
+                        "card": [
+                          {
+                            "padding": "7%"
+                          },
+                          {
+                            "font-size": "12px"
+                          }
+                        ]
+                      },
+                      "hold_action": {
+                        "action": "more-info"
+                      },
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "media_player.media_play_pause",
+                        "target": {
+                          "entity_id": "media_player.kokken"
+                        }
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "square_button",
+                      "entity": "binary_sensor.kokken_is_on_shuffle",
+                      "name": "Entré",
+                      "show_name": false,
+                      "show_state": true,
+                      "state_display": "[[[\n  if (entity.state === 'on')\n    return \"Shuffling\"\n  else\n    return \"No shuffle\"\n]]]\n",
+                      "state": [
+                        {
+                          "value": "off",
+                          "color": "rgba(249,159,40,255)",
+                          "icon": "mdi:shuffle-disabled"
+                        },
+                        {
+                          "value": "on",
+                          "icon": "mdi:shuffle-variant"
+                        }
+                      ],
+                      "styles": {
+                        "card": [
+                          {
+                            "padding": "7%"
+                          },
+                          {
+                            "font-size": "12px"
+                          }
+                        ]
+                      },
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.toggle_shuffle_kokken"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "square_button",
+                      "entity": "pyscript.media_metadata",
+                      "show_name": false,
+                      "show_state": true,
+                      "state_display": "[[[\n  if (states['pyscript.media_metadata'].attributes[`kokken_feels_lucky`])\n    return \"Lucky\"\n  else\n    return \"Not lucky\"\n]]]\n",
+                      "icon": "[[[\n  return states['pyscript.media_metadata'].attributes.kokken_feels_lucky\n    ? \"mdi:clover\"\n    : \"mdi:clover-outline\";\n]]]\n",
+                      "styles": {
+                        "card": [
+                          {
+                            "padding": "7%"
+                          },
+                          {
+                            "font-size": "12px"
+                          }
+                        ]
+                      },
+                      "tap_action": {
+                        "action": "call-service",
+                        "perform_action": "pyscript.toggle_sonos_feels_lucky",
+                        "data": {
+                          "entity_id": "media_player.kokken"
+                        }
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
                     },
                     {
                       "type": "custom:bubble-card",
                       "card_type": "button",
                       "button_type": "state",
                       "grid_options": {
-                        "columns": 12,
                         "rows": 1
                       },
                       "icon": "mdi:power",
@@ -1266,7 +1237,6 @@
                       "name": "Køkken",
                       "icon": "mdi:speaker",
                       "grid_options": {
-                        "columns": 12,
                         "rows": 1
                       },
                       "show_state": true,
@@ -1399,7 +1369,6 @@
                       "name": "Entré",
                       "icon": "mdi:speaker",
                       "grid_options": {
-                        "columns": 12,
                         "rows": 1
                       },
                       "show_state": true,
@@ -1471,7 +1440,6 @@
                       "name": "Stue",
                       "icon": "mdi:speaker",
                       "grid_options": {
-                        "columns": 12,
                         "rows": 1
                       },
                       "show_state": true,
@@ -1559,729 +1527,382 @@
                         }
                       ]
                     }
-                  ]
+                  ],
+                  "performance_mode": "performance"
                 },
                 {
-                  "type": "vertical-stack",
+                  "type": "custom:bubble-card",
+                  "card_type": "pop-up",
+                  "hash": "#tado-controls",
+                  "button_type": "name",
+                  "modules": [
+                    "default"
+                  ],
+                  "slide_to_close_distance": "40000",
+                  "close_on_click": false,
+                  "background_update": false,
+                  "close_by_clicking_outside": true,
+                  "show_header": true,
+                  "margin": "0px",
+                  "bg_opacity": "0",
+                  "bg_blur": "9",
+                  "margin_top_desktop": "-56px",
+                  "margin_top_mobile": "-56px",
+                  "hide_backdrop": true,
+                  "name": "",
+                  "show_icon": false,
+                  "card_layout": "large",
+                  "auto_close": "300000",
+                  "sub_button": {
+                    "main": [],
+                    "bottom": []
+                  },
+                  "slider_fill_orientation": "left",
+                  "slider_value_position": "right",
                   "cards": [
                     {
-                      "type": "custom:bubble-card",
-                      "card_type": "pop-up",
-                      "hash": "#tado-controls",
-                      "button_type": "name",
-                      "modules": [
-                        "default"
-                      ],
-                      "slide_to_close_distance": "40000",
-                      "close_on_click": false,
-                      "background_update": true,
-                      "close_by_clicking_outside": true,
-                      "show_header": true,
-                      "margin": "0px",
-                      "bg_opacity": "0",
-                      "bg_blur": "9",
-                      "margin_top_desktop": "-56px",
-                      "margin_top_mobile": "-56px",
-                      "hide_backdrop": true,
-                      "name": "",
-                      "show_icon": false,
-                      "card_layout": "large",
-                      "auto_close": "300000",
-                      "sub_button": {
-                        "main": [],
-                        "bottom": []
-                      },
-                      "slider_fill_orientation": "left",
-                      "slider_value_position": "right"
-                    },
-                    {
-                      "type": "horizontal-stack",
-                      "cards": [
-                        {
-                          "type": "custom:button-card",
-                          "template": "tado_label",
-                          "name": "Køkken"
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "tado_label",
-                          "name": "Stue"
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "tado_label",
-                          "name": "Spisestue"
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "tado_label",
-                          "name": "Orangerie"
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "tado_label",
-                          "name": "Entre"
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "tado_label",
-                          "name": "Nania"
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "tado_label",
-                          "name": "Sasha"
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "tado_label",
-                          "name": "Mattias"
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "tado_label",
-                          "name": "Kontor"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "horizontal-stack",
-                      "cards": [
-                        {
-                          "type": "custom:button-card",
-                          "template": "tado_temperature_button",
-                          "entity": "climate.smart_radiator_kokken",
-                          "triggers_update": [
-                            "input_number.kokken_temperature_helper"
-                          ]
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "tado_temperature_button",
-                          "entity": "climate.smart_radiator_stue",
-                          "triggers_update": [
-                            "input_number.stue_temperature_helper"
-                          ]
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "tado_temperature_button",
-                          "entity": "climate.smart_radiator_spisestue",
-                          "triggers_update": [
-                            "input_number.spisestue_temperature_helper"
-                          ]
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "tado_temperature_button",
-                          "entity": "climate.smart_radiator_orangerie",
-                          "triggers_update": [
-                            "input_number.orangerie_temperature_helper"
-                          ]
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "tado_temperature_button",
-                          "entity": "climate.smart_radiator_entre",
-                          "triggers_update": [
-                            "input_number.entre_temperature_helper"
-                          ]
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "tado_temperature_button",
-                          "entity": "climate.smart_radiator_nania",
-                          "triggers_update": [
-                            "input_number.nania_temperature_helper"
-                          ]
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "tado_temperature_button",
-                          "entity": "climate.smart_radiator_sasha",
-                          "triggers_update": [
-                            "input_number.sasha_temperature_helper"
-                          ]
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "tado_temperature_button",
-                          "entity": "climate.smart_radiator_mattias",
-                          "triggers_update": [
-                            "input_number.mattias_temperature_helper"
-                          ]
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "tado_temperature_button",
-                          "entity": "climate.smart_radiator_kontor",
-                          "triggers_update": [
-                            "input_number.kontor_temperature_helper"
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "horizontal-stack",
-                      "cards": [
-                        {
-                          "type": "custom:button-card",
-                          "template": "square_tado_button",
-                          "icon": "mdi:calendar-end-outline",
-                          "name": "Resume schedule",
-                          "tap_action": {
-                            "action": "perform-action",
-                            "perform_action": "pyscript.set_tado_temperature_according_to_schedule",
-                            "target": {}
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "square_tado_button",
-                          "visibility": [
-                            {
-                              "condition": "state",
-                              "entity": "input_text.home_state",
-                              "state": "Home - Night"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "square_tado_button",
-                          "icon": "mdi:home",
-                          "name": "Go to sleep",
-                          "tap_action": {
-                            "action": "perform-action",
-                            "perform_action": "automation.trigger",
-                            "target": {
-                              "entity_id": "automation.set_home_state_to_night"
-                            },
-                            "data": {
-                              "skip_condition": true
-                            }
-                          },
-                          "visibility": [
-                            {
-                              "condition": "state",
-                              "entity": "input_text.home_state",
-                              "state_not": "Home - Night"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "square_tado_button",
-                          "entity": "light.entre",
-                          "icon": "mdi:lightbulb",
-                          "show_icon": true,
-                          "color": "auto",
-                          "color_type": "card",
-                          "tap_action": {
-                            "action": "toggle"
-                          },
-                          "name": "Entré",
-                          "show_state": false,
-                          "show_name": true
-                        }
-                      ]
-                    },
-                    {
-                      "type": "horizontal-stack",
-                      "cards": [
-                        {
-                          "type": "custom:button-card",
-                          "template": "square_tado_button",
-                          "icon": "mdi:power",
-                          "tap_action": {
-                            "action": "perform-action",
-                            "perform_action": "script.toggle_tado_on_ground_floor",
-                            "target": {}
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "square_tado_button",
-                          "icon": "mdi:thermometer-minus",
-                          "tap_action": {
-                            "action": "perform-action",
-                            "perform_action": "script.decrease_tado_temperature_on_ground_floor",
-                            "target": {}
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "square_tado_button",
-                          "icon": "mdi:thermometer-plus",
-                          "tap_action": {
-                            "action": "perform-action",
-                            "perform_action": "script.increase_tado_temperature_on_ground_floor",
-                            "target": {}
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "square_tado_button",
-                          "name": "Authorize",
-                          "icon": "mdi:security",
-                          "show_name": true,
-                          "show_state": false,
-                          "color": "red",
-                          "visibility": [
-                            {
-                              "condition": "state",
-                              "entity": "input_text.tado_api_status",
-                              "state_not": "ok"
-                            },
-                            {
-                              "condition": "state",
-                              "entity": "binary_sensor.tado_verification_in_progress",
-                              "state": "off"
-                            },
-                            {
-                              "condition": "not",
-                              "conditions": [
-                                {
-                                  "condition": "user",
-                                  "users": [
-                                    "fc0349e683a1483c8f19af305ac0d079"
-                                  ]
-                                }
-                              ]
-                            }
-                          ],
-                          "tap_action": {
-                            "action": "perform-action",
-                            "perform_action": "pyscript.authorize_tado_api"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "square_tado_button",
-                          "grid_options": {
-                            "columns": 4
-                          },
-                          "name": "Validate",
-                          "icon": "mdi:web-check",
-                          "show_name": true,
-                          "show_state": false,
-                          "color": "red",
-                          "tap_action": {
-                            "action": "url",
-                            "url_path": "[[[\n  return states['input_text.tado_verification_uri_complete'].state\n]]]\n"
-                          },
-                          "visibility": [
-                            {
-                              "condition": "state",
-                              "entity": "binary_sensor.tado_verification_in_progress",
-                              "state": "on"
-                            },
-                            {
-                              "condition": "not",
-                              "conditions": [
-                                {
-                                  "condition": "user",
-                                  "users": [
-                                    "fc0349e683a1483c8f19af305ac0d079"
-                                  ]
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "vertical-stack",
-                  "cards": [
-                    {
-                      "type": "custom:bubble-card",
-                      "card_type": "pop-up",
-                      "modules": [
-                        "default"
-                      ],
-                      "slide_to_close_distance": "40000",
-                      "close_on_click": true,
-                      "background_update": false,
-                      "close_by_clicking_outside": true,
-                      "show_header": true,
-                      "hash": "#radio-controls",
-                      "margin": "0px",
-                      "bg_opacity": "0",
-                      "bg_blur": "9",
-                      "margin_top_desktop": "-56px",
-                      "margin_top_mobile": "-56px",
-                      "hide_backdrop": true,
-                      "button_type": "name",
-                      "sub_button": {
-                        "main": [],
-                        "bottom": []
-                      },
-                      "slider_fill_orientation": "left",
-                      "slider_value_position": "right",
-                      "auto_close": "300000",
-                      "trigger": [
-                        {
-                          "condition": "state",
-                          "entity": "input_boolean.allow_radio_popup_on_shelly",
-                          "state": "on"
-                        },
-                        {
-                          "condition": "user",
-                          "users": [
-                            "fc0349e683a1483c8f19af305ac0d079"
-                          ]
-                        }
-                      ],
-                      "open_action": {
-                        "action": "perform-action",
-                        "perform_action": "script.allow_radio_popup_on_shelly_2",
-                        "target": {}
-                      },
-                      "close_action": {
-                        "action": "perform-action",
-                        "perform_action": "script.disallow_radio_popup_on_shelly",
-                        "target": {}
+                      "type": "custom:button-card",
+                      "template": "tado_label",
+                      "name": "Køkken",
+                      "grid_options": {
+                        "columns": 1
                       }
                     },
                     {
-                      "type": "horizontal-stack",
-                      "cards": [
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "variables": {
-                            "preset": "Internet radio/preset/1"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "variables": {
-                            "preset": "Internet radio/preset/2"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "variables": {
-                            "preset": "Internet radio/preset/3"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "variables": {
-                            "preset": "Internet radio/preset/4"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "type": "horizontal-stack",
-                      "cards": [
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "variables": {
-                            "preset": "Internet radio/preset/5"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "variables": {
-                            "preset": "Internet radio/preset/6"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "variables": {
-                            "preset": "Internet radio/preset/7"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "variables": {
-                            "preset": "Internet radio/preset/8"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "type": "horizontal-stack",
-                      "cards": [
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "variables": {
-                            "preset": "Internet radio/preset/9"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "variables": {
-                            "preset": "Internet radio/preset/10"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "entity_picture": "/local/p6_logo.png",
-                          "variables": {
-                            "preset": "DAB/preset/5"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "entity_picture": "/local/p8_logo.png",
-                          "variables": {
-                            "preset": "DAB/preset/6"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "type": "horizontal-stack",
-                      "cards": [
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "entity_picture": "/local/p2_logo.png",
-                          "variables": {
-                            "preset": "DAB/preset/2"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "entity_picture": "/local/p3_logo.png",
-                          "variables": {
-                            "preset": "DAB/preset/3"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "entity_picture": "/local/p4_logo.png",
-                          "variables": {
-                            "preset": "DAB/preset/4"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "radio_button",
-                          "entity_picture": "/local/p5_logo.png?v=2",
-                          "variables": {
-                            "preset": "DAB/preset/7"
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "vertical-stack",
-                  "cards": [
-                    {
-                      "type": "custom:bubble-card",
-                      "card_type": "pop-up",
-                      "modules": [
-                        "default"
-                      ],
-                      "slide_to_close_distance": "40000",
-                      "close_on_click": true,
-                      "background_update": false,
-                      "close_by_clicking_outside": true,
-                      "show_header": true,
-                      "hash": "#apple-music-media",
-                      "margin": "0px",
-                      "bg_opacity": "0",
-                      "bg_blur": "9",
-                      "margin_top_desktop": "-56px",
-                      "margin_top_mobile": "-56px",
-                      "hide_backdrop": true,
-                      "button_type": "name",
-                      "sub_button": {
-                        "main": [],
-                        "bottom": []
-                      },
-                      "slider_fill_orientation": "left",
-                      "slider_value_position": "right",
-                      "auto_close": "300000",
-                      "open_action": {
-                        "action": "perform-action",
-                        "perform_action": "script.allow_apple_music_popup_on_shelly_2",
-                        "target": {}
-                      },
-                      "trigger": [
-                        {
-                          "condition": "state",
-                          "entity": "input_boolean.allow_apple_music_popup_on_shelly",
-                          "state": "on"
-                        },
-                        {
-                          "condition": "user",
-                          "users": [
-                            "fc0349e683a1483c8f19af305ac0d079"
-                          ]
-                        }
-                      ],
-                      "close_action": {
-                        "action": "perform-action",
-                        "perform_action": "script.disallow_apple_music_popup_on_shelly",
-                        "target": {}
+                      "type": "custom:button-card",
+                      "template": "tado_label",
+                      "name": "Stue",
+                      "grid_options": {
+                        "columns": 1
                       }
                     },
                     {
-                      "type": "horizontal-stack",
-                      "cards": [
-                        {
-                          "type": "custom:button-card",
-                          "template": "music_assistant_button",
-                          "entity": "media_player.kokken",
-                          "variables": {
-                            "album": "recently_added_album_1"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "music_assistant_button",
-                          "entity": "media_player.kokken",
-                          "variables": {
-                            "album": "recently_added_album_2"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "music_assistant_button",
-                          "entity": "media_player.kokken",
-                          "variables": {
-                            "album": "recently_added_album_3"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "music_assistant_button",
-                          "entity": "media_player.kokken",
-                          "variables": {
-                            "album": "recently_added_album_4"
-                          }
-                        }
-                      ]
+                      "type": "custom:button-card",
+                      "template": "tado_label",
+                      "name": "Spisestue",
+                      "grid_options": {
+                        "columns": 1
+                      }
                     },
                     {
-                      "type": "horizontal-stack",
-                      "cards": [
-                        {
-                          "type": "custom:button-card",
-                          "template": "music_assistant_button",
-                          "entity": "media_player.kokken",
-                          "variables": {
-                            "album": "recently_added_album_5"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "music_assistant_button",
-                          "entity": "media_player.kokken",
-                          "variables": {
-                            "album": "recently_added_album_6"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "music_assistant_button",
-                          "entity": "media_player.kokken",
-                          "variables": {
-                            "album": "recently_added_album_7"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "music_assistant_button",
-                          "entity": "media_player.kokken",
-                          "variables": {
-                            "album": "random_album"
-                          }
-                        }
-                      ]
+                      "type": "custom:button-card",
+                      "template": "tado_label",
+                      "name": "Orangerie",
+                      "grid_options": {
+                        "columns": 1
+                      }
                     },
                     {
-                      "type": "horizontal-stack",
-                      "cards": [
-                        {
-                          "type": "custom:button-card",
-                          "template": "music_assistant_button",
-                          "entity": "media_player.kokken",
-                          "variables": {
-                            "album": "recently_added_playlist_1"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "music_assistant_button",
-                          "entity": "media_player.kokken",
-                          "variables": {
-                            "album": "recently_added_playlist_2"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "music_assistant_button",
-                          "entity": "media_player.kokken",
-                          "variables": {
-                            "album": "recently_added_playlist_3"
-                          }
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "music_assistant_button",
-                          "entity": "media_player.kokken",
-                          "variables": {
-                            "album": "recently_added_playlist_4"
-                          }
-                        }
-                      ]
+                      "type": "custom:button-card",
+                      "template": "tado_label",
+                      "name": "Entre",
+                      "grid_options": {
+                        "columns": 1
+                      }
                     },
                     {
-                      "type": "horizontal-stack",
-                      "cards": [
-                        {
-                          "type": "custom:button-card",
-                          "template": "square_button"
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "square_button"
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "square_button"
-                        },
-                        {
-                          "type": "custom:button-card",
-                          "template": "square_button",
-                          "entity": "media_player.kokken",
-                          "show_name": false,
-                          "show_icon": true,
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "pyscript.sync_music_assistant_library"
-                          },
-                          "icon": "mdi:refresh",
-                          "grid_options": {
-                            "columns": 4
-                          }
-                        }
+                      "type": "custom:button-card",
+                      "template": "tado_label",
+                      "name": "Nania",
+                      "grid_options": {
+                        "columns": 1
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "tado_label",
+                      "name": "Sasha",
+                      "grid_options": {
+                        "columns": 1
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "tado_label",
+                      "name": "Mattias",
+                      "grid_options": {
+                        "columns": 1
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "tado_label",
+                      "name": "Kontor",
+                      "grid_options": {
+                        "columns": 1
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "tado_label",
+                      "grid_options": {
+                        "columns": 1
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "tado_label",
+                      "grid_options": {
+                        "columns": 1
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "tado_label",
+                      "grid_options": {
+                        "columns": 1
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "tado_temperature_button",
+                      "entity": "climate.smart_radiator_kokken",
+                      "triggers_update": [
+                        "input_number.kokken_temperature_helper"
                       ],
+                      "grid_options": {
+                        "columns": 1
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "tado_temperature_button",
+                      "entity": "climate.smart_radiator_stue",
+                      "triggers_update": [
+                        "input_number.stue_temperature_helper"
+                      ],
+                      "grid_options": {
+                        "columns": 1
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "tado_temperature_button",
+                      "entity": "climate.smart_radiator_spisestue",
+                      "triggers_update": [
+                        "input_number.spisestue_temperature_helper"
+                      ],
+                      "grid_options": {
+                        "columns": 1
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "tado_temperature_button",
+                      "entity": "climate.smart_radiator_orangerie",
+                      "triggers_update": [
+                        "input_number.orangerie_temperature_helper"
+                      ],
+                      "grid_options": {
+                        "columns": 1
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "tado_temperature_button",
+                      "entity": "climate.smart_radiator_entre",
+                      "triggers_update": [
+                        "input_number.entre_temperature_helper"
+                      ],
+                      "grid_options": {
+                        "columns": 1
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "tado_temperature_button",
+                      "entity": "climate.smart_radiator_nania",
+                      "triggers_update": [
+                        "input_number.nania_temperature_helper"
+                      ],
+                      "grid_options": {
+                        "columns": 1
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "tado_temperature_button",
+                      "entity": "climate.smart_radiator_sasha",
+                      "triggers_update": [
+                        "input_number.sasha_temperature_helper"
+                      ],
+                      "grid_options": {
+                        "columns": 1
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "tado_temperature_button",
+                      "entity": "climate.smart_radiator_mattias",
+                      "triggers_update": [
+                        "input_number.mattias_temperature_helper"
+                      ],
+                      "grid_options": {
+                        "columns": 1
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "tado_temperature_button",
+                      "entity": "climate.smart_radiator_kontor",
+                      "triggers_update": [
+                        "input_number.kontor_temperature_helper"
+                      ],
+                      "grid_options": {
+                        "columns": 1
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "square_tado_button",
+                      "grid_options": {
+                        "columns": 1
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "square_tado_button",
+                      "grid_options": {
+                        "columns": 1
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "square_tado_button",
+                      "grid_options": {
+                        "columns": 1
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "square_tado_button",
+                      "icon": "mdi:calendar-end-outline",
+                      "name": "Resume schedule",
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "pyscript.set_tado_temperature_according_to_schedule",
+                        "target": {}
+                      },
+                      "grid_options": {
+                        "columns": 4
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "square_tado_button",
                       "visibility": [
+                        {
+                          "condition": "state",
+                          "entity": "input_text.home_state",
+                          "state": "Home - Night"
+                        }
+                      ],
+                      "grid_options": {
+                        "columns": 4
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "square_tado_button",
+                      "icon": "mdi:home",
+                      "name": "Go to sleep",
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "automation.trigger",
+                        "target": {
+                          "entity_id": "automation.set_home_state_to_night"
+                        },
+                        "data": {
+                          "skip_condition": true
+                        }
+                      },
+                      "visibility": [
+                        {
+                          "condition": "state",
+                          "entity": "input_text.home_state",
+                          "state_not": "Home - Night"
+                        }
+                      ],
+                      "grid_options": {
+                        "columns": 4
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "square_tado_button",
+                      "entity": "light.entre",
+                      "icon": "mdi:lightbulb",
+                      "show_icon": true,
+                      "color": "auto",
+                      "color_type": "card",
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "name": "Entré",
+                      "show_state": false,
+                      "show_name": true,
+                      "grid_options": {
+                        "columns": 4
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "square_tado_button",
+                      "icon": "mdi:power",
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.toggle_tado_on_ground_floor",
+                        "target": {}
+                      },
+                      "grid_options": {
+                        "columns": 4
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "square_tado_button",
+                      "icon": "mdi:thermometer-minus",
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.decrease_tado_temperature_on_ground_floor",
+                        "target": {}
+                      },
+                      "grid_options": {
+                        "columns": 4
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "square_tado_button",
+                      "icon": "mdi:thermometer-plus",
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "script.increase_tado_temperature_on_ground_floor",
+                        "target": {}
+                      },
+                      "grid_options": {
+                        "columns": 4
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "square_tado_button",
+                      "name": "Authorize",
+                      "icon": "mdi:security",
+                      "show_name": true,
+                      "show_state": false,
+                      "color": "red",
+                      "visibility": [
+                        {
+                          "condition": "state",
+                          "entity": "input_text.tado_api_status",
+                          "state_not": "ok"
+                        },
+                        {
+                          "condition": "state",
+                          "entity": "binary_sensor.tado_verification_in_progress",
+                          "state": "off"
+                        },
                         {
                           "condition": "not",
                           "conditions": [
@@ -2293,9 +1914,501 @@
                             }
                           ]
                         }
+                      ],
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "pyscript.authorize_tado_api"
+                      },
+                      "grid_options": {
+                        "columns": 4
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "square_tado_button",
+                      "name": "Validate",
+                      "icon": "mdi:web-check",
+                      "show_name": true,
+                      "show_state": false,
+                      "color": "red",
+                      "tap_action": {
+                        "action": "url",
+                        "url_path": "[[[\n  return states['input_text.tado_verification_uri_complete'].state\n]]]\n"
+                      },
+                      "visibility": [
+                        {
+                          "condition": "state",
+                          "entity": "binary_sensor.tado_verification_in_progress",
+                          "state": "on"
+                        },
+                        {
+                          "condition": "not",
+                          "conditions": [
+                            {
+                              "condition": "user",
+                              "users": [
+                                "fc0349e683a1483c8f19af305ac0d079"
+                              ]
+                            }
+                          ]
+                        }
+                      ],
+                      "grid_options": {
+                        "columns": 4
+                      }
+                    }
+                  ],
+                  "performance_mode": "performance"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "pop-up",
+                  "modules": [
+                    "default"
+                  ],
+                  "slide_to_close_distance": "40000",
+                  "close_on_click": true,
+                  "background_update": false,
+                  "close_by_clicking_outside": true,
+                  "show_header": true,
+                  "hash": "#radio-controls",
+                  "margin": "0px",
+                  "bg_opacity": "0",
+                  "bg_blur": "9",
+                  "margin_top_desktop": "-56px",
+                  "margin_top_mobile": "-56px",
+                  "hide_backdrop": true,
+                  "button_type": "name",
+                  "sub_button": {
+                    "main": [],
+                    "bottom": []
+                  },
+                  "slider_fill_orientation": "left",
+                  "slider_value_position": "right",
+                  "auto_close": "300000",
+                  "trigger": [
+                    {
+                      "condition": "state",
+                      "entity": "input_boolean.allow_radio_popup_on_shelly",
+                      "state": "on"
+                    },
+                    {
+                      "condition": "user",
+                      "users": [
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079"
                       ]
                     }
-                  ]
+                  ],
+                  "open_action": {
+                    "action": "perform-action",
+                    "perform_action": "script.allow_radio_popup_on_shelly_2",
+                    "target": {}
+                  },
+                  "close_action": {
+                    "action": "perform-action",
+                    "perform_action": "script.disallow_radio_popup_on_shelly",
+                    "target": {}
+                  },
+                  "cards": [
+                    {
+                      "type": "custom:button-card",
+                      "template": "radio_button",
+                      "variables": {
+                        "preset": "Internet radio/preset/1"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "radio_button",
+                      "variables": {
+                        "preset": "Internet radio/preset/2"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "radio_button",
+                      "variables": {
+                        "preset": "Internet radio/preset/3"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "radio_button",
+                      "variables": {
+                        "preset": "Internet radio/preset/4"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "radio_button",
+                      "variables": {
+                        "preset": "Internet radio/preset/5"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "radio_button",
+                      "variables": {
+                        "preset": "Internet radio/preset/6"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "radio_button",
+                      "variables": {
+                        "preset": "Internet radio/preset/7"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "radio_button",
+                      "variables": {
+                        "preset": "Internet radio/preset/8"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "radio_button",
+                      "variables": {
+                        "preset": "Internet radio/preset/9"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "radio_button",
+                      "variables": {
+                        "preset": "Internet radio/preset/10"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "radio_button",
+                      "entity_picture": "/local/p6_logo.png",
+                      "variables": {
+                        "preset": "DAB/preset/5"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "radio_button",
+                      "entity_picture": "/local/p8_logo.png",
+                      "variables": {
+                        "preset": "DAB/preset/6"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "radio_button",
+                      "entity_picture": "/local/p2_logo.png",
+                      "variables": {
+                        "preset": "DAB/preset/2"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "radio_button",
+                      "entity_picture": "/local/p3_logo.png",
+                      "variables": {
+                        "preset": "DAB/preset/3"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "radio_button",
+                      "entity_picture": "/local/p4_logo.png",
+                      "variables": {
+                        "preset": "DAB/preset/4"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "radio_button",
+                      "entity_picture": "/local/p5_logo.png?v=2",
+                      "variables": {
+                        "preset": "DAB/preset/7"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    }
+                  ],
+                  "performance_mode": "performance"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "pop-up",
+                  "modules": [
+                    "default"
+                  ],
+                  "slide_to_close_distance": "40000",
+                  "close_on_click": true,
+                  "background_update": false,
+                  "close_by_clicking_outside": true,
+                  "show_header": true,
+                  "hash": "#apple-music-media",
+                  "margin": "0px",
+                  "bg_opacity": "0",
+                  "bg_blur": "9",
+                  "margin_top_desktop": "-56px",
+                  "margin_top_mobile": "-56px",
+                  "hide_backdrop": true,
+                  "button_type": "name",
+                  "sub_button": {
+                    "main": [],
+                    "bottom": []
+                  },
+                  "slider_fill_orientation": "left",
+                  "slider_value_position": "right",
+                  "auto_close": "300000",
+                  "open_action": {
+                    "action": "perform-action",
+                    "perform_action": "script.allow_apple_music_popup_on_shelly_2",
+                    "target": {}
+                  },
+                  "trigger": [
+                    {
+                      "condition": "state",
+                      "entity": "input_boolean.allow_apple_music_popup_on_shelly",
+                      "state": "on"
+                    },
+                    {
+                      "condition": "user",
+                      "users": [
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079"
+                      ]
+                    }
+                  ],
+                  "close_action": {
+                    "action": "perform-action",
+                    "perform_action": "script.disallow_apple_music_popup_on_shelly",
+                    "target": {}
+                  },
+                  "cards": [
+                    {
+                      "type": "custom:button-card",
+                      "template": "music_assistant_button",
+                      "entity": "media_player.kokken",
+                      "variables": {
+                        "album": "recently_added_album_1"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "music_assistant_button",
+                      "entity": "media_player.kokken",
+                      "variables": {
+                        "album": "recently_added_album_2"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "music_assistant_button",
+                      "entity": "media_player.kokken",
+                      "variables": {
+                        "album": "recently_added_album_3"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "music_assistant_button",
+                      "entity": "media_player.kokken",
+                      "variables": {
+                        "album": "recently_added_album_4"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "music_assistant_button",
+                      "entity": "media_player.kokken",
+                      "variables": {
+                        "album": "recently_added_album_5"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "music_assistant_button",
+                      "entity": "media_player.kokken",
+                      "variables": {
+                        "album": "recently_added_album_6"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "music_assistant_button",
+                      "entity": "media_player.kokken",
+                      "variables": {
+                        "album": "recently_added_album_7"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "music_assistant_button",
+                      "entity": "media_player.kokken",
+                      "variables": {
+                        "album": "random_album"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "music_assistant_button",
+                      "entity": "media_player.kokken",
+                      "variables": {
+                        "album": "recently_added_playlist_1"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "music_assistant_button",
+                      "entity": "media_player.kokken",
+                      "variables": {
+                        "album": "recently_added_playlist_2"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "music_assistant_button",
+                      "entity": "media_player.kokken",
+                      "variables": {
+                        "album": "recently_added_playlist_3"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "music_assistant_button",
+                      "entity": "media_player.kokken",
+                      "variables": {
+                        "album": "recently_added_playlist_4"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "square_button",
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "square_button",
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "square_button",
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "square_button",
+                      "entity": "media_player.kokken",
+                      "show_name": false,
+                      "show_icon": true,
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "pyscript.sync_music_assistant_library"
+                      },
+                      "icon": "mdi:refresh",
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    }
+                  ],
+                  "performance_mode": "performance"
                 }
               ]
             },
