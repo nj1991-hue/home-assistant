@@ -1998,6 +1998,7 @@
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079"
                       ]
                     }
@@ -2174,6 +2175,17 @@
                       "entity_picture": "/local/p5_logo.png?v=2",
                       "variables": {
                         "preset": "DAB/preset/7"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "radio_button",
+                      "entity_picture": "/local/radio_solo_logo.png",
+                      "variables": {
+                        "preset": "DAB/preset/1"
                       },
                       "grid_options": {
                         "columns": 3

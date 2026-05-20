@@ -224,6 +224,13 @@
         "mode": "text",
         "min": 0,
         "max": 100
+      },
+      {
+        "id": "default_radio_preset",
+        "name": "default_radio_preset",
+        "max": 100,
+        "mode": "text",
+        "min": 0
       }
     ]
   }

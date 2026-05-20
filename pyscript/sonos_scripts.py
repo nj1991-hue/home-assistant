@@ -17,7 +17,8 @@ state.persist('pyscript.dab_radio_art_urls')
 sonos_media = None
 #default_radio_station = "NPO Radio 2"
 #default_radio_station = "Random album"
-default_radio_station = "Random station"
+#default_radio_station = "Random station"
+default_radio_station = "Default radio preset"
 
 # Group leader
 main_media_player = "media_player.kokken"
@@ -1049,12 +1050,12 @@ def handle_radio_playback(trigger_entity_id):
             now = datetime.datetime.now()
             weekday = now.weekday()
 
-            
             if default_radio_station == "NPO Radio 2":
                 if weekday in [5, 6]: # weekend
                     play_dab_preset("Internet radio/preset/7") # KYA
                 else:
                     play_dab_preset("Internet radio/preset/2") # NPO Radio 2
+
             elif default_radio_station == "Random album":
             
                 if weekday in [5, 6]: # weekend
@@ -1065,9 +1066,13 @@ def handle_radio_playback(trigger_entity_id):
                         return
                     else:
                         play_dab_preset("Internet radio/preset/5") # Paradise radio
+
             elif default_radio_station == "Random station":
                 station_to_play=random.choice([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
                 play_dab_preset(f"Internet radio/preset/{station_to_play}")
+
+            elif default_radio_station == "Default radio preset":
+                play_dab_preset(input_text.default_radio_preset)
 
             else:
                 log.warning(f"Unsupported value for default_radio_station: {default_radio_station}; Playing p3")
@@ -1214,14 +1219,21 @@ async def set_default_media():
     """
     Updates the scene yaml which sets the default media (kokken_paused_and_set_to_default_media)
     """
-    media_content_ids = ["x-rincon-stream:RINCON_804AF2CAFA8001400"]*10 # One for each radio preset
-    media_content_ids += [get_media_content_id("New Music Daily")]
-    media_content_ids += [get_media_content_id("Radio 100")]
-    media_content_ids += [get_media_content_id("The Voice")]
-    media_content_ids += [get_media_content_id("NOVA")]
-    media_content_ids += [get_media_content_id("myROCK")]
+    possible_defaults = [f"Internet radio/preset/{s}" for s in range(1,11)]
+    possible_defaults += [get_media_content_id("New Music Daily")]
+    possible_defaults += [get_media_content_id("Radio 100")]
+    possible_defaults += [get_media_content_id("The Voice")]
+    possible_defaults += [get_media_content_id("NOVA")]
+    possible_defaults += [get_media_content_id("myROCK")]
+    #possible_defaults += ["DAB/preset/1"] # Radio SOLO
     
-    media_content_id = random.choice(media_content_ids)
+    default_media = random.choice(possible_defaults)
+    if "preset" in default_media:
+        media_content_id = "x-rincon-stream:RINCON_804AF2CAFA8001400"
+        input_text.default_radio_preset = default_media
+    else:
+        media_content_id = default_media
+        
     media_content_type = "favorite_item_id" if "FV:" in media_content_id else "music"
 
     await task.executor(
