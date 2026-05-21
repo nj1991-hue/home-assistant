@@ -823,9 +823,6 @@
   alias: refresh_tado_token
   description: ''
   triggers:
-  - minutes: /9
-    trigger: time_pattern
-    enabled: false
   - trigger: homeassistant
     event: start
   - trigger: state
