@@ -435,7 +435,7 @@ def get_lucky_station():
 
     # Everyday mix
     stations_to_choose_from = [
-        get_media_content_id("Radio Vinyl"),
+        #get_media_content_id("Radio Vinyl"),
         get_media_content_id("10's Hits"),
         get_media_content_id("00's Hits"),
         get_media_content_id("Top 100 Listen"),
@@ -1111,7 +1111,7 @@ def handle_radio_playback(trigger_entity_id):
 
     elif media_player.argon_radio_2i_305890754e1c == "unavailable":
         media_player.play_media(
-            media_content_id="FV:2/73", # Radio Vinyl 
+            media_content_id=get_media_content_id("Top 100 Listen"), 
             media_content_type="favorite_item_id",
             entity_id=trigger_entity_id
         )

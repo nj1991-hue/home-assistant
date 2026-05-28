@@ -1561,217 +1561,131 @@
                   "slider_value_position": "right",
                   "cards": [
                     {
-                      "type": "custom:button-card",
-                      "template": "tado_label",
-                      "name": "Køkken",
-                      "grid_options": {
-                        "columns": 1
-                      }
+                      "type": "horizontal-stack",
+                      "cards": [
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_label",
+                          "name": "Køkken"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_label",
+                          "name": "Stue"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_label",
+                          "name": "Spisestue"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_label",
+                          "name": "Orangerie"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_label",
+                          "name": "Entre"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_label",
+                          "name": "Nania"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_label",
+                          "name": "Sasha"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_label",
+                          "name": "Mattias"
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_label",
+                          "name": "Kontor"
+                        }
+                      ]
                     },
                     {
-                      "type": "custom:button-card",
-                      "template": "tado_label",
-                      "name": "Stue",
-                      "grid_options": {
-                        "columns": 1
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "tado_label",
-                      "name": "Spisestue",
-                      "grid_options": {
-                        "columns": 1
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "tado_label",
-                      "name": "Orangerie",
-                      "grid_options": {
-                        "columns": 1
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "tado_label",
-                      "name": "Entre",
-                      "grid_options": {
-                        "columns": 1
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "tado_label",
-                      "name": "Nania",
-                      "grid_options": {
-                        "columns": 1
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "tado_label",
-                      "name": "Sasha",
-                      "grid_options": {
-                        "columns": 1
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "tado_label",
-                      "name": "Mattias",
-                      "grid_options": {
-                        "columns": 1
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "tado_label",
-                      "name": "Kontor",
-                      "grid_options": {
-                        "columns": 1
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "tado_label",
-                      "grid_options": {
-                        "columns": 1
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "tado_label",
-                      "grid_options": {
-                        "columns": 1
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "tado_label",
-                      "grid_options": {
-                        "columns": 1
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "tado_temperature_button",
-                      "entity": "climate.smart_radiator_kokken",
-                      "triggers_update": [
-                        "input_number.kokken_temperature_helper"
-                      ],
-                      "grid_options": {
-                        "columns": 1
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "tado_temperature_button",
-                      "entity": "climate.smart_radiator_stue",
-                      "triggers_update": [
-                        "input_number.stue_temperature_helper"
-                      ],
-                      "grid_options": {
-                        "columns": 1
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "tado_temperature_button",
-                      "entity": "climate.smart_radiator_spisestue",
-                      "triggers_update": [
-                        "input_number.spisestue_temperature_helper"
-                      ],
-                      "grid_options": {
-                        "columns": 1
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "tado_temperature_button",
-                      "entity": "climate.smart_radiator_orangerie",
-                      "triggers_update": [
-                        "input_number.orangerie_temperature_helper"
-                      ],
-                      "grid_options": {
-                        "columns": 1
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "tado_temperature_button",
-                      "entity": "climate.smart_radiator_entre",
-                      "triggers_update": [
-                        "input_number.entre_temperature_helper"
-                      ],
-                      "grid_options": {
-                        "columns": 1
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "tado_temperature_button",
-                      "entity": "climate.smart_radiator_nania",
-                      "triggers_update": [
-                        "input_number.nania_temperature_helper"
-                      ],
-                      "grid_options": {
-                        "columns": 1
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "tado_temperature_button",
-                      "entity": "climate.smart_radiator_sasha",
-                      "triggers_update": [
-                        "input_number.sasha_temperature_helper"
-                      ],
-                      "grid_options": {
-                        "columns": 1
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "tado_temperature_button",
-                      "entity": "climate.smart_radiator_mattias",
-                      "triggers_update": [
-                        "input_number.mattias_temperature_helper"
-                      ],
-                      "grid_options": {
-                        "columns": 1
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "tado_temperature_button",
-                      "entity": "climate.smart_radiator_kontor",
-                      "triggers_update": [
-                        "input_number.kontor_temperature_helper"
-                      ],
-                      "grid_options": {
-                        "columns": 1
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "square_tado_button",
-                      "grid_options": {
-                        "columns": 1
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "square_tado_button",
-                      "grid_options": {
-                        "columns": 1
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "square_tado_button",
-                      "grid_options": {
-                        "columns": 1
-                      }
+                      "type": "horizontal-stack",
+                      "cards": [
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_temperature_button",
+                          "entity": "climate.smart_radiator_kokken",
+                          "triggers_update": [
+                            "input_number.kokken_temperature_helper"
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_temperature_button",
+                          "entity": "climate.smart_radiator_stue",
+                          "triggers_update": [
+                            "input_number.stue_temperature_helper"
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_temperature_button",
+                          "entity": "climate.smart_radiator_spisestue",
+                          "triggers_update": [
+                            "input_number.spisestue_temperature_helper"
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_temperature_button",
+                          "entity": "climate.smart_radiator_orangerie",
+                          "triggers_update": [
+                            "input_number.orangerie_temperature_helper"
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_temperature_button",
+                          "entity": "climate.smart_radiator_entre",
+                          "triggers_update": [
+                            "input_number.entre_temperature_helper"
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_temperature_button",
+                          "entity": "climate.smart_radiator_nania",
+                          "triggers_update": [
+                            "input_number.nania_temperature_helper"
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_temperature_button",
+                          "entity": "climate.smart_radiator_sasha",
+                          "triggers_update": [
+                            "input_number.sasha_temperature_helper"
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_temperature_button",
+                          "entity": "climate.smart_radiator_mattias",
+                          "triggers_update": [
+                            "input_number.mattias_temperature_helper"
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "tado_temperature_button",
+                          "entity": "climate.smart_radiator_kontor",
+                          "triggers_update": [
+                            "input_number.kontor_temperature_helper"
+                          ]
+                        }
+                      ]
                     },
                     {
                       "type": "custom:button-card",
