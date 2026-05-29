@@ -121,16 +121,17 @@ def handle_ir_remote_events(**kwargs):
     elif "preset" in event_name:
         preset_number = int(event_name.split("_")[-1])
         timer.start(entity_id= "timer.radio_turned_on_by_automation")
+        
         if preset_number == 0:
-            play_dab_preset("Internet radio/preset/10")
+            preset_path = "Internet radio/preset/10"
         else:
-            play_dab_preset(f"Internet radio/preset/{preset_number}")
-            
-        media_player.play_media(
-            media_content_id="x-rincon-stream:RINCON_804AF2CAFA8001400", 
-            media_content_type="music",
-            entity_id=media_player_obj.entity_id
-        )
+            preset_path = f"Internet radio/preset/{preset_number}"
+
+        script.play_radio_preset_on_sonos(
+            entity_id = media_player_obj.entity_id,
+            preset_path = preset_path
+            )
+
 
 
 

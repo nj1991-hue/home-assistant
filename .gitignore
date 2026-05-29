@@ -12,5 +12,6 @@
 !helper_backups/ 
 !helper_backups/**
 !**.sh
+!**.py
 !.gitignore
 

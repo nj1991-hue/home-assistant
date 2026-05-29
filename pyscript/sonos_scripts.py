@@ -79,6 +79,8 @@ def refresh_rayo_urls():
     for slug in get_rayo_media().keys():
         art_attrs[slug] = get_rayo_image(slug)
         media_attrs[slug] = get_rayo_url(slug)
+        
+    art_attrs["lucky-station"] = "/local/buddha_lucky.png?v1"
     state.set("pyscript.rayo_art_urls", "ok", art_attrs)
     state.set("pyscript.rayo_media_urls", "ok", media_attrs)
 
@@ -494,7 +496,8 @@ def get_lucky_station():
 
     # Everyday mix
     stations_to_choose_from = [
-        #get_media_content_id("Radio Vinyl"),
+        get_rayo_url("radiovinyl"),
+        get_rayo_url("flow"),
         get_media_content_id("10's Hits"),
         get_media_content_id("00's Hits"),
         get_media_content_id("Top 100 Listen"),
@@ -1284,6 +1287,12 @@ async def set_default_media():
     possible_defaults += [get_media_content_id("The Voice")]
     possible_defaults += [get_media_content_id("NOVA")]
     possible_defaults += [get_media_content_id("myROCK")]
+    
+    # rayo_urls do not work in scenes    
+    #possible_defaults += [get_rayo_url("radiovinyl")]
+    #possible_defaults += [get_rayo_url("flow")]
+    
+    # This is how to add DAB presets
     #possible_defaults += ["DAB/preset/1"] # Radio SOLO
     
     default_media = random.choice(possible_defaults)
@@ -1310,28 +1319,31 @@ async def set_default_media():
 
 @service
 def play_rayo_station_on_sonos(slug, entity_id):
-    url = get_rayo_url(slug)
-    image = get_rayo_image(slug)
-    name = get_rayo_name(slug)
-
-    media_player.play_media(
-        media_content_id=url, 
-        media_content_type="music",
-        entity_id=entity_id,
-    )
+    
+    if slug == "lucky-station":
+        play_lucky_station(entity_id)
+    else:
+        script.force_play_media(
+            target_media_player=entity_id,
+            media_content_id=get_rayo_url(slug),
+            media_content_type="music"
+        )    
     input_boolean.turn_off(entity_id="input_boolean.allow_sonos_popup_on_shelly")
+    input_text.resume_npo_radio_2_after_commercials = "False"
+    
+    # Radio 100 and Radio vinyl are always shown on the main screen.
+    if slug not in ["radio-100", "radiovinyl"]:
+        input_text.last_selected_rayo_slug = slug
 
 @service
 def play_favorite_on_sonos(media_name, entity_id):
-    media_content_id = get_media_content_id(media_name)
-    thumbnail = get_thumbnail(media_name)
-
-    media_player.play_media(
-        media_content_id=media_content_id, 
-        media_content_type="favorite_item_id",
-        entity_id=entity_id
-    )
+    script.force_play_media(
+        target_media_player=entity_id,
+        media_content_id=get_media_content_id(media_name),
+        media_content_type="favorite_item_id"
+    )    
     input_boolean.turn_off(entity_id="input_boolean.allow_sonos_popup_on_shelly")
+    input_text.resume_npo_radio_2_after_commercials = "False"
 
 
 

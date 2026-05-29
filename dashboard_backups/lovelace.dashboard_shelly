@@ -2420,6 +2420,7 @@
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079"
                       ]
                     }
@@ -2439,6 +2440,16 @@
                       "type": "custom:button-card",
                       "template": "rayo_button",
                       "variables": {
+                        "slug": "lucky-station"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "rayo_button",
+                      "variables": {
                         "slug": "the-voice"
                       },
                       "grid_options": {
@@ -2450,6 +2461,16 @@
                       "template": "sonos_favorite_button",
                       "variables": {
                         "media_name": "New Music Daily"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "sonos_favorite_button",
+                      "variables": {
+                        "media_name": "Album of the week"
                       },
                       "grid_options": {
                         "columns": 3
@@ -2705,42 +2726,20 @@
               "cards": [
                 {
                   "type": "custom:button-card",
-                  "template": "square_button",
-                  "entity": "media_player.kokken",
-                  "show_name": false,
-                  "show_icon": false,
-                  "tap_action": {
-                    "action": "call-service",
-                    "service": "script.force_play_media",
-                    "service_data": {
-                      "target_media_player": "media_player.kokken",
-                      "media_content_id": "[[[\n  return states['pyscript.rayo_media_urls'].attributes['radio-100']\n]]]\n",
-                      "media_content_type": "music"
-                    }
+                  "template": "rayo_button",
+                  "variables": {
+                    "slug": "radio-100"
                   },
-                  "name": "Radio 100",
-                  "entity_picture": "/local/radio_100_logo.jpg",
-                  "show_entity_picture": true,
                   "grid_options": {
                     "columns": 4
                   }
                 },
                 {
                   "type": "custom:button-card",
-                  "template": "square_button",
-                  "entity": "media_player.kokken",
-                  "show_name": false,
-                  "show_icon": false,
-                  "tap_action": {
-                    "action": "call-service",
-                    "service": "script.play_radio_vinyl_and_disable_resume",
-                    "service_data": {
-                      "entity_id": "media_player.kokken"
-                    }
+                  "template": "rayo_button",
+                  "variables": {
+                    "slug": "radiovinyl"
                   },
-                  "name": "Radio Vinyl",
-                  "entity_picture": "/local/radio_vinyl_logo.jpg",
-                  "show_entity_picture": true,
                   "grid_options": {
                     "columns": 4
                   },
@@ -2804,19 +2803,10 @@
                 },
                 {
                   "type": "custom:button-card",
-                  "template": "square_button",
-                  "entity": "media_player.kokken",
-                  "show_name": false,
-                  "show_icon": false,
-                  "tap_action": {
-                    "action": "call-service",
-                    "perform_action": "pyscript.play_lucky_station",
-                    "data": {
-                      "entity_id": "media_player.kokken"
-                    }
+                  "template": "rayo_button",
+                  "variables": {
+                    "slug": "[[[\n  return states['input_text.last_selected_rayo_slug'].state\n]]]\n"
                   },
-                  "entity_picture": "/local/buddha_lucky.png?v1",
-                  "show_entity_picture": true,
                   "grid_options": {
                     "columns": 4
                   }

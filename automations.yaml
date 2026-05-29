@@ -819,12 +819,21 @@
   triggers:
   - trigger: homeassistant
     event: start
+    id: ha_start
   - trigger: state
     entity_id:
     - timer.tado_token_expiration_timer
     to: idle
     from: active
+    id: timer_fired
   actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: ha_start
+      sequence:
+      - delay:
+          seconds: 30
   - action: timer.start
     metadata: {}
     data: {}
