@@ -20,6 +20,10 @@
         "id": "album_added_to_queue",
         "name": "album_added_to_queue",
         "icon": "mdi:playlist-music"
+      },
+      {
+        "id": "allow_sonos_popup_on_shelly",
+        "name": "allow_sonos_popup_on_shelly"
       }
     ]
   }

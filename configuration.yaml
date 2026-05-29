@@ -63,6 +63,7 @@ shell_command:
 
   run_gitbackup: bash -c "/config/backup2git.sh >> /config/backup2git.log 2>&1"
 
+  refresh_rayo_media: /config/refresh_rayo_media.sh 
   
   
   

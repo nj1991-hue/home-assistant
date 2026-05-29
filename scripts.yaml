@@ -570,8 +570,9 @@ play_radio_vinyl_and_disable_resume:
     action: input_text.set_value
   - action: script.force_play_media
     data:
-      media_content_id: FV:2/73
-      media_content_type: favorite_item_id
+      media_content_id: '{{state_attr(''pyscript.rayo_media_urls'', ''radiovinyl'')
+        }}'
+      media_content_type: music
       target_media_player: '{{ entity_id }}'
   mode: single
   description: ''
@@ -922,4 +923,22 @@ clean_kokken_and_spisestue:
           region_id: '5'
           type: rid
   alias: clean_only_kokken_and_spisestue_with_sheldon
+  description: ''
+allow_sonos_popup_on_shelly_2:
+  sequence:
+  - action: input_boolean.turn_on
+    metadata: {}
+    target:
+      entity_id: input_boolean.allow_sonos_popup_on_shelly
+    data: {}
+  alias: allow_sonos_popup_on_shelly
+  description: ''
+disallow_sonos_popup_on_shelly:
+  sequence:
+  - action: input_boolean.turn_off
+    metadata: {}
+    target:
+      entity_id: input_boolean.allow_sonos_popup_on_shelly
+    data: {}
+  alias: disallow_sonos_popup_on_shelly
   description: ''

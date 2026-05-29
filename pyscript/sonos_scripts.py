@@ -13,8 +13,12 @@ from pathlib import Path
 
 state.persist('pyscript.media_metadata')
 state.persist('pyscript.dab_radio_art_urls')
+state.persist('pyscript.rayo_art_urls')
+state.persist('pyscript.rayo_media_urls')
+state.persist('pyscript.sonos_art_urls')
 
 sonos_media = None
+rayo_media = None
 #default_radio_station = "NPO Radio 2"
 #default_radio_station = "Random album"
 #default_radio_station = "Random station"
@@ -27,6 +31,7 @@ main_media_player = "media_player.kokken"
 @time_trigger("cron(0 3 * * *)")
 def refresh_sonos_media():
     global sonos_media
+    attrs = state.getattr("pyscript.sonos_art_urls") or {}
     playlists = media_player.browse_media(
         entity_id = "media_player.kokken", 
         media_content_type= "favorites_folder", 
@@ -42,7 +47,11 @@ def refresh_sonos_media():
     
     for media in [streams['media_player.kokken'], playlists['media_player.kokken']]:
         for child in media.children:
-            sonos_media_dict[child.title] = child.media_content_id
+            sonos_media_dict[child.title] = {
+                "media_content_id": child.media_content_id,
+                "thumbnail": child.thumbnail
+            }
+            attrs[child.title] = child.thumbnail
 
     file_path = "/config/json/sonos/media.json"
     json_data = json.dumps(sonos_media_dict, indent=4, ensure_ascii=False)
@@ -51,7 +60,27 @@ def refresh_sonos_media():
         await f.write(json_data)
         
     sonos_media = None
+    state.set("pyscript.sonos_art_urls", "ok", attrs)
 
+@service
+@time_trigger("cron(0 2 * * *)")
+def refresh_rayo_media():
+    global rayo_media
+    service.call("shell_command", "refresh_rayo_media")
+    rayo_media = None
+
+
+@service
+@time_trigger("cron(0 4 * * *)")
+def refresh_rayo_urls():
+    art_attrs = state.getattr("pyscript.rayo_art_urls") or {}
+    media_attrs = state.getattr("pyscript.rayo_media_urls") or {}
+
+    for slug in get_rayo_media().keys():
+        art_attrs[slug] = get_rayo_image(slug)
+        media_attrs[slug] = get_rayo_url(slug)
+    state.set("pyscript.rayo_art_urls", "ok", art_attrs)
+    state.set("pyscript.rayo_media_urls", "ok", media_attrs)
 
 def get_sonos_media():
     global sonos_media
@@ -65,13 +94,38 @@ def get_sonos_media():
         sonos_media = json.loads(content)
     return sonos_media
     
+def get_rayo_media():
+    global rayo_media
+    
+    if not rayo_media:
+        file_path = "/config/json/rayo/media.json"
+    
+        async with aiofiles.open(file_path, mode="r", encoding="utf-8") as f:
+            content = await f.read()
+    
+        rayo_media = json.loads(content)
+    return rayo_media
+
+def get_rayo_url(slug):
+    return "x-rincon-mp3radio://" + get_rayo_media()[slug]["premium_url"]
+    
+def get_rayo_image(slug):
+    return get_rayo_media()[slug]["image_url"]
+
+def get_rayo_name(slug):
+    return get_rayo_media()[slug]["name"]
+    
         
 def get_media_content_id(media_name):
     sonos_media = get_sonos_media()
-    return sonos_media[media_name]
+    return sonos_media[media_name]["media_content_id"]
+    
+def get_thumbnail(media_name):
+    sonos_media = get_sonos_media()
+    return sonos_media[media_name]["thumbnail"]
     
 def get_media_name(media_content_id):
-    sonos_media_inverted = {v:k for k,v in get_sonos_media().items()}
+    sonos_media_inverted = {v["media_content_id"]:k for k,v in get_sonos_media().items()}
     return sonos_media_inverted[media_content_id]
     
     
@@ -295,6 +349,11 @@ def set_sonos_meta_data(entity_ids):
                     media_title = await get_dr_media_header(dr_media_header_url)
                     dr_media_headers[dr_media_header_url] = media_title
                 
+        if "bauerdk" in sonos_media_content_id:
+            for item in get_rayo_media().values():
+                if sonos_media_content_id.split("/")[-1] in item["premium_url"]:
+                    media_header = item["name"]
+                    break
 
         if not media_header:
             media_header = sonos_media_channel or sonos_media_playlist or sonos_source or "???"
@@ -401,7 +460,7 @@ def set_sonos_art(entity_id):
         art_url = sonos_entity_picture
     elif sonos_media_artist and sonos_media_title:
         if "bauerdk" in sonos_media_content_id:
-            # Radio 100 and Radio Vinyl switch media_artist and media_title up
+            # Rayo channels switch media_artist and media_title up
             song_title = sonos_media_artist
             artist = sonos_media_title
         else:
@@ -1249,15 +1308,30 @@ async def set_default_media():
         f"{media_content_type=} {media_content_id=}"
     )
 
+@service
+def play_rayo_station_on_sonos(slug, entity_id):
+    url = get_rayo_url(slug)
+    image = get_rayo_image(slug)
+    name = get_rayo_name(slug)
 
+    media_player.play_media(
+        media_content_id=url, 
+        media_content_type="music",
+        entity_id=entity_id,
+    )
+    input_boolean.turn_off(entity_id="input_boolean.allow_sonos_popup_on_shelly")
 
+@service
+def play_favorite_on_sonos(media_name, entity_id):
+    media_content_id = get_media_content_id(media_name)
+    thumbnail = get_thumbnail(media_name)
 
-
-
-
-
-
-
+    media_player.play_media(
+        media_content_id=media_content_id, 
+        media_content_type="favorite_item_id",
+        entity_id=entity_id
+    )
+    input_boolean.turn_off(entity_id="input_boolean.allow_sonos_popup_on_shelly")
 
 
 

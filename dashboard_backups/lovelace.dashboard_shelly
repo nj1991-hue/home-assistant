@@ -108,6 +108,44 @@
           },
           "show_entity_picture": true
         },
+        "sonos_favorite_button": {
+          "template": "square_button",
+          "entity_id": "media_player.kokken",
+          "entity_picture": "[[[\n  return states['pyscript.sonos_art_urls'].attributes[variables.media_name]\n]]]\n",
+          "variables": {
+            "media_name": ""
+          },
+          "show_name": false,
+          "show_icon": false,
+          "tap_action": {
+            "action": "call-service",
+            "service": "pyscript.play_favorite_on_sonos",
+            "data": {
+              "entity_id": "media_player.kokken",
+              "media_name": "[[[\n  return variables.media_name\n]]]\n"
+            }
+          },
+          "show_entity_picture": true
+        },
+        "rayo_button": {
+          "template": "square_button",
+          "entity_id": "media_player.kokken",
+          "entity_picture": "[[[\n  return states['pyscript.rayo_art_urls'].attributes[variables.slug]\n]]]\n",
+          "variables": {
+            "slug": ""
+          },
+          "show_name": false,
+          "show_icon": false,
+          "tap_action": {
+            "action": "call-service",
+            "service": "pyscript.play_rayo_station_on_sonos",
+            "data": {
+              "entity_id": "media_player.kokken",
+              "slug": "[[[\n  return variables.slug\n]]]\n"
+            }
+          },
+          "show_entity_picture": true
+        },
         "music_assistant_button": {
           "template": "square_button",
           "show_name": false,
@@ -507,7 +545,7 @@
                           "show_icon": false,
                           "tap_action": {
                             "action": "navigate",
-                            "navigation_path": "#more-media"
+                            "navigation_path": "#sonos-media"
                           },
                           "entity_picture": "/local/sonos_logo.jpg",
                           "show_entity_picture": true,
@@ -2335,6 +2373,330 @@
                     }
                   ],
                   "performance_mode": "performance"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "pop-up",
+                  "modules": [
+                    "default"
+                  ],
+                  "slide_to_close_distance": "40000",
+                  "close_on_click": true,
+                  "background_update": false,
+                  "close_by_clicking_outside": true,
+                  "show_header": true,
+                  "hash": "#sonos-media",
+                  "margin": "0px",
+                  "bg_opacity": "0",
+                  "bg_blur": "9",
+                  "margin_top_desktop": "-56px",
+                  "margin_top_mobile": "-56px",
+                  "hide_backdrop": true,
+                  "button_type": "name",
+                  "sub_button": {
+                    "main": [],
+                    "bottom": []
+                  },
+                  "slider_fill_orientation": "left",
+                  "slider_value_position": "right",
+                  "auto_close": "300000",
+                  "trigger": [
+                    {
+                      "condition": "state",
+                      "entity": "input_boolean.allow_sonos_popup_on_shelly",
+                      "state": "on"
+                    },
+                    {
+                      "condition": "user",
+                      "users": [
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079"
+                      ]
+                    }
+                  ],
+                  "open_action": {
+                    "action": "perform-action",
+                    "perform_action": "script.allow_sonos_popup_on_shelly_2",
+                    "target": {}
+                  },
+                  "close_action": {
+                    "action": "perform-action",
+                    "perform_action": "script.disallow_sonos_popup_on_shelly",
+                    "target": {}
+                  },
+                  "cards": [
+                    {
+                      "type": "custom:button-card",
+                      "template": "rayo_button",
+                      "variables": {
+                        "slug": "the-voice"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "sonos_favorite_button",
+                      "variables": {
+                        "media_name": "New Music Daily"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "sonos_favorite_button",
+                      "variables": {
+                        "media_name": "Weekend Warriors"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "sonos_favorite_button",
+                      "variables": {
+                        "media_name": "Power Metal Essentials"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "sonos_favorite_button",
+                      "variables": {
+                        "media_name": "Metal Workout"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "rayo_button",
+                      "variables": {
+                        "slug": "flow"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "rayo_button",
+                      "variables": {
+                        "slug": "radio-klassisk"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "rayo_button",
+                      "variables": {
+                        "slug": "00s-hits"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "rayo_button",
+                      "variables": {
+                        "slug": "10s-hits"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "rayo_button",
+                      "variables": {
+                        "slug": "70er-hits"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "rayo_button",
+                      "variables": {
+                        "slug": "80s-hits"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "rayo_button",
+                      "variables": {
+                        "slug": "90s-hits"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "rayo_button",
+                      "variables": {
+                        "slug": "de-stoerste-rockballader"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "rayo_button",
+                      "variables": {
+                        "slug": "grandprixhits"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "rayo_button",
+                      "variables": {
+                        "slug": "mix"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "rayo_button",
+                      "variables": {
+                        "slug": "myrock"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "rayo_button",
+                      "variables": {
+                        "slug": "myrock-legends-rock"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "rayo_button",
+                      "variables": {
+                        "slug": "nova"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "rayo_button",
+                      "variables": {
+                        "slug": "planet-rock"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "rayo_button",
+                      "variables": {
+                        "slug": "pop-fm"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "rayo_button",
+                      "variables": {
+                        "slug": "top-100-listen"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "rayo_button",
+                      "variables": {
+                        "slug": "valentinesradio"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "sonos_favorite_button",
+                      "variables": {
+                        "media_name": "Akustiske hits"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "sonos_favorite_button",
+                      "variables": {
+                        "media_name": "Disco: Essentials"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "sonos_favorite_button",
+                      "variables": {
+                        "media_name": "Everyday Hits"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "sonos_favorite_button",
+                      "variables": {
+                        "media_name": "Happy Hits"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    }
+                  ],
+                  "performance_mode": "performance"
                 }
               ]
             },
@@ -2352,8 +2714,8 @@
                     "service": "script.force_play_media",
                     "service_data": {
                       "target_media_player": "media_player.kokken",
-                      "media_content_id": "FV:2/82",
-                      "media_content_type": "favorite_item_id"
+                      "media_content_id": "[[[\n  return states['pyscript.rayo_media_urls'].attributes['radio-100']\n]]]\n",
+                      "media_content_type": "music"
                     }
                   },
                   "name": "Radio 100",
@@ -4532,7 +4894,22 @@
           "sections": [
             {
               "type": "grid",
-              "cards": []
+              "cards": [
+                {
+                  "type": "custom:button-card",
+                  "template": "rayo_button",
+                  "variables": {
+                    "slug": "radiovinyl"
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "sonos_favorite_button",
+                  "variables": {
+                    "media_name": "New Music Daily"
+                  }
+                }
+              ]
             }
           ],
           "visible": [
