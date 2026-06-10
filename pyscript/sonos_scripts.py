@@ -16,6 +16,7 @@ state.persist('pyscript.dab_radio_art_urls')
 state.persist('pyscript.rayo_art_urls')
 state.persist('pyscript.rayo_media_urls')
 state.persist('pyscript.sonos_art_urls')
+state.persist("pyscript.retained_rayo_slugs")
 
 sonos_media = None
 rayo_media = None
@@ -70,13 +71,16 @@ def refresh_rayo_media():
     rayo_media = None
 
 
+def rayo_slugs():
+    return get_rayo_media().keys()
+
 @service
 @time_trigger("cron(0 4 * * *)")
 def refresh_rayo_urls():
     art_attrs = state.getattr("pyscript.rayo_art_urls") or {}
     media_attrs = state.getattr("pyscript.rayo_media_urls") or {}
 
-    for slug in get_rayo_media().keys():
+    for slug in rayo_slugs():
         art_attrs[slug] = get_rayo_image(slug)
         media_attrs[slug] = get_rayo_url(slug)
         
@@ -1103,6 +1107,13 @@ def handle_radio_playback(trigger_entity_id):
         log.info(f"{media_player_obj} is not playing line-in. Returning")
         return
     
+    retained_rayo_slug = get_retained_rayoslug(trigger_entity_id)
+    
+    if retained_rayo_slug:
+        log.info(f"A rayo slug was retained. Playing {retained_rayo_slug}")
+        play_rayo_station_on_sonos(retained_rayo_slug, trigger_entity_id, update_last_selected_rayo_slug=False)
+        return
+    
     if media_player.argon_radio_2i_305890754e1c == "off":
         service.call('timer', 'start', entity_id='timer.radio_turned_on_by_automation')
         
@@ -1283,14 +1294,19 @@ async def set_default_media():
     """
     possible_defaults = [f"Internet radio/preset/{s}" for s in range(1,11)]
     possible_defaults += [get_media_content_id("New Music Daily")]
-    possible_defaults += [get_media_content_id("Radio 100")]
-    possible_defaults += [get_media_content_id("The Voice")]
-    possible_defaults += [get_media_content_id("NOVA")]
-    possible_defaults += [get_media_content_id("myROCK")]
-    
-    # rayo_urls do not work in scenes    
-    #possible_defaults += [get_rayo_url("radiovinyl")]
-    #possible_defaults += [get_rayo_url("flow")]
+    #possible_defaults += [get_media_content_id("Radio 100")]
+    #possible_defaults += [get_media_content_id("The Voice")]
+    #possible_defaults += [get_media_content_id("NOVA")]
+    #possible_defaults += [get_media_content_id("myROCK")]
+
+    possible_defaults += ["the-voice"]
+    possible_defaults += ["radio-100"]
+    possible_defaults += ["nova-top-40"]
+    possible_defaults += ["myrock"]
+    possible_defaults += ["radiovinyl"]
+    possible_defaults += ["flow"]
+    possible_defaults += ["radio-soft-modern"]
+    possible_defaults += ["radio-soft-classic"]
     
     # This is how to add DAB presets
     #possible_defaults += ["DAB/preset/1"] # Radio SOLO
@@ -1299,6 +1315,16 @@ async def set_default_media():
     if "preset" in default_media:
         media_content_id = "x-rincon-stream:RINCON_804AF2CAFA8001400"
         input_text.default_radio_preset = default_media
+        set_retained_rayo_slug("media_player.kokken", None)
+        set_retained_rayo_slug("media_player.entre", None)
+        set_retained_rayo_slug("media_player.stue", None)
+        set_retained_rayo_slug("media_player.spisestue", None)
+    elif default_media in rayo_slugs():
+        media_content_id = "x-rincon-stream:RINCON_804AF2CAFA8001400"
+        set_retained_rayo_slug("media_player.kokken", default_media)
+        set_retained_rayo_slug("media_player.entre", default_media)
+        set_retained_rayo_slug("media_player.stue", default_media)
+        set_retained_rayo_slug("media_player.spisestue", default_media)
     else:
         media_content_id = default_media
         
@@ -1317,8 +1343,18 @@ async def set_default_media():
         f"{media_content_type=} {media_content_id=}"
     )
 
+def set_retained_rayo_slug(entity_id, slug):
+    attrs = state.getattr("pyscript.retained_rayo_slugs") or {}
+    attrs[entity_id] = slug
+    state.set("pyscript.retained_rayo_slugs", "ok", attrs)
+
+def get_retained_rayoslug(entity_id):
+    attrs = state.getattr("pyscript.retained_rayo_slugs") or {}
+    return attrs.get(entity_id)
+    
+
 @service
-def play_rayo_station_on_sonos(slug, entity_id):
+def play_rayo_station_on_sonos(slug, entity_id, update_last_selected_rayo_slug=True):
     
     if slug == "lucky-station":
         play_lucky_station(entity_id)
@@ -1332,8 +1368,31 @@ def play_rayo_station_on_sonos(slug, entity_id):
     input_text.resume_npo_radio_2_after_commercials = "False"
     
     # Radio 100 and Radio vinyl are always shown on the main screen.
-    if slug not in ["radio-100", "radiovinyl"]:
+    if slug not in ["radio-100", "radiovinyl"] and update_last_selected_rayo_slug:
         input_text.last_selected_rayo_slug = slug
+
+    set_retained_rayo_slug(entity_id, slug)
+    attrs = state.getattr(entity_id)
+    for grouped_entity_id in attrs.get("group_members", []):
+        set_retained_rayo_slug(grouped_entity_id, slug)
+        
+
+
+@state_trigger("media_player.kokken.*")
+@state_trigger("media_player.stue.*")
+@state_trigger("media_player.spisestue.*")
+@state_trigger("media_player.entre.*")
+@state_trigger("media_player.kokken")
+@state_trigger("media_player.stue")
+@state_trigger("media_player.spisestue")
+@state_trigger("media_player.entre")
+def reset_retained_rayo_slug(var_name=None, value = None):
+    if value == "playing":
+        attrs = state.getattr(var_name)
+        sonos_media_content_id = attrs.get("media_content_id", "")
+        
+        if "bauerdk" not in sonos_media_content_id:
+            set_retained_rayo_slug(var_name, None)
 
 @service
 def play_favorite_on_sonos(media_name, entity_id):

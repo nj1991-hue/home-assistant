@@ -2421,6 +2421,8 @@
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079"
                       ]
                     }
@@ -2671,6 +2673,26 @@
                       "template": "rayo_button",
                       "variables": {
                         "slug": "valentinesradio"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "rayo_button",
+                      "variables": {
+                        "slug": "radio-soft-classic"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "rayo_button",
+                      "variables": {
+                        "slug": "radio-soft-modern"
                       },
                       "grid_options": {
                         "columns": 3
