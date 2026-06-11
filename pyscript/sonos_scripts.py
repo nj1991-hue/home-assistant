@@ -1107,7 +1107,7 @@ def handle_radio_playback(trigger_entity_id):
         log.info(f"{media_player_obj} is not playing line-in. Returning")
         return
     
-    retained_rayo_slug = get_retained_rayoslug(trigger_entity_id)
+    retained_rayo_slug = get_retained_rayo_slug(trigger_entity_id)
     
     if retained_rayo_slug:
         log.info(f"A rayo slug was retained. Playing {retained_rayo_slug}")
@@ -1348,7 +1348,7 @@ def set_retained_rayo_slug(entity_id, slug):
     attrs[entity_id] = slug
     state.set("pyscript.retained_rayo_slugs", "ok", attrs)
 
-def get_retained_rayoslug(entity_id):
+def get_retained_rayo_slug(entity_id):
     attrs = state.getattr("pyscript.retained_rayo_slugs") or {}
     return attrs.get(entity_id)
     
@@ -1392,6 +1392,7 @@ def reset_retained_rayo_slug(var_name=None, value = None):
         sonos_media_content_id = attrs.get("media_content_id", "")
         
         if "bauerdk" not in sonos_media_content_id:
+            log.info("Resetting retained rayo slug")
             set_retained_rayo_slug(var_name, None)
 
 @service
