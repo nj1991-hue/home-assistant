@@ -223,6 +223,17 @@
   - action: script.group_all_and_set_volume
     metadata: {}
     data: {}
+  - if:
+    - condition: state
+      entity_id: input_boolean.guest_is_staying_in_the_entre
+      state:
+      - 'on'
+    then:
+    - action: media_player.unjoin
+      metadata: {}
+      target:
+        entity_id: media_player.entre
+      data: {}
   - action: scene.turn_on
     metadata: {}
     data: {}
@@ -351,11 +362,17 @@
   - action: pyscript.add_media_player_to_group
     metadata: {}
     data:
-      entity_id: media_player.entre
-  - action: pyscript.add_media_player_to_group
-    metadata: {}
-    data:
       entity_id: media_player.spisestue
+  - if:
+    - condition: state
+      entity_id: input_boolean.guest_is_staying_in_the_entre
+      state:
+      - 'off'
+    then:
+    - action: pyscript.add_media_player_to_group
+      metadata: {}
+      data:
+        entity_id: media_player.entre
   mode: restart
 - id: '1742471573592'
   alias: regroup_entre_on_pause_when_source_is_pc_audio
@@ -1319,11 +1336,17 @@
       - 1
       attribute: totalNumberOfPressesCounted
     then:
-    - action: script.toggle_hue
-      metadata: {}
-      data:
-        entity_id: light.entre
-        scene_entity_id: scene.entre_laes
+    - if:
+      - condition: state
+        entity_id: input_boolean.guest_is_staying_in_the_entre
+        state:
+        - 'off'
+      then:
+      - action: script.toggle_hue
+        metadata: {}
+        data:
+          entity_id: light.entre
+          scene_entity_id: scene.entre_laes
     else:
     - if:
       - condition: state
@@ -1567,4 +1590,30 @@
       value: 'True'
     target:
       entity_id: input_text.reset_radio
+  mode: single
+- id: '1781896992159'
+  alias: determine_if_guest_is_staying_in_the_entre
+  description: ''
+  triggers:
+  - trigger: time
+    at: 02:30:00
+  conditions: []
+  actions:
+  - if:
+    - condition: state
+      entity_id: alarm_control_panel.verisure_alarm
+      state:
+      - disarmed
+    then:
+    - action: input_boolean.turn_on
+      metadata: {}
+      target:
+        entity_id: input_boolean.guest_is_staying_in_the_entre
+      data: {}
+    else:
+    - action: input_boolean.turn_off
+      metadata: {}
+      target:
+        entity_id: input_boolean.guest_is_staying_in_the_entre
+      data: {}
   mode: single

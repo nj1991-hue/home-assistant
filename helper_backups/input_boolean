@@ -24,6 +24,10 @@
       {
         "id": "allow_sonos_popup_on_shelly",
         "name": "allow_sonos_popup_on_shelly"
+      },
+      {
+        "id": "guest_is_staying_in_the_entre",
+        "name": "guest_is_staying_in_the_entre"
       }
     ]
   }
