@@ -1553,7 +1553,11 @@
     to:
     - Away
     - Home - Night
-  conditions: []
+  conditions:
+  - condition: state
+    entity_id: input_boolean.guest_is_staying_in_the_entre
+    state:
+    - 'off'
   actions:
   - action: pyscript.close_entre_window
     metadata: {}
@@ -1571,6 +1575,10 @@
     entity_id: weather.forecast_home
     attribute: humidity
     above: 80
+  - condition: state
+    entity_id: input_boolean.guest_is_staying_in_the_entre
+    state:
+    - 'off'
   actions:
   - action: pyscript.close_entre_window
     metadata: {}
