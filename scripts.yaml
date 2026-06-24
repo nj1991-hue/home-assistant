@@ -624,6 +624,13 @@ toggle_hue:
       target:
         entity_id: '{{ scene_entity_id }}'
       data: {}
+      enabled: false
+    - action: light.turn_on
+      metadata: {}
+      target:
+        entity_id: light.entre
+      data:
+        brightness_pct: 100
 reset_spisestue_volume:
   sequence:
   - action: media_player.volume_set
