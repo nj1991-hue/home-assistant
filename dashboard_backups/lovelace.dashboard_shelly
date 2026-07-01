@@ -2193,6 +2193,7 @@
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079"
                       ]
                     }
@@ -2337,7 +2338,11 @@
                     },
                     {
                       "type": "custom:button-card",
-                      "template": "square_button",
+                      "template": "music_assistant_button",
+                      "entity": "media_player.kokken",
+                      "variables": {
+                        "album": "mother_earth_radio"
+                      },
                       "grid_options": {
                         "columns": 3
                       }

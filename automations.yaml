@@ -1189,14 +1189,12 @@
       hours: 0
       minutes: 20
       seconds: 0
-  conditions: []
+  conditions:
+  - condition: state
+    entity_id: vacuum.sheldon
+    state:
+    - docked
   actions:
-  - action: vacuum.start
-    metadata: {}
-    target:
-      entity_id: vacuum.sheldon
-    data: {}
-    enabled: false
   - action: script.clean_kokken_and_spisestue
     metadata: {}
     data: {}

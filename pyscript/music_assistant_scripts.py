@@ -124,6 +124,17 @@ def update_recently_added_playlists():
     for i in range(4):
         add_item_to_music_assistant_metadata(f"recently_added_playlist_{i+1}", playlists[i])
 
+@service
+def update_radio_stations():
+    mother_earth_radio_station =  music_assistant.search(
+        config_entry_id="01KJD55JFR0EVEB6YP6869PN0Y",
+        media_type= "radio",
+        library_only= False,
+        name = "Mother Earth Radio",
+        limit=1
+    )["radio"][0]
+    
+    add_item_to_music_assistant_metadata(f"mother_earth_radio", mother_earth_radio_station)
 
 @state_trigger("media_player.argon_radio_2i_305890754e1c_3")
 def dont_stop_the_music_for_music_assistant_speakers():
@@ -141,6 +152,7 @@ def update_music_assistant_uris():
     update_random_album()
     update_recently_added_albums()
     update_recently_added_playlists()
+    update_radio_stations()
 
 
 @state_trigger("input_text.home_state")
