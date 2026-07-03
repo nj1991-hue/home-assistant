@@ -1194,6 +1194,10 @@
     entity_id: vacuum.sheldon
     state:
     - docked
+  - condition: state
+    entity_id: input_boolean.vacuum_while_away
+    state:
+    - 'on'
   actions:
   - action: script.clean_kokken_and_spisestue
     metadata: {}
@@ -1622,4 +1626,39 @@
       target:
         entity_id: input_boolean.guest_is_staying_in_the_entre
       data: {}
+  mode: single
+- id: '1782979192311'
+  alias: reset_vacuum_while_away
+  description: ''
+  triggers:
+  - trigger: time
+    at: 01:00:00
+  conditions: []
+  actions:
+  - action: input_boolean.turn_on
+    metadata: {}
+    target:
+      entity_id: input_boolean.vacuum_while_away
+    data: {}
+  mode: single
+- id: '1782979380503'
+  alias: turn_off_vacuum_while_away
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - input_text.home_state
+    to:
+    - Away
+    for:
+      hours: 4
+      minutes: 0
+      seconds: 0
+  conditions: []
+  actions:
+  - action: input_boolean.turn_off
+    metadata: {}
+    target:
+      entity_id: input_boolean.vacuum_while_away
+    data: {}
   mode: single

@@ -28,6 +28,11 @@
       {
         "id": "guest_is_staying_in_the_entre",
         "name": "guest_is_staying_in_the_entre"
+      },
+      {
+        "id": "vacuum_while_away",
+        "name": "vacuum_while_away",
+        "icon": "mdi:vacuum"
       }
     ]
   }

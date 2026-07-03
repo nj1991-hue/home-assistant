@@ -4398,50 +4398,70 @@
                   "button_type": "state",
                   "entity": "vacuum.sheldon",
                   "icon": "mdi:robot-vacuum",
-                  "sub_button": [
-                    {
-                      "entity": "vacuum.sheldon",
-                      "name": "Clean now",
-                      "show_name": true,
-                      "icon": "",
-                      "tap_action": {
-                        "action": "call-service",
-                        "target": {
-                          "entity_id": "entity"
+                  "sub_button": {
+                    "main": [
+                      {
+                        "entity": "vacuum.sheldon",
+                        "name": "Clean now",
+                        "show_name": true,
+                        "icon": "",
+                        "tap_action": {
+                          "action": "call-service",
+                          "target": {
+                            "entity_id": "entity"
+                          },
+                          "service": "vacuum.start"
                         },
-                        "service": "vacuum.start"
+                        "state_background": false,
+                        "show_icon": true
                       },
-                      "state_background": false,
-                      "show_icon": true
-                    },
-                    {
-                      "entity": "vacuum.sheldon",
-                      "icon": "mdi:pause",
-                      "tap_action": {
-                        "action": "call-service",
-                        "target": {
-                          "entity_id": "entity"
+                      {
+                        "entity": "vacuum.sheldon",
+                        "icon": "mdi:pause",
+                        "tap_action": {
+                          "action": "call-service",
+                          "target": {
+                            "entity_id": "entity"
+                          },
+                          "service": "vacuum.pause"
                         },
-                        "service": "vacuum.pause"
+                        "state_background": false,
+                        "show_icon": true
                       },
-                      "state_background": false,
-                      "show_icon": true
-                    },
-                    {
-                      "entity": "vacuum.sheldon",
-                      "icon": "mdi:home-import-outline",
-                      "tap_action": {
-                        "action": "call-service",
-                        "target": {
-                          "entity_id": "entity"
+                      {
+                        "entity": "vacuum.sheldon",
+                        "icon": "mdi:home-import-outline",
+                        "tap_action": {
+                          "action": "call-service",
+                          "target": {
+                            "entity_id": "entity"
+                          },
+                          "service": "vacuum.return_to_base"
                         },
-                        "service": "vacuum.return_to_base"
-                      },
-                      "state_background": false,
-                      "show_icon": true
-                    }
-                  ],
-                  "show_last_changed": true
+                        "state_background": false,
+                        "show_icon": true
+                      }
+                    ],
+                    "bottom": [
+                      {
+                        "entity": "input_boolean.vacuum_while_away",
+                        "name": "Vacuum while away",
+                        "icon": "mdi:vacuum",
+                        "show_name": true,
+                        "show_state": true,
+                        "state_background": true,
+                        "tap_action": {
+                          "action": "toggle"
+                        },
+                        "show_attribute": false,
+                        "attribute": "icon",
+                        "force_icon": false,
+                        "show_background": true
+                      }
+                    ]
+                  },
+                  "show_last_changed": true,
+                  "rows": 1.719
                 },
                 {
                   "type": "custom:bubble-card",
@@ -4913,18 +4933,11 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "custom:button-card",
-                  "template": "rayo_button",
-                  "variables": {
-                    "slug": "radiovinyl"
-                  }
-                },
-                {
-                  "type": "custom:button-card",
-                  "template": "sonos_favorite_button",
-                  "variables": {
-                    "media_name": "New Music Daily"
-                  }
+                  "type": "custom:now-playing-fullscreen-card",
+                  "metadata_entity": "pyscript.media_metadata",
+                  "room": "kokken",
+                  "player_entity": "media_player.kokken",
+                  "volume_entity": "input_number.kokken_volume"
                 }
               ]
             }
