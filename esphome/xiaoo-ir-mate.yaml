@@ -207,7 +207,11 @@ remote_receiver:
               } else if (data == 0x5EE9) {
                 ESP_LOGI("ir", "firing skip_to_end");
                 id(fire_ir_event).execute("skip_to_end");
+              } else if (data == 0x000052E9) {
+                ESP_LOGI("ir", "firing red");
+                id(fire_ir_event).execute("red");
               }
+              
             }
 
 
