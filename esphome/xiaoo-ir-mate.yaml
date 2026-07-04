@@ -210,6 +210,15 @@ remote_receiver:
               } else if (data == 0x000052E9) {
                 ESP_LOGI("ir", "firing red");
                 id(fire_ir_event).execute("red");
+              } else if (data == 0x000052E9) {
+                ESP_LOGI("ir", "firing green");
+                id(fire_ir_event).execute("green");
+              } else if (data == 0x000052E9) {
+                ESP_LOGI("ir", "firing yellow");
+                id(fire_ir_event).execute("yellow");
+              } else if (data == 0x000052E9) {
+                ESP_LOGI("ir", "firing blue");
+                id(fire_ir_event).execute("blue");
               }
               
             }
