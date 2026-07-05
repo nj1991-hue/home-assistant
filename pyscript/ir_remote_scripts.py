@@ -131,6 +131,30 @@ def handle_ir_remote_events(**kwargs):
             entity_id = media_player_obj.entity_id,
             preset_path = preset_path
             )
+    elif event_name == "red":
+        service.call(
+            "pyscript",
+            "play_rayo_station_on_sonos",
+            slug="radiovinyl",
+            entity_id=media_player_obj.entity_id)
+    elif event_name == "green":
+        service.call(
+            "pyscript",
+            "play_rayo_station_on_sonos",
+            slug="myrock",
+            entity_id=media_player_obj.entity_id)
+    elif event_name == "yellow":
+        service.call(
+            "pyscript",
+            "play_rayo_station_on_sonos",
+            slug="flow",
+            entity_id=media_player_obj.entity_id)
+    elif event_name == "blue":
+        service.call(
+            "pyscript",
+            "play_rayo_station_on_sonos",
+            slug="radio-100",
+            entity_id=media_player_obj.entity_id)
 
 
 

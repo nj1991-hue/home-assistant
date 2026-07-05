@@ -535,7 +535,25 @@
                           "show_entity_picture": true,
                           "grid_options": {
                             "columns": 4
-                          }
+                          },
+                          "visibility": [
+                            {
+                              "condition": "state",
+                              "entity": "binary_sensor.dab_radio_ok",
+                              "state": "on"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "custom:button-card",
+                          "template": "square_button",
+                          "visibility": [
+                            {
+                              "condition": "state",
+                              "entity": "binary_sensor.dab_radio_ok",
+                              "state_not": "on"
+                            }
+                          ]
                         },
                         {
                           "type": "custom:button-card",
@@ -2943,6 +2961,7 @@
                         {
                           "condition": "user",
                           "users": [
+                            "fc0349e683a1483c8f19af305ac0d079",
                             "fc0349e683a1483c8f19af305ac0d079"
                           ]
                         }
@@ -2954,12 +2973,18 @@
                         {
                           "condition": "user",
                           "users": [
+                            "fc0349e683a1483c8f19af305ac0d079",
                             "fc0349e683a1483c8f19af305ac0d079"
                           ]
                         }
                       ]
                     }
                   ]
+                },
+                {
+                  "condition": "state",
+                  "entity": "binary_sensor.dab_radio_ok",
+                  "state": "on"
                 }
               ]
             },
