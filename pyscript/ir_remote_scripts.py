@@ -17,9 +17,13 @@ def mute_or_unmute(media_player_obj):
 
 def media_play(media_player_obj):
     
-    if media_player_obj == "playing" and media_player_obj.is_volume_muted:
+    if media_player_obj.is_volume_muted:
         media_player.volume_mute(entity_id=media_player_obj.entity_id, is_volume_muted=False)
-    elif media_player_obj == "idle":
+
+    if media_player_obj == "playing" :
+        return
+
+    if media_player_obj == "idle":
         media_player.play_media(
             media_content_id="x-rincon-stream:RINCON_804AF2CAFA8001400", 
             media_content_type="music",
@@ -32,7 +36,7 @@ def media_play(media_player_obj):
 
 def pause_or_play(media_player_obj, mute_instead_of_pause = False):
     if media_player_obj == "playing":
-        if mute_instead_of_pause:
+        if mute_instead_of_pause or media_player_obj.is_volume_muted:
             mute_or_unmute(media_player_obj)
         else:
             media_player.media_pause(entity_id=media_player_obj.entity_id)

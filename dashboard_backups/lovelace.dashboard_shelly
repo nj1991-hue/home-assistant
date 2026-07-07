@@ -4962,7 +4962,11 @@
                   "metadata_entity": "pyscript.media_metadata",
                   "room": "kokken",
                   "player_entity": "media_player.kokken",
-                  "volume_entity": "input_number.kokken_volume"
+                  "volume_entity": "input_number.kokken_volume",
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "#sonos-controls"
+                  }
                 }
               ]
             }

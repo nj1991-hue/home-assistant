@@ -640,6 +640,12 @@ reset_spisestue_volume:
       entity_id: media_player.spisestue
     data:
       volume_level: 0.02
+  - action: media_player.volume_mute
+    metadata: {}
+    target:
+      entity_id: media_player.spisestue
+    data:
+      is_volume_muted: false
   alias: reset_spisestue_volume
   description: ''
 reset_entre_volume:
@@ -650,6 +656,12 @@ reset_entre_volume:
       entity_id: media_player.entre
     data:
       volume_level: 0.05
+  - action: media_player.volume_mute
+    metadata: {}
+    target:
+      entity_id: media_player.entre
+    data:
+      is_volume_muted: false
   alias: reset_entre_volume
   description: ''
 reset_kokken_volume:
@@ -660,6 +672,12 @@ reset_kokken_volume:
       entity_id: media_player.kokken
     data:
       volume_level: 0.01
+  - action: media_player.volume_mute
+    metadata: {}
+    target:
+      entity_id: media_player.kokken
+    data:
+      is_volume_muted: false
   alias: reset_kokken_volume
   description: ''
 reset_stue_volume:
@@ -670,6 +688,12 @@ reset_stue_volume:
       entity_id: media_player.stue
     data:
       volume_level: 0.01
+  - action: media_player.volume_mute
+    metadata: {}
+    target:
+      entity_id: media_player.stue
+    data:
+      is_volume_muted: false
   alias: reset_stue_volume
   description: ''
 play_preset_on_dab_radio:
