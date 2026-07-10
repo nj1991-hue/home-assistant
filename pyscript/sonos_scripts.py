@@ -1387,12 +1387,16 @@ def play_rayo_station_on_sonos(slug, entity_id, update_last_selected_rayo_slug=T
 @state_trigger("media_player.spisestue")
 @state_trigger("media_player.entre")
 def reset_retained_rayo_slug(var_name=None, value = None):
+    
+    task.unique("reset_retained_rayo_slug")
+    asyncio.sleep(30) # Sleep for 30 seconds to allow the media content ID to stabilize
+    
     if value == "playing":
         attrs = state.getattr(var_name)
         sonos_media_content_id = attrs.get("media_content_id", "")
-        
+
         if "bauerdk" not in sonos_media_content_id:
-            log.info("Resetting retained rayo slug")
+            log.info(f"Resetting retained rayo slug - sonos_media_content_id={sonos_media_content_id}")
             set_retained_rayo_slug(var_name, None)
 
 @service
