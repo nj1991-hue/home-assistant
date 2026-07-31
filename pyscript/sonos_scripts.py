@@ -1109,7 +1109,9 @@ def handle_radio_playback(trigger_entity_id):
     
     retained_rayo_slug = get_retained_rayo_slug(trigger_entity_id)
     
-    if retained_rayo_slug:
+    # Only play retained slugs when the radio is off. Otherwise we
+    # end up in a loop when the radio is turned on manually
+    if retained_rayo_slug and media_player.argon_radio_2i_305890754e1c == "off":
         log.info(f"A rayo slug was retained. Playing {retained_rayo_slug}")
         play_rayo_station_on_sonos(retained_rayo_slug, trigger_entity_id, update_last_selected_rayo_slug=False)
         return
