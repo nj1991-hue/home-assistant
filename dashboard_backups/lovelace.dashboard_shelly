@@ -4951,6 +4951,67 @@
         {
           "type": "sections",
           "max_columns": 4,
+          "icon": "mdi:window-closed",
+          "path": "",
+          "sections": [
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "switch",
+                  "sub_button": {
+                    "main": [
+                      {
+                        "entity": "binary_sensor.hue_secure_contact_sensor_entre_velux_opening",
+                        "tap_action": {
+                          "action": "perform-action",
+                          "perform_action": "pyscript.open_entre_window",
+                          "target": {}
+                        },
+                        "name": "open",
+                        "icon": "mdi:window-shutter-open",
+                        "show_name": true,
+                        "visibility": [
+                          {
+                            "condition": "state",
+                            "entity": "binary_sensor.hue_secure_contact_sensor_entre_velux_opening",
+                            "state": "off"
+                          }
+                        ]
+                      },
+                      {
+                        "tap_action": {
+                          "action": "perform-action",
+                          "perform_action": "pyscript.close_entre_window",
+                          "target": {}
+                        },
+                        "icon": "mdi:close",
+                        "name": "close",
+                        "show_name": true,
+                        "visibility": [
+                          {
+                            "condition": "state",
+                            "entity": "binary_sensor.hue_secure_contact_sensor_entre_velux_opening",
+                            "state": "on"
+                          }
+                        ]
+                      }
+                    ],
+                    "bottom": []
+                  },
+                  "entity": "binary_sensor.hue_secure_contact_sensor_entre_velux_opening",
+                  "name": "Entre window",
+                  "show_state": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "sections",
+          "max_columns": 4,
           "title": "test",
           "path": "test",
           "sections": [
@@ -5276,18 +5337,6 @@
             }
           ],
           "cards": []
-        },
-        {
-          "type": "sections",
-          "max_columns": 4,
-          "icon": "mdi:window-closed",
-          "path": "",
-          "sections": [
-            {
-              "type": "grid",
-              "cards": []
-            }
-          ]
         }
       ]
     }
