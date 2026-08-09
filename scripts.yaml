@@ -950,3 +950,12 @@ disallow_sonos_popup_on_shelly:
     data: {}
   alias: disallow_sonos_popup_on_shelly
   description: ''
+disallow_now_playing_popup_on_shelly:
+  sequence:
+  - action: input_boolean.turn_off
+    metadata: {}
+    target:
+      entity_id: input_boolean.allow_now_playing_popup_on_shelly
+    data: {}
+  alias: disallow_now_playing_popup_on_shelly
+  description: ''

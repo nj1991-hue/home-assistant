@@ -1485,6 +1485,16 @@
   - action: script.reset_stue_volume
     metadata: {}
     data: {}
+  - action: media_player.volume_mute
+    metadata: {}
+    target:
+      entity_id:
+      - media_player.entre
+      - media_player.kokken
+      - media_player.spisestue
+      - media_player.stue
+    data:
+      is_volume_muted: false
   mode: single
 - id: '1771357691377'
   alias: backup_to_git

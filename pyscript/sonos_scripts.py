@@ -1229,6 +1229,9 @@ def reset_album_added_to_queue():
 
 @service
 def play_music_assistant_on_sonos(entity_id, album, enqueue=None):
+    
+    # We use task.unique because the wait_for() call sometimes takes a while.
+    task.unique("play_music_assistant_on_sonos")
 
     media_id = getattr(pyscript.music_assistant_metadata, album+ "_uri")
     timer.start(entity_id= "timer.radio_turned_on_by_automation")
@@ -1249,7 +1252,7 @@ def play_music_assistant_on_sonos(entity_id, album, enqueue=None):
         )
         input_boolean.turn_off(entity_id="input_boolean.album_added_to_queue")
             
-        wait_for(media_player.argon_radio_2i_305890754e1c_3, "state", "is", "playing")
+        wait_for(media_player.argon_radio_2i_305890754e1c_3, "state", "is", "playing", timeout = 60)
     
         script.force_play_media(
             target_media_player=entity_id,

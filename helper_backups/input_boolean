@@ -33,6 +33,10 @@
         "id": "vacuum_while_away",
         "name": "vacuum_while_away",
         "icon": "mdi:vacuum"
+      },
+      {
+        "id": "allow_now_playing_popup_on_shelly",
+        "name": "allow_now_playing_popup_on_shelly"
       }
     ]
   }
