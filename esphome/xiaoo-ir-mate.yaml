@@ -221,6 +221,9 @@ remote_receiver:
               } else if (data == 0x000012E9) {
                 ESP_LOGI("ir", "firing blue");
                 id(fire_ir_event).execute("blue");
+              } else if (data == 0x00007123) {
+                id(fire_ir_event).execute("youtube");
+                
               }
               
             }
