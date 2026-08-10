@@ -224,8 +224,7 @@ remote_receiver:
               } else if (data == 0x00007123) {
                 id(fire_ir_event).execute("youtube");              
               } else if (data == 0x00001F58) {
-                id(fire_ir_event).execute("netflix");              
-                
+                id(fire_ir_event).execute("netflix");                              
               }
               
             }
