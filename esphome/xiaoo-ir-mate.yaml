@@ -184,7 +184,9 @@ remote_receiver:
                 id(fire_ir_event).execute("preset_9");
               } else if (data == 0x910) {
                 id(fire_ir_event).execute("preset_0");
-              } 
+              } else if (data == 0x000005D0) {
+                id(fire_ir_event).execute("question_mark");
+              }
             } else if (nbits==15){
               if (data == 0x2CE9) {
                 ESP_LOGI("ir", "firing play");
