@@ -159,8 +159,18 @@ def handle_ir_remote_events(**kwargs):
             "play_rayo_station_on_sonos",
             slug="radio-100",
             entity_id=media_player_obj.entity_id)
-
-
+    elif event_name == "question_mark":
+        service.call(
+            "pyscript",
+            "play_rayo_station_on_sonos",
+            slug="lucky-station",
+            entity_id=media_player_obj.entity_id)
+    elif event_name == "netflix":
+        service.call(
+            "pyscript",
+            "play_favorite_on_sonos",
+            media_name="New Music Daily",
+            entity_id=media_player_obj.entity_id)
 
 
 @event_trigger("esphome.ir_touch")

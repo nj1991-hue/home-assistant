@@ -91,10 +91,10 @@
         },
         "radio_button": {
           "template": "square_button",
-          "entity_id": "media_player.kokken",
           "entity_picture": "[[[\n  return states['pyscript.dab_radio_art_urls'].attributes[variables.preset]\n]]]\n",
           "variables": {
-            "preset": ""
+            "preset": "",
+            "entity_id": "media_player.kokken"
           },
           "show_name": false,
           "show_icon": false,
@@ -102,7 +102,7 @@
             "action": "call-service",
             "service": "script.play_radio_preset_on_sonos",
             "data": {
-              "entity_id": "media_player.kokken",
+              "entity_id": "[[[\n  return variables.entity_id\n]]]\n",
               "preset_path": "[[[\n  return variables.preset\n]]]\n"
             }
           },
@@ -110,10 +110,10 @@
         },
         "sonos_favorite_button": {
           "template": "square_button",
-          "entity_id": "media_player.kokken",
           "entity_picture": "[[[\n  return states['pyscript.sonos_art_urls'].attributes[variables.media_name]\n]]]\n",
           "variables": {
-            "media_name": ""
+            "media_name": "",
+            "entity_id": "media_player.kokken"
           },
           "show_name": false,
           "show_icon": false,
@@ -121,7 +121,7 @@
             "action": "call-service",
             "service": "pyscript.play_favorite_on_sonos",
             "data": {
-              "entity_id": "media_player.kokken",
+              "entity_id": "[[[\n  return variables.entity_id\n]]]\n",
               "media_name": "[[[\n  return variables.media_name\n]]]\n"
             }
           },
@@ -129,10 +129,10 @@
         },
         "rayo_button": {
           "template": "square_button",
-          "entity_id": "media_player.kokken",
           "entity_picture": "[[[\n  return states['pyscript.rayo_art_urls'].attributes[variables.slug]\n]]]\n",
           "variables": {
-            "slug": ""
+            "slug": "",
+            "entity_id": "media_player.kokken"
           },
           "show_name": false,
           "show_icon": false,
@@ -140,7 +140,7 @@
             "action": "call-service",
             "service": "pyscript.play_rayo_station_on_sonos",
             "data": {
-              "entity_id": "media_player.kokken",
+              "entity_id": "[[[\n  return variables.entity_id\n]]]\n",
               "slug": "[[[\n  return variables.slug\n]]]\n"
             }
           },
@@ -152,13 +152,14 @@
           "show_icon": false,
           "show_entity_picture": true,
           "variables": {
-            "album": ""
+            "album": "",
+            "entity_id": "media_player.kokken"
           },
           "tap_action": {
             "action": "call-service",
             "service": "pyscript.play_music_assistant_on_sonos",
             "data": {
-              "entity_id": "media_player.kokken",
+              "entity_id": "[[[\n  return variables.entity_id\n]]]\n",
               "album": "[[[\n  return variables.album\n]]]\n"
             }
           },
@@ -166,7 +167,7 @@
             "action": "call-service",
             "service": "pyscript.play_music_assistant_on_sonos",
             "data": {
-              "entity_id": "media_player.kokken",
+              "entity_id": "[[[\n  return variables.entity_id\n]]]\n",
               "enqueue": "add",
               "album": "[[[\n  return variables.album\n]]]\n"
             }
@@ -1565,23 +1566,13 @@
                       }
                     },
                     {
-                      "type": "custom:home-feed-card",
-                      "show_empty": false,
-                      "scrollbars_enabled": true,
-                      "more_info_on_tap": false,
-                      "state_color": false,
-                      "compact_mode": true,
-                      "show_icons": false,
-                      "id_filter": "^input_text_.*",
-                      "entities": [
-                        {
-                          "entity": "input_text.kokken_song_history",
-                          "include_history": true,
-                          "max_history": 10,
-                          "format": "time",
-                          "content_template": "{{state}}"
-                        }
-                      ]
+                      "type": "logbook",
+                      "target": {
+                        "entity_id": [
+                          "input_text.kokken_song_history"
+                        ]
+                      },
+                      "name_detail": "none"
                     }
                   ],
                   "performance_mode": "performance"
@@ -3160,7 +3151,7 @@
           "type": "sections",
           "max_columns": 4,
           "path": "duka",
-          "icon": "mdi:fan",
+          "icon": "mdi:spider-thread",
           "sections": [
             {
               "type": "grid",
@@ -3586,6 +3577,30 @@
                       "entity_id": "entity"
                     },
                     "service": "fan.toggle"
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "radio_button",
+                  "variables": {
+                    "preset": "Internet radio/preset/2",
+                    "entity_id": "media_player.kaelder"
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "radio_button",
+                  "variables": {
+                    "preset": "DAB/preset/3",
+                    "entity_id": "media_player.kaelder"
+                  },
+                  "entity_picture": "/local/p3_logo.png",
+                  "show_entity_picture": true,
+                  "grid_options": {
+                    "columns": 4
                   }
                 }
               ]
@@ -5085,6 +5100,15 @@
                   "tap_action": {
                     "action": "none"
                   }
+                },
+                {
+                  "type": "logbook",
+                  "target": {
+                    "entity_id": [
+                      "input_text.kokken_song_history"
+                    ]
+                  },
+                  "name_detail": "none"
                 }
               ]
             }

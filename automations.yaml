@@ -206,6 +206,7 @@
       - media_player.spisestue
       - media_player.kokken
       - media_player.stue
+      - media_player.kaelder
   - action: media_player.media_pause
     metadata: {}
     data: {}
@@ -215,8 +216,14 @@
       - media_player.kokken
       - media_player.spisestue
       - media_player.stue
+      - media_player.kaelder
   - action: script.group_all_and_set_volume
     metadata: {}
+    data: {}
+  - action: media_player.unjoin
+    metadata: {}
+    target:
+      entity_id: media_player.kaelder
     data: {}
   - if:
     - condition: state

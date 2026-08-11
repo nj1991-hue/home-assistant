@@ -170,6 +170,7 @@ def get_media_players():
         media_player.entre,
         media_player.stue,
         media_player.spisestue,
+        media_player.kaelder,
         ]
         
     media_players_to_return = []
@@ -268,8 +269,6 @@ def set_sonos_meta_data(entity_ids):
     dr_media_headers = {}
     
     for entity_id in entity_ids:
-    
-        media_players = [m.entity_id for m in get_media_players()]
     
         attrs = state.getattr(entity_id)
         sonos_media_content_id = attrs.get("media_content_id", "")
@@ -381,7 +380,7 @@ def set_sonos_meta_data(entity_ids):
         )
     
 
-@state_trigger("pyscript.media_metadata.kokken_media_title")
+@state_trigger("pyscript.media_metadata.kokken_media_subtitle")
 def add_song_to_kokken_history():
     
     task.unique("add_song_to_kokken_history")
@@ -556,9 +555,13 @@ def play_lucky_station(entity_id):
     
     media_player.shuffle_set(entity_id = entity_id, shuffle=True)
     asyncio.sleep(15) # Give automations a chance to reset kokken_feels_lucky
-    set_media_metadata_attributes(entity_id, feels_lucky=True)
     service.call('timer', 'start', entity_id='timer.lucky_station_change_timer')
     service.call('timer', 'start', entity_id='timer.lucky_station_force_change_timer')
+    
+    group_members = state.getattr(entity_id).get("group_members",[])
+    for grouped_entity_id in set(group_members + [entity_id]):
+        set_media_metadata_attributes(grouped_entity_id, feels_lucky=True)
+        
 
 
 
@@ -830,6 +833,7 @@ def get_media_title(media_player_obj):
 @state_trigger("media_player.entre.media_title")
 @state_trigger("media_player.stue.media_title")
 @state_trigger("media_player.spisestue.media_title")
+@state_trigger("media_player.kaelder.media_title")
 def switch_back_to_npo_radio_2(var_name=None):
     media_players = get_media_players()
     
