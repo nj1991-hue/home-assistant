@@ -552,30 +552,6 @@ play_npo_radio_2:
       entity_id: media_player.argon_radio_2i_305890754e1c
   alias: play_npo_radio_2
   description: ''
-play_radio_vinyl_and_disable_resume:
-  fields:
-    entity_id:
-      description: The media player entity to play on
-      example: media_player.kokken
-      required: true
-      selector:
-        entity:
-          domain: media_player
-  alias: play_radio_vinyl_and_disable_resume_npo_radio_2
-  sequence:
-  - target:
-      entity_id: input_text.resume_npo_radio_2_after_commercials
-    data:
-      value: 'False'
-    action: input_text.set_value
-  - action: script.force_play_media
-    data:
-      media_content_id: '{{state_attr(''pyscript.rayo_media_urls'', ''radiovinyl'')
-        }}'
-      media_content_type: music
-      target_media_player: '{{ entity_id }}'
-  mode: single
-  description: ''
 pause_kokken_and_show_media_player_controls_on_shelly:
   sequence:
   - action: media_player.media_pause
@@ -785,7 +761,7 @@ play_radio_preset_on_sonos:
     - condition: template
       value_template: '{{ preset_path == ''Internet radio/preset/2''  }}'
     then:
-    - action: script.play_npo_radio_2_on_sonos
+    - action: pyscript.play_npo_radio_2_on_sonos
       metadata: {}
       data:
         entity_id: '{{ entity_id }}'
@@ -814,64 +790,6 @@ play_radio_preset_on_sonos:
       data:
         value: '{{ preset_path }}'
   alias: play_radio_preset_on_sonos
-  description: ''
-play_npo_radio_2_on_sonos:
-  fields:
-    entity_id:
-      description: The media player entity to play on
-      example: media_player.kokken
-      required: true
-      selector:
-        entity:
-          domain: media_player
-  sequence:
-  - if:
-    - condition: state
-      entity_id: input_text.commercials_on_npo_radio_2
-      state: 'True'
-    then:
-    - action: media_player.shuffle_set
-      metadata: {}
-      data:
-        shuffle: true
-      target:
-        entity_id: '{{ entity_id }}'
-    - action: media_player.play_media
-      data:
-        media:
-          media_content_id: '{{ states(''input_text.npo_radio_2_filler_playlist_id'')
-            }}'
-          media_content_type: favorite_item_id
-          metadata: {}
-      target:
-        entity_id: '{{ entity_id }}'
-    - action: input_text.set_value
-      metadata: {}
-      data:
-        value: 'True'
-      target:
-        entity_id: input_text.resume_npo_radio_2_after_commercials
-    - action: media_player.shuffle_set
-      metadata: {}
-      data:
-        shuffle: true
-      target:
-        entity_id: '{{ entity_id }}'
-    else:
-    - action: script.play_npo_radio_2
-      metadata: {}
-      data: {}
-    - action: script.force_play_media
-      data:
-        target_media_player: '{{ entity_id }}'
-        media_content_id: x-rincon-stream:RINCON_804AF2CAFA8001400
-        media_content_type: music
-  - action: input_boolean.turn_off
-    metadata: {}
-    target:
-      entity_id: input_boolean.allow_radio_popup_on_shelly
-    data: {}
-  alias: play_npo_radio_2_on_sonos
   description: ''
 disallow_apple_music_popup_on_shelly:
   sequence:

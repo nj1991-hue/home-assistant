@@ -37,6 +37,10 @@
       {
         "id": "allow_now_playing_popup_on_shelly",
         "name": "allow_now_playing_popup_on_shelly"
+      },
+      {
+        "id": "resume_npo_radio_2_after_commercials_is_true_anywhere",
+        "name": "resume_npo_radio_2_after_commercials_is_true_anywhere"
       }
     ]
   }

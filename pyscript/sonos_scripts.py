@@ -231,15 +231,36 @@ def set_media_metadata_attributes(entity_id, **kwargs):
         attrs[f"{room}_{key}"]=value
 
     state.set("pyscript.media_metadata", "ok", attrs)
-    
+
 def get_media_metadata_attribute(entity_id, attribute):
     
     attrs = state.getattr("pyscript.media_metadata") or {}
     room = entity_id.split('.')[-1]
+
     return attrs.get(f"{room}_{attribute}")
     
+def set_resume_npo_radio_2_after_commercials(entity_id, boolean_state):
+    group_members = state.getattr(entity_id).get("group_members",[])
+    for grouped_entity_id in set(group_members + [entity_id]):
+        set_media_metadata_attributes(grouped_entity_id, resume_npo_radio_2_after_commercials=boolean_state)
+        
+    if resume_npo_radio_2_after_commercials_is_true_anywhere():
+        input_boolean.turn_on(entity_id="input_boolean.resume_npo_radio_2_after_commercials_is_true_anywhere")
+    else:
+        input_boolean.turn_off(entity_id="input_boolean.resume_npo_radio_2_after_commercials_is_true_anywhere")
 
-
+def get_resume_npo_radio_2_after_commercials(entity_id):
+    return get_media_metadata_attribute(entity_id, "resume_npo_radio_2_after_commercials")
+    
+def resume_npo_radio_2_after_commercials_is_true_anywhere():
+    return any([
+        get_media_metadata_attribute("media_player.kokken", "resume_npo_radio_2_after_commercials"),
+        get_media_metadata_attribute("media_player.stue", "resume_npo_radio_2_after_commercials"),
+        get_media_metadata_attribute("media_player.spisestue", "resume_npo_radio_2_after_commercials"),
+        get_media_metadata_attribute("media_player.entre", "resume_npo_radio_2_after_commercials"),
+        get_media_metadata_attribute("media_player.kaelder", "resume_npo_radio_2_after_commercials"),
+    ])
+    
 @state_trigger("media_player.kokken.*")
 @state_trigger("media_player.stue.*")
 @state_trigger("media_player.spisestue.*")
@@ -369,7 +390,7 @@ def set_sonos_meta_data(entity_ids):
         if not media_subtitle:
             media_subtitle = sonos_media_title or "-"
     
-        if input_text.resume_npo_radio_2_after_commercials == "True" and media_header == get_media_name(input_text.npo_radio_2_filler_playlist_id):
+        if get_resume_npo_radio_2_after_commercials(entity_id) and media_header == get_media_name(input_text.npo_radio_2_filler_playlist_id):
             media_header = "NPO Radio 2 (Reklame)"
             
         set_media_metadata_attributes(
@@ -757,7 +778,7 @@ async def stop_npo_radio_2_commercial_break():
     else:
         timeout = 9 * 60
     
-    if input_text.resume_npo_radio_2_after_commercials == "True":
+    if resume_npo_radio_2_after_commercials_is_true_anywhere():
         interval = 15
     else:
         interval = 60
@@ -779,16 +800,16 @@ async def stop_npo_radio_2_commercial_break():
     log.info("Stopping commercial break")
     input_text.commercials_on_npo_radio_2 = "False"
     
-def start_npo_radio_2_filler_playlist(media_player_obj):
-    input_text.resume_npo_radio_2_after_commercials = "True"
-    media_player.shuffle_set(entity_id = media_player_obj.entity_id, shuffle=True)
+def start_npo_radio_2_filler_playlist(entity_id):
+    set_resume_npo_radio_2_after_commercials(entity_id, True)
+    media_player.shuffle_set(entity_id = entity_id, shuffle=True)
     media_player.play_media(
         media_content_id=input_text.npo_radio_2_filler_playlist_id, 
         media_content_type="favorite_item_id",
-        entity_id=media_player_obj.entity_id
+        entity_id=entity_id
     )
     asyncio.sleep(2)
-    media_player.shuffle_set(entity_id = media_player_obj.entity_id, shuffle=True)    
+    media_player.shuffle_set(entity_id = entity_id, shuffle=True)    
     
     
 @state_trigger("input_text.commercials_on_npo_radio_2")
@@ -811,7 +832,7 @@ async def switch_to_playlist_on_commercial_break(value=None, old_value=None):
         ):
             
             log.info(f"Switching to {filler_playlist_title} because of commercials")
-            start_npo_radio_2_filler_playlist(media_player_obj)
+            start_npo_radio_2_filler_playlist(media_player_obj.entity_id)
         else:
             log.info(
                 f"Not switching to {filler_playlist_title}: "
@@ -855,10 +876,10 @@ def switch_back_to_npo_radio_2(var_name=None):
         media_title = get_media_title(media_player_obj)
         media_player_state = state.get(media_player_obj.entity_id)
         commercials_on_npo_radio_2 = input_text.commercials_on_npo_radio_2
-        resume_npo_radio_2_after_commercials = input_text.resume_npo_radio_2_after_commercials
+        resume_npo_radio_2_after_commercials = get_resume_npo_radio_2_after_commercials(media_player_obj.entity_id)
         
         if (
-            resume_npo_radio_2_after_commercials == "True"
+            resume_npo_radio_2_after_commercials
             and commercials_on_npo_radio_2 == "False"
             and media_playlist == filler_playlist_title
             and media_player_state == "playing"
@@ -871,7 +892,7 @@ def switch_back_to_npo_radio_2(var_name=None):
                 media_content_type="music",
                 entity_id=media_player_obj.entity_id
             )
-            input_text.resume_npo_radio_2_after_commercials = "False"
+            set_resume_npo_radio_2_after_commercials(media_player_obj.entity_id, False)
             
             dab_channel = getattr(media_player.argon_radio_2i_305890754e1c, "media_content_id", None)
             if media_player.argon_radio_2i_305890754e1c == "off":
@@ -889,7 +910,7 @@ def switch_back_to_npo_radio_2(var_name=None):
         ):
             if media_title and media_player_state != "idle":
                 
-                if resume_npo_radio_2_after_commercials == "True":
+                if resume_npo_radio_2_after_commercials:
                     log.info(
                         "No need to switch back to NPO Radio 2; "
                         f"playlist = {media_playlist}, "
@@ -912,9 +933,9 @@ def switch_back_to_npo_radio_2(var_name=None):
                 f"var_name = {var_name}"
             )
     if sum(no_need_to_switch) == len(media_players):
-        if resume_npo_radio_2_after_commercials == "True":
+        if resume_npo_radio_2_after_commercials:
             log.info(f"No need to switch back to NPO Radio 2. Setting resume_npo_radio_2_after_commercials to False")
-        input_text.resume_npo_radio_2_after_commercials = "False"
+        set_resume_npo_radio_2_after_commercials(var_name, False)
         
 
 @service
@@ -1185,7 +1206,7 @@ def handle_radio_playback(trigger_entity_id):
             and binary_sensor.npo_radio_2_is_playing == "on"
         ):
             log.info("DAB radio is playing NPO radio 2 but there are commercials. Starting filler playlist")
-            start_npo_radio_2_filler_playlist(media_player_obj)
+            start_npo_radio_2_filler_playlist(media_player_obj.entity_id)
         log.info("Handled radio playback successfully")
 
     elif media_player.argon_radio_2i_305890754e1c == "unavailable":
@@ -1197,7 +1218,7 @@ def handle_radio_playback(trigger_entity_id):
     elif (
         input_text.commercials_on_npo_radio_2 == "True" 
         and binary_sensor.npo_radio_2_is_playing == "on"
-        and input_text.resume_npo_radio_2_after_commercials == "True"
+        and get_resume_npo_radio_2_after_commercials(trigger_entity_id)
     ):
         # We end up here if:
         # - The radio is already playing
@@ -1209,7 +1230,7 @@ def handle_radio_playback(trigger_entity_id):
         # But rather than play the radio signal, we would like to play the filler playlist.
         # Because there are commercials on the radio.
         log.info("Starting filler playlist because NPO radio 2 is already playing and we are in a commercial break")
-        start_npo_radio_2_filler_playlist(media_player_obj)
+        start_npo_radio_2_filler_playlist(media_player_obj.entity_id)
         wait_for(media_player_obj, "media_playlist", "is_not", None)
         wait_for(media_player_obj, "state", "is", "playing")
         group_if_same_content()
@@ -1374,7 +1395,7 @@ def play_rayo_station_on_sonos(slug, entity_id, update_last_selected_rayo_slug=T
             media_content_type="music"
         )    
     input_boolean.turn_off(entity_id="input_boolean.allow_sonos_popup_on_shelly")
-    input_text.resume_npo_radio_2_after_commercials = "False"
+    set_resume_npo_radio_2_after_commercials(entity_id, False)
     
     # Radio 100 and Radio vinyl are always shown on the main screen.
     if slug not in ["radio-100", "radiovinyl"] and update_last_selected_rayo_slug:
@@ -1416,10 +1437,23 @@ def play_favorite_on_sonos(media_name, entity_id):
         media_content_type="favorite_item_id"
     )    
     input_boolean.turn_off(entity_id="input_boolean.allow_sonos_popup_on_shelly")
-    input_text.resume_npo_radio_2_after_commercials = "False"
+    set_resume_npo_radio_2_after_commercials(entity_id, False)
 
 
-
+@service
+def play_npo_radio_2_on_sonos(entity_id):
+    
+    if input_text.commercials_on_npo_radio_2 == "True":
+        start_npo_radio_2_filler_playlist(entity_id)
+    else:
+        script.play_npo_radio_2()
+        script.force_play_media(
+            target_media_player=entity_id,
+            media_content_id="x-rincon-stream:RINCON_804AF2CAFA8001400",
+            media_content_type="music"
+        )    
+    
+    input_boolean.turn_off(entity_id="input_boolean.allow_radio_popup_on_shelly")
 
 
 
