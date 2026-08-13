@@ -37,14 +37,6 @@
         "mode": "text"
       },
       {
-        "id": "resume_npo_radio_2_after_commercials",
-        "name": "resume_npo_radio_2_after_commercials",
-        "icon": "mdi:currency-usd",
-        "min": 0,
-        "max": 100,
-        "mode": "text"
-      },
-      {
         "id": "npo_radio_2_filler_playlist_id",
         "name": "npo_radio_2_filler_playlist_id",
         "min": 0,
