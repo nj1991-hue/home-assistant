@@ -15,8 +15,6 @@ frontend:
       --control-button-padding: 0
       --control-button-border-radius: 10px
       --control-button-background-opacity: 0
-  extra_module_url:
-    - /www/community/lovelace-card-mod/card-mod.js
 
 pyscript:
   allow_all_imports: true

@@ -1210,11 +1210,7 @@ def handle_radio_playback(trigger_entity_id):
         log.info("Handled radio playback successfully")
 
     elif media_player.argon_radio_2i_305890754e1c == "unavailable":
-        media_player.play_media(
-            media_content_id=get_media_content_id("Top 100 Listen"), 
-            media_content_type="favorite_item_id",
-            entity_id=trigger_entity_id
-        )
+        play_rayo_station_on_sonos("top-100-listen", trigger_entity_id, update_last_selected_rayo_slug=False)
     elif (
         input_text.commercials_on_npo_radio_2 == "True" 
         and binary_sensor.npo_radio_2_is_playing == "on"
