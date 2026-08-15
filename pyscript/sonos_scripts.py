@@ -1077,8 +1077,6 @@ def set_repeat_to_true(var_name=None):
     if var_name in [m.entity_id for m in media_players]:
         media_player.repeat_set(entity_id = var_name, repeat="all")
 
-
-    
     
 @state_trigger("media_player.argon_radio_2i_305890754e1c.source")
 def update_last_dab_radio_source():
@@ -1452,6 +1450,22 @@ def play_npo_radio_2_on_sonos(entity_id):
     input_boolean.turn_off(entity_id="input_boolean.allow_radio_popup_on_shelly")
 
 
+@state_trigger("media_player.argon_radio_2i_305890754e1c.media_content_id")
+def set_resume_npo_radio_2_to_false():
+    """
+    Sets resume_npo_radio_2 to false when a new station is played.
+    Because it should never be True if a station which is not NPO radio 2 is playing.
+    """
+    media_content_id = getattr(media_player.argon_radio_2i_305890754e1c, "media_content_id", None)
+    
+    if not media_content_id:
+        return
+    if media_content_id == "Internet radio/preset/2":
+        return
+    
+    log.info("Setting resume_npo_radio_2_after_commercials to False")
+    for media_player_obj in get_media_players():
+        set_resume_npo_radio_2_after_commercials(media_player_obj.entity_id, False)
 
 
 
