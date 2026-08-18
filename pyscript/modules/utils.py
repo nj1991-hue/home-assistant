@@ -110,6 +110,8 @@ def media_string_is_valid(artist_or_song):
         return False
     if "PowNed" in artist_or_song:
         return False
+    if "www." in artist_or_song:
+        return False
     return True
     
     

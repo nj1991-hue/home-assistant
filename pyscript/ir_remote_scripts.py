@@ -131,10 +131,18 @@ def handle_ir_remote_events(**kwargs):
         else:
             preset_path = f"Internet radio/preset/{preset_number}"
 
-        script.play_radio_preset_on_sonos(
-            entity_id = media_player_obj.entity_id,
-            preset_path = preset_path
-            )
+        if binary_sensor.dab_radio_ok == "on":
+            script.play_radio_preset_on_sonos(
+                entity_id = media_player_obj.entity_id,
+                preset_path = preset_path
+                )
+        else:
+            service.call(
+                "pyscript",
+                "play_rayo_station_on_sonos",
+                slug="radiovinyl",
+                entity_id=media_player_obj.entity_id)
+            
     elif event_name == "red":
         service.call(
             "pyscript",
