@@ -583,10 +583,14 @@
   alias: set_home_state_to_home
   description: ''
   triggers:
-  - trigger: numeric_state
+  - trigger: state
     entity_id:
-    - sensor.shellywalldisplay_0008225bc076_illuminance
-    above: 15
+    - sensor.shellywalldisplay_0206039b2b83_illuminance_level
+  - trigger: state
+    entity_id:
+    - binary_sensor.shellywalldisplay_0206039b2b83_occupancy
+    to:
+    - 'on'
   - trigger: time
     at: 08:00:00
   - trigger: state

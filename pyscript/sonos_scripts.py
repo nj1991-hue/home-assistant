@@ -564,7 +564,7 @@ def get_lucky_station():
 
 @service
 def play_lucky_station(entity_id):
-    task.unique("play_lucky_station")
+    task.unique(f"play_lucky_station_{entity_id}")
     station_to_play = get_lucky_station()
     media_content_type = "favorite_item_id" if "FV:" in station_to_play else "music"
 
@@ -589,13 +589,15 @@ def play_lucky_station(entity_id):
 @state_trigger("timer.lucky_station_force_change_timer")
 @state_trigger("media_player.kokken.media_title")
 def change_lucky_station_in_kokken():
-    task.unique("play_lucky_station", kill_me=True)
+    entity_id = "media_player.kokken"
+    
+    task.unique(f"play_lucky_station_{entity_id}", kill_me=True)
     timer_state = state.get('timer.lucky_station_change_timer')
     force_timer_state = state.get('timer.lucky_station_force_change_timer')
     morning_routine_timer_state = state.get('timer.sonos_morning_routine_running')
     
-    media_state = state.get('media_player.kokken')
-    kokken_feels_lucky = get_media_metadata_attribute("media_player.kokken", "feels_lucky")
+    media_state = state.get(entity_id)
+    kokken_feels_lucky = get_media_metadata_attribute(entity_id, "feels_lucky")
     log.info(f"Running change_lucky_station_in_kokken - timer_state = {timer_state}; "
               f"media_state = {media_state}; kokken_feels_lucky = {kokken_feels_lucky}; "
               f"force_timer_state = {force_timer_state}")
@@ -606,7 +608,7 @@ def change_lucky_station_in_kokken():
         and morning_routine_timer_state == "idle"
         ):
         log.info("playing lucky station in kokken")
-        play_lucky_station("media_player.kokken")
+        play_lucky_station(entity_id)
 
 
 @state_trigger("pyscript.media_metadata.kokken_media_header")
@@ -1250,7 +1252,7 @@ def reset_album_added_to_queue():
 def play_music_assistant_on_sonos(entity_id, album, enqueue=None):
     
     # We use task.unique because the wait_for() call sometimes takes a while.
-    task.unique("play_music_assistant_on_sonos")
+    task.unique(f"play_music_assistant_on_sonos_{entity_id}")
 
     media_id = getattr(pyscript.music_assistant_metadata, album+ "_uri")
     timer.start(entity_id= "timer.radio_turned_on_by_automation")
@@ -1412,7 +1414,7 @@ def play_rayo_station_on_sonos(slug, entity_id, update_last_selected_rayo_slug=T
 @state_trigger("media_player.entre")
 def reset_retained_rayo_slug(var_name=None, value = None):
     
-    task.unique("reset_retained_rayo_slug")
+    task.unique(f"reset_retained_rayo_slug_{var_name}")
     asyncio.sleep(30) # Sleep for 30 seconds to allow the media content ID to stabilize
     
     if value == "playing":

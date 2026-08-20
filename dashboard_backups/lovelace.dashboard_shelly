@@ -1488,8 +1488,7 @@
                       },
                       "name_detail": "none"
                     }
-                  ],
-                  "performance_mode": "performance"
+                  ]
                 },
                 {
                   "type": "custom:bubble-card",
@@ -1832,8 +1831,7 @@
                         "columns": 4
                       }
                     }
-                  ],
-                  "performance_mode": "performance"
+                  ]
                 },
                 {
                   "type": "custom:bubble-card",
@@ -1870,6 +1868,7 @@
                     {
                       "condition": "user",
                       "users": [
+                        "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
@@ -2066,8 +2065,7 @@
                         "columns": 3
                       }
                     }
-                  ],
-                  "performance_mode": "performance"
+                  ]
                 },
                 {
                   "type": "custom:bubble-card",
@@ -2109,6 +2107,7 @@
                     {
                       "condition": "user",
                       "users": [
+                        "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
@@ -2296,8 +2295,7 @@
                         "columns": 3
                       }
                     }
-                  ],
-                  "performance_mode": "performance"
+                  ]
                 },
                 {
                   "type": "custom:bubble-card",
@@ -2334,6 +2332,7 @@
                     {
                       "condition": "user",
                       "users": [
+                        "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
@@ -2663,8 +2662,7 @@
                         "columns": 3
                       }
                     }
-                  ],
-                  "performance_mode": "performance"
+                  ]
                 },
                 {
                   "type": "custom:bubble-card",
@@ -2703,6 +2701,7 @@
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079"
                       ]
                     }
@@ -2724,8 +2723,7 @@
                         "perform_action": "script.disallow_now_playing_popup_on_shelly"
                       }
                     }
-                  ],
-                  "performance_mode": "performance"
+                  ]
                 }
               ]
             },

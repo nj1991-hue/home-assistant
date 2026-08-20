@@ -165,7 +165,7 @@ def sync_music_assistant_when_we_get_home_or_wake_up(old_value = None):
         log.info("Refreshing music database")
         run_music_assistant_command("music/sync")
 
-@state_trigger("sensor.shellywalldisplay_0008225bc076_illuminance_level")
+@state_trigger("sensor.shellywalldisplay_0206039b2b83_illuminance_level")
 def update_albums_and_playlists_when_shelly_lid_is_closed(value = None):
     if value and "dark" in value.lower():
         update_recently_added_playlists()
@@ -235,7 +235,7 @@ def update_apple_music_provider_status_when_radio_changes_state(value = None, ol
     if old_value == "unavailable" or value == "unavailable":
         set_apple_music_provider_status()
 
-@state_trigger("sensor.shellywalldisplay_0008225bc076_illuminance_level")
+@state_trigger("sensor.shellywalldisplay_0206039b2b83_illuminance_level")
 def update_apple_music_provider_status_when_shelly_lid_is_closed(value=None):
     if value and "dark" in value.lower():
         set_apple_music_provider_status()
