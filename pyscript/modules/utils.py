@@ -112,6 +112,8 @@ def media_string_is_valid(artist_or_song):
         return False
     if "www." in artist_or_song:
         return False
+    if "SomaFM" in artist_or_song:
+        return False
     return True
     
     

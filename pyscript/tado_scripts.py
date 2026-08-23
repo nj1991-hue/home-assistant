@@ -368,11 +368,12 @@ def check_tado_response():
 
     tado_response = json.loads(response["stdout"])
     
-    if "refresh_token" in tado_response:
+    if tado_response and "refresh_token" in tado_response:
         input_text.tado_api_status = "ok"
     else:
         error = str(tado_response)
-        input_text.tado_api_status = error[:255]  
+        input_text.tado_api_status = error[:255] if error else "ERROR" 
+
 
 #@state_trigger("climate.smart_radiator_toilet == 'heat'")
 @state_trigger("climate.smart_radiator_entre == 'heat'")

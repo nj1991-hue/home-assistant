@@ -2,7 +2,7 @@ import asyncio
 
 @service
 def close_entre_window():
-    task.unique("close_entre_window")
+    task.unique("open_close_entre_window")
     counter=0
     while binary_sensor.hue_secure_contact_sensor_entre_velux_opening == "on":
         log.info(f"Closing Entre velux window, attempt {counter}")
@@ -28,7 +28,7 @@ def close_entre_window():
 
 @service
 def open_entre_window():
-    task.unique("open_entre_window")
+    task.unique("open_close_entre_window")
     counter=0
     while binary_sensor.hue_secure_contact_sensor_entre_velux_opening == "off":
         log.info(f"Opening Entre velux window, attempt {counter}")
