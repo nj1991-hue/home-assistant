@@ -645,7 +645,7 @@ reset_stue_volume:
     target:
       entity_id: media_player.stue
     data:
-      volume_level: 0.01
+      volume_level: 0.02
   alias: reset_stue_volume
   description: ''
 play_preset_on_dab_radio:
