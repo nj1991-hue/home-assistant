@@ -4606,6 +4606,94 @@
                   "card_type": "button",
                   "button_type": "state",
                   "entity": "alarm_control_panel.verisure_alarm"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Docker",
+                  "grid_options": {
+                    "columns": 12,
+                    "rows": 0.45
+                  },
+                  "card_layout": "normal",
+                  "sub_button": {
+                    "main": [],
+                    "bottom": []
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "sensor.docker_koffan_state",
+                  "name": "Koffan",
+                  "show_last_changed": false,
+                  "sub_button": {
+                    "main": [],
+                    "bottom": []
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Velux",
+                  "grid_options": {
+                    "columns": 12,
+                    "rows": 0.45
+                  },
+                  "card_layout": "normal",
+                  "sub_button": {
+                    "main": [],
+                    "bottom": []
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "switch",
+                  "sub_button": {
+                    "main": [
+                      {
+                        "entity": "binary_sensor.hue_secure_contact_sensor_entre_velux_opening",
+                        "tap_action": {
+                          "action": "perform-action",
+                          "perform_action": "pyscript.open_entre_window",
+                          "target": {}
+                        },
+                        "name": "open",
+                        "icon": "mdi:window-shutter-open",
+                        "show_name": true,
+                        "visibility": [
+                          {
+                            "condition": "state",
+                            "entity": "binary_sensor.hue_secure_contact_sensor_entre_velux_opening",
+                            "state": "off"
+                          }
+                        ]
+                      },
+                      {
+                        "tap_action": {
+                          "action": "perform-action",
+                          "perform_action": "pyscript.close_entre_window",
+                          "target": {}
+                        },
+                        "icon": "mdi:close",
+                        "name": "close",
+                        "show_name": true,
+                        "visibility": [
+                          {
+                            "condition": "state",
+                            "entity": "binary_sensor.hue_secure_contact_sensor_entre_velux_opening",
+                            "state": "on"
+                          }
+                        ]
+                      }
+                    ],
+                    "bottom": []
+                  },
+                  "entity": "binary_sensor.hue_secure_contact_sensor_entre_velux_opening",
+                  "name": "Entre window",
+                  "show_state": true
                 }
               ]
             },
@@ -4930,67 +5018,6 @@
             },
             {
               "user": "27ce53f5c2ba40aa998b01e6340a5fc7"
-            }
-          ]
-        },
-        {
-          "type": "sections",
-          "max_columns": 4,
-          "icon": "mdi:window-closed",
-          "path": "",
-          "sections": [
-            {
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "custom:bubble-card",
-                  "card_type": "button",
-                  "button_type": "switch",
-                  "sub_button": {
-                    "main": [
-                      {
-                        "entity": "binary_sensor.hue_secure_contact_sensor_entre_velux_opening",
-                        "tap_action": {
-                          "action": "perform-action",
-                          "perform_action": "pyscript.open_entre_window",
-                          "target": {}
-                        },
-                        "name": "open",
-                        "icon": "mdi:window-shutter-open",
-                        "show_name": true,
-                        "visibility": [
-                          {
-                            "condition": "state",
-                            "entity": "binary_sensor.hue_secure_contact_sensor_entre_velux_opening",
-                            "state": "off"
-                          }
-                        ]
-                      },
-                      {
-                        "tap_action": {
-                          "action": "perform-action",
-                          "perform_action": "pyscript.close_entre_window",
-                          "target": {}
-                        },
-                        "icon": "mdi:close",
-                        "name": "close",
-                        "show_name": true,
-                        "visibility": [
-                          {
-                            "condition": "state",
-                            "entity": "binary_sensor.hue_secure_contact_sensor_entre_velux_opening",
-                            "state": "on"
-                          }
-                        ]
-                      }
-                    ],
-                    "bottom": []
-                  },
-                  "entity": "binary_sensor.hue_secure_contact_sensor_entre_velux_opening",
-                  "name": "Entre window",
-                  "show_state": true
-                }
-              ]
             }
           ]
         },

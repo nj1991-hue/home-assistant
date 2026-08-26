@@ -16,6 +16,16 @@ frontend:
       --control-button-border-radius: 10px
       --control-button-background-opacity: 0
 
+monitor_docker:
+  - name: Docker
+    url: http://192.168.1.140:2375
+    monitored_conditions:
+      - status
+      - health
+      - uptime
+      - 1cpu_percentage
+      - memory_percentage
+      
 pyscript:
   allow_all_imports: true
   hass_is_global: true
