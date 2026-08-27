@@ -4625,13 +4625,13 @@
                   "type": "custom:bubble-card",
                   "card_type": "button",
                   "button_type": "state",
-                  "entity": "sensor.docker_koffan_state",
                   "name": "Koffan",
                   "show_last_changed": false,
                   "sub_button": {
                     "main": [],
                     "bottom": []
-                  }
+                  },
+                  "entity": "sensor.docker_koffan_status"
                 },
                 {
                   "type": "custom:bubble-card",
