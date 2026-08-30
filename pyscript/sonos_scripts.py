@@ -85,6 +85,7 @@ def refresh_rayo_urls():
         media_attrs[slug] = get_rayo_url(slug)
         
     art_attrs["lucky-station"] = "/local/buddha_lucky.png?v1"
+    art_attrs["nj16"] = "/local/nj16_logo_v5.jpeg?v1"
     state.set("pyscript.rayo_art_urls", "ok", art_attrs)
     state.set("pyscript.rayo_media_urls", "ok", media_attrs)
 
@@ -380,6 +381,9 @@ def set_sonos_meta_data(entity_ids):
                 if sonos_media_content_id.split("/")[-1] in item["premium_url"]:
                     media_header = item["name"]
                     break
+                
+        if "nj16.mp3" in sonos_media_content_id:
+            media_header = "NJ16"
 
         if not media_header:
             media_header = sonos_media_channel or sonos_media_playlist or sonos_source or "???"
@@ -1192,7 +1196,7 @@ def handle_radio_playback(trigger_entity_id):
         
         log.info(f"Obtained DAB source: {dab_source}")
         
-        if media_player.argon_radio_2i_305890754e1c.media_title == media_player.argon_radio_2i_305890754e1c_3.media_title:
+        if media_player.argon_radio_2i_305890754e1c.media_title == getattr(media_player.argon_radio_2i_305890754e1c_3, "media_title", ""):
             log.info("DAB radio is playing Music Assistant. Returning")
             return
         
@@ -1333,6 +1337,7 @@ async def set_default_media():
     possible_defaults += ["flow"]
     possible_defaults += ["radio-soft-modern"]
     possible_defaults += ["radio-soft-classic"]
+    possible_defaults += ["nj16"]
     
     # This is how to add DAB presets
     #possible_defaults += ["DAB/preset/1"] # Radio SOLO
@@ -1345,7 +1350,7 @@ async def set_default_media():
         set_retained_rayo_slug("media_player.entre", None)
         set_retained_rayo_slug("media_player.stue", None)
         set_retained_rayo_slug("media_player.spisestue", None)
-    elif default_media in rayo_slugs():
+    elif default_media=="nj16" or default_media in rayo_slugs():
         media_content_id = "x-rincon-stream:RINCON_804AF2CAFA8001400"
         set_retained_rayo_slug("media_player.kokken", default_media)
         set_retained_rayo_slug("media_player.entre", default_media)
@@ -1384,6 +1389,13 @@ def play_rayo_station_on_sonos(slug, entity_id, update_last_selected_rayo_slug=T
     
     if slug == "lucky-station":
         play_lucky_station(entity_id)
+    elif slug == "nj16":
+        script.force_play_media(
+            target_media_player=entity_id,
+            #media_content_id="http://192.168.1.140:8000/nj16.mp3",
+            media_content_id="x-rincon-mp3radio://http://192.168.1.140:8000/nj16.mp3",
+            media_content_type="music"
+        )    
     else:
         script.force_play_media(
             target_media_player=entity_id,
@@ -1421,7 +1433,7 @@ def reset_retained_rayo_slug(var_name=None, value = None):
         attrs = state.getattr(var_name)
         sonos_media_content_id = attrs.get("media_content_id", "")
 
-        if "bauerdk" not in sonos_media_content_id:
+        if "bauerdk" not in sonos_media_content_id and "nj16.mp3" not in sonos_media_content_id:
             log.info(f"Resetting retained rayo slug - sonos_media_content_id={sonos_media_content_id}")
             set_retained_rayo_slug(var_name, None)
 
@@ -1468,7 +1480,6 @@ def set_resume_npo_radio_2_to_false():
     log.info("Setting resume_npo_radio_2_after_commercials to False")
     for media_player_obj in get_media_players():
         set_resume_npo_radio_2_after_commercials(media_player_obj.entity_id, False)
-
 
 
 

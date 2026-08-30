@@ -1873,6 +1873,9 @@
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079"
                       ]
                     }
@@ -2347,6 +2350,7 @@
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079"
                       ]
                     }
@@ -2362,6 +2366,16 @@
                     "target": {}
                   },
                   "cards": [
+                    {
+                      "type": "custom:button-card",
+                      "template": "rayo_button",
+                      "variables": {
+                        "slug": "nj16"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
                     {
                       "type": "custom:button-card",
                       "template": "rayo_button",
@@ -4628,10 +4642,58 @@
                   "name": "Koffan",
                   "show_last_changed": false,
                   "sub_button": {
-                    "main": [],
+                    "main": [
+                      {
+                        "entity": "sensor.docker_koffan_1cpu",
+                        "show_name": true,
+                        "show_state": true,
+                        "state_background": false,
+                        "name": "CPU"
+                      }
+                    ],
                     "bottom": []
                   },
                   "entity": "sensor.docker_koffan_status"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "show_last_changed": false,
+                  "sub_button": {
+                    "main": [
+                      {
+                        "entity": "sensor.docker_radio_icecast_1_1cpu",
+                        "show_name": true,
+                        "show_state": true,
+                        "state_background": false,
+                        "name": "CPU"
+                      }
+                    ],
+                    "bottom": []
+                  },
+                  "entity": "sensor.docker_radio_icecast_1_status",
+                  "name": "Icecast"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "name": "Liquidsoap",
+                  "show_last_changed": false,
+                  "sub_button": {
+                    "main": [
+                      {
+                        "entity": "sensor.docker_radio_liquidsoap_1_1cpu",
+                        "show_name": true,
+                        "show_state": true,
+                        "state_background": false,
+                        "name": "CPU"
+                      }
+                    ],
+                    "bottom": []
+                  },
+                  "entity": "sensor.docker_radio_liquidsoap_1_status"
                 },
                 {
                   "type": "custom:bubble-card",
