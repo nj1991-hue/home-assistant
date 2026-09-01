@@ -18,6 +18,11 @@ state.persist('pyscript.rayo_media_urls')
 state.persist('pyscript.sonos_art_urls')
 state.persist("pyscript.retained_rayo_slugs")
 
+state.persist("pyscript.kokken_media_channel")
+state.persist("pyscript.entre_media_channel")
+state.persist("pyscript.stue_media_channel")
+state.persist("pyscript.spisestue_media_channel")
+
 sonos_media = None
 rayo_media = None
 #default_radio_station = "NPO Radio 2"
@@ -1017,6 +1022,49 @@ def group_if_same_content():
             add_media_player_to_group(other_media_player_obj.entity_id)
 
 
+@state_trigger("media_player.kokken.media_content_id")
+@state_trigger("media_player.stue.media_content_id")
+@state_trigger("media_player.spisestue.media_content_id")
+@state_trigger("media_player.entre.media_content_id")
+@state_trigger("media_player.argon_radio_2i_305890754e1c.media_title")
+def update_media_channel_when_dab_radio_changes_channel():
+    
+    task.unique("update_media_channel_when_dab_radio_changes_channel")
+    
+    media_title = state.getattr("media_player.argon_radio_2i_305890754e1c").get("media_title", "")
+    
+    if "-" in media_title:
+        channel = media_title.split("-")[0]
+    else:
+        channel = "Radio"
+        
+    for media_player_obj in [
+        media_player.kokken,
+        media_player.entre,
+        media_player.stue,
+        media_player.spisestue
+    ]:
+        media_content_id = getattr(media_player_obj, "media_content_id", "")
+        if "RINCON_804AF2CAFA8001400" in media_content_id:
+            
+            room = media_player_obj.entity_id.split(".")[-1]
+            state.set(f"pyscript.{room}_media_channel", channel)
+        
+@state_trigger("media_player.kokken.media_content_id")
+@state_trigger("media_player.stue.media_content_id")
+@state_trigger("media_player.spisestue.media_content_id")
+@state_trigger("media_player.entre.media_content_id")
+def update_media_channel_when_media_content_id_changes(var_name):
+    
+    room = var_name.split(".")[-1]
+    media_content_id = state.getattr(var_name).get("media_content_id", "")
+    
+    if "RINCON_804AF2CAFA8001400" in media_content_id:
+        return
+    else:
+        state.set(f"pyscript.{room}_media_channel", media_content_id)
+    
+
 def adjust_volume_for_quiet_music(var_name, value, old_value, keywords):
     
     timer_state = state.get('timer.sonos_morning_routine_running')
@@ -1062,12 +1110,12 @@ def adjust_volume_for_quiet_music(var_name, value, old_value, keywords):
                          entity_id=player, volume_level=new)
     
 
-@state_trigger("sensor.entre_media_channel")
-@state_trigger("sensor.stue_media_channel")
-@state_trigger("sensor.spisestue_media_channel")
-@state_trigger("sensor.kokken_media_channel")
+@state_trigger("pyscript.entre_media_channel")
+@state_trigger("pyscript.stue_media_channel")
+@state_trigger("pyscript.spisestue_media_channel")
+@state_trigger("pyscript.kokken_media_channel")
 def adjust_volume_when_quiet_music_plays(var_name=None, value=None, old_value=None):
-    adjust_volume_for_quiet_music(var_name, value, old_value, ["Klassisk","P8 Jazz"])
+    adjust_volume_for_quiet_music(var_name, value, old_value, ["radioklassisk", "P8 Jazz", "nj16.mp3"])
 
 # Commented out because repeat_set occasionally pauses playback
 #@state_trigger("media_player.kokken.queue_position")
