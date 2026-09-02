@@ -138,7 +138,7 @@
           "show_icon": false,
           "tap_action": {
             "action": "call-service",
-            "service": "pyscript.play_rayo_station_on_sonos",
+            "service": "pyscript.play_audiostream_on_sonos",
             "data": {
               "entity_id": "[[[\n  return variables.entity_id\n]]]\n",
               "slug": "[[[\n  return variables.slug\n]]]\n"

@@ -144,13 +144,14 @@ def get_media_name(media_content_id):
 
 def get_media_player(entity_id):
     """
-    returns a media player given its entity ID
+    returns a media player object given its entity ID
     """
     media_players = [
         media_player.kokken,
         media_player.entre,
         media_player.stue,
         media_player.spisestue,
+        media_player.kaelder,
     ]
 
     media_player_dict={player.entity_id: player for player in media_players}
@@ -1190,7 +1191,7 @@ def handle_radio_playback(trigger_entity_id):
     # end up in a loop when the radio is turned on manually
     if retained_rayo_slug and media_player.argon_radio_2i_305890754e1c == "off":
         log.info(f"A rayo slug was retained. Playing {retained_rayo_slug}")
-        play_rayo_station_on_sonos(retained_rayo_slug, trigger_entity_id, update_last_selected_rayo_slug=False)
+        play_audiostream_on_sonos(retained_rayo_slug, trigger_entity_id, update_last_selected_rayo_slug=False)
         return
     
     if media_player.argon_radio_2i_305890754e1c == "off":
@@ -1262,7 +1263,7 @@ def handle_radio_playback(trigger_entity_id):
         log.info("Handled radio playback successfully")
 
     elif media_player.argon_radio_2i_305890754e1c == "unavailable":
-        play_rayo_station_on_sonos("top-100-listen", trigger_entity_id, update_last_selected_rayo_slug=False)
+        play_audiostream_on_sonos("top-100-listen", trigger_entity_id, update_last_selected_rayo_slug=False)
     elif (
         input_text.commercials_on_npo_radio_2 == "True" 
         and binary_sensor.npo_radio_2_is_playing == "on"
@@ -1433,7 +1434,7 @@ def get_retained_rayo_slug(entity_id):
     
 
 @service
-def play_rayo_station_on_sonos(slug, entity_id, update_last_selected_rayo_slug=True):
+def play_audiostream_on_sonos(slug, entity_id, update_last_selected_rayo_slug=True):
     
     if slug == "lucky-station":
         play_lucky_station(entity_id)
