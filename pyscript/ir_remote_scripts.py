@@ -179,6 +179,12 @@ def handle_ir_remote_events(**kwargs):
             "play_favorite_on_sonos",
             media_name="New Music Daily",
             entity_id=media_player_obj.entity_id)
+    elif event_name == "youtube":
+        service.call(
+            "pyscript",
+            "play_audiostream_on_sonos",
+            slug="nj16",
+            entity_id=media_player_obj.entity_id)
 
 
 @event_trigger("esphome.ir_touch")

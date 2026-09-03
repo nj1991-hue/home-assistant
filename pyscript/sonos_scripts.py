@@ -13,10 +13,11 @@ from pathlib import Path
 
 state.persist('pyscript.media_metadata')
 state.persist('pyscript.dab_radio_art_urls')
-state.persist('pyscript.rayo_art_urls')
-state.persist('pyscript.rayo_media_urls')
+state.persist('pyscript.audiostream_art_urls')
+state.persist('pyscript.audiostream_media_urls')
 state.persist('pyscript.sonos_art_urls')
-state.persist("pyscript.retained_rayo_slugs")
+state.persist('pyscript.sonos_media_content_ids')
+state.persist("pyscript.retained_audiostream_slugs")
 
 state.persist("pyscript.kokken_media_channel")
 state.persist("pyscript.entre_media_channel")
@@ -37,7 +38,8 @@ main_media_player = "media_player.kokken"
 @time_trigger("cron(0 3 * * *)")
 def refresh_sonos_media():
     global sonos_media
-    attrs = state.getattr("pyscript.sonos_art_urls") or {}
+    art_attrs = state.getattr("pyscript.sonos_art_urls") or {}
+    media_attrs = state.getattr("pyscript.sonos_media_content_ids") or {}
     playlists = media_player.browse_media(
         entity_id = "media_player.kokken", 
         media_content_type= "favorites_folder", 
@@ -57,7 +59,8 @@ def refresh_sonos_media():
                 "media_content_id": child.media_content_id,
                 "thumbnail": child.thumbnail
             }
-            attrs[child.title] = child.thumbnail
+            art_attrs[child.title] = child.thumbnail
+            media_attrs[child.title] = child.media_content_id
 
     file_path = "/config/json/sonos/media.json"
     json_data = json.dumps(sonos_media_dict, indent=4, ensure_ascii=False)
@@ -66,7 +69,18 @@ def refresh_sonos_media():
         await f.write(json_data)
         
     sonos_media = None
-    state.set("pyscript.sonos_art_urls", "ok", attrs)
+
+    for slug in get_rayo_media().keys():
+        art_attrs[slug] = get_rayo_media()[slug]["image_url"]
+        media_attrs[slug] = "x-rincon-mp3radio://" + get_rayo_media()[slug]["premium_url"]
+        
+    art_attrs["lucky-station"] = "/local/buddha_lucky.png?v1"
+
+    art_attrs["nj16"] = "/local/nj16_logo_v5.jpeg?v1"
+    media_attrs["nj16"]= "x-rincon-mp3radio://http://192.168.1.140:8000/nj16.mp3"
+
+    state.set("pyscript.sonos_art_urls", "ok", art_attrs)
+    state.set("pyscript.sonos_media_content_ids", "ok", media_attrs)
 
 @service
 @time_trigger("cron(0 2 * * *)")
@@ -74,25 +88,6 @@ def refresh_rayo_media():
     global rayo_media
     service.call("shell_command", "refresh_rayo_media")
     rayo_media = None
-
-
-def rayo_slugs():
-    return get_rayo_media().keys()
-
-@service
-@time_trigger("cron(0 4 * * *)")
-def refresh_rayo_urls():
-    art_attrs = state.getattr("pyscript.rayo_art_urls") or {}
-    media_attrs = state.getattr("pyscript.rayo_media_urls") or {}
-
-    for slug in rayo_slugs():
-        art_attrs[slug] = get_rayo_image(slug)
-        media_attrs[slug] = get_rayo_url(slug)
-        
-    art_attrs["lucky-station"] = "/local/buddha_lucky.png?v1"
-    art_attrs["nj16"] = "/local/nj16_logo_v5.jpeg?v1"
-    state.set("pyscript.rayo_art_urls", "ok", art_attrs)
-    state.set("pyscript.rayo_media_urls", "ok", media_attrs)
 
 def get_sonos_media():
     global sonos_media
@@ -118,30 +113,13 @@ def get_rayo_media():
         rayo_media = json.loads(content)
     return rayo_media
 
-def get_rayo_url(slug):
-    return "x-rincon-mp3radio://" + get_rayo_media()[slug]["premium_url"]
-    
-def get_rayo_image(slug):
-    return get_rayo_media()[slug]["image_url"]
-
-def get_rayo_name(slug):
-    return get_rayo_media()[slug]["name"]
-    
-        
 def get_media_content_id(media_name):
-    sonos_media = get_sonos_media()
-    return sonos_media[media_name]["media_content_id"]
-    
-def get_thumbnail(media_name):
-    sonos_media = get_sonos_media()
-    return sonos_media[media_name]["thumbnail"]
-    
+    return state.getattr("pyscript.sonos_media_content_ids").get(media_name,"")
+
 def get_media_name(media_content_id):
     sonos_media_inverted = {v["media_content_id"]:k for k,v in get_sonos_media().items()}
     return sonos_media_inverted[media_content_id]
     
-    
-
 def get_media_player(entity_id):
     """
     returns a media player object given its entity ID
@@ -530,8 +508,8 @@ def get_lucky_station():
 
     # Everyday mix
     stations_to_choose_from = [
-        get_rayo_url("radiovinyl"),
-        get_rayo_url("flow"),
+        get_media_content_id("radiovinyl"),
+        get_media_content_id("flow"),
         get_media_content_id("10's Hits"),
         get_media_content_id("00's Hits"),
         get_media_content_id("Top 100 Listen"),
@@ -1185,13 +1163,13 @@ def handle_radio_playback(trigger_entity_id):
         log.info(f"{media_player_obj} is not playing line-in. Returning")
         return
     
-    retained_rayo_slug = get_retained_rayo_slug(trigger_entity_id)
+    retained_audiostream_slug = get_retained_audiostream_slug(trigger_entity_id)
     
     # Only play retained slugs when the radio is off. Otherwise we
     # end up in a loop when the radio is turned on manually
-    if retained_rayo_slug and media_player.argon_radio_2i_305890754e1c == "off":
-        log.info(f"A rayo slug was retained. Playing {retained_rayo_slug}")
-        play_audiostream_on_sonos(retained_rayo_slug, trigger_entity_id, update_last_selected_rayo_slug=False)
+    if retained_audiostream_slug and media_player.argon_radio_2i_305890754e1c == "off":
+        log.info(f"A rayo slug was retained. Playing {retained_audiostream_slug}")
+        play_audiostream_on_sonos(retained_audiostream_slug, trigger_entity_id, update_last_selected_audiostream_slug=False)
         return
     
     if media_player.argon_radio_2i_305890754e1c == "off":
@@ -1263,7 +1241,7 @@ def handle_radio_playback(trigger_entity_id):
         log.info("Handled radio playback successfully")
 
     elif media_player.argon_radio_2i_305890754e1c == "unavailable":
-        play_audiostream_on_sonos("top-100-listen", trigger_entity_id, update_last_selected_rayo_slug=False)
+        play_audiostream_on_sonos("top-100-listen", trigger_entity_id, update_last_selected_audiostream_slug=False)
     elif (
         input_text.commercials_on_npo_radio_2 == "True" 
         and binary_sensor.npo_radio_2_is_playing == "on"
@@ -1395,16 +1373,16 @@ async def set_default_media():
     if "preset" in default_media:
         media_content_id = "x-rincon-stream:RINCON_804AF2CAFA8001400"
         input_text.default_radio_preset = default_media
-        set_retained_rayo_slug("media_player.kokken", None)
-        set_retained_rayo_slug("media_player.entre", None)
-        set_retained_rayo_slug("media_player.stue", None)
-        set_retained_rayo_slug("media_player.spisestue", None)
-    elif default_media=="nj16" or default_media in rayo_slugs():
+        set_retained_audiostream_slug("media_player.kokken", None)
+        set_retained_audiostream_slug("media_player.entre", None)
+        set_retained_audiostream_slug("media_player.stue", None)
+        set_retained_audiostream_slug("media_player.spisestue", None)
+    elif "mp3radio" in get_media_content_id(default_media):
         media_content_id = "x-rincon-stream:RINCON_804AF2CAFA8001400"
-        set_retained_rayo_slug("media_player.kokken", default_media)
-        set_retained_rayo_slug("media_player.entre", default_media)
-        set_retained_rayo_slug("media_player.stue", default_media)
-        set_retained_rayo_slug("media_player.spisestue", default_media)
+        set_retained_audiostream_slug("media_player.kokken", default_media)
+        set_retained_audiostream_slug("media_player.entre", default_media)
+        set_retained_audiostream_slug("media_player.stue", default_media)
+        set_retained_audiostream_slug("media_player.spisestue", default_media)
     else:
         media_content_id = default_media
         
@@ -1423,45 +1401,38 @@ async def set_default_media():
         f"{media_content_type=} {media_content_id=}"
     )
 
-def set_retained_rayo_slug(entity_id, slug):
-    attrs = state.getattr("pyscript.retained_rayo_slugs") or {}
+def set_retained_audiostream_slug(entity_id, slug):
+    attrs = state.getattr("pyscript.retained_audiostream_slugs") or {}
     attrs[entity_id] = slug
-    state.set("pyscript.retained_rayo_slugs", "ok", attrs)
+    state.set("pyscript.retained_audiostream_slugs", "ok", attrs)
 
-def get_retained_rayo_slug(entity_id):
-    attrs = state.getattr("pyscript.retained_rayo_slugs") or {}
+def get_retained_audiostream_slug(entity_id):
+    attrs = state.getattr("pyscript.retained_audiostream_slugs") or {}
     return attrs.get(entity_id)
     
 
 @service
-def play_audiostream_on_sonos(slug, entity_id, update_last_selected_rayo_slug=True):
+def play_audiostream_on_sonos(slug, entity_id, update_last_selected_audiostream_slug=True):
     
     if slug == "lucky-station":
         play_lucky_station(entity_id)
-    elif slug == "nj16":
-        script.force_play_media(
-            target_media_player=entity_id,
-            #media_content_id="http://192.168.1.140:8000/nj16.mp3",
-            media_content_id="x-rincon-mp3radio://http://192.168.1.140:8000/nj16.mp3",
-            media_content_type="music"
-        )    
     else:
         script.force_play_media(
             target_media_player=entity_id,
-            media_content_id=get_rayo_url(slug),
+            media_content_id=get_media_content_id(slug),
             media_content_type="music"
         )    
     input_boolean.turn_off(entity_id="input_boolean.allow_sonos_popup_on_shelly")
     set_resume_npo_radio_2_after_commercials(entity_id, False)
     
     # Radio 100 and Radio vinyl are always shown on the main screen.
-    if slug not in ["radio-100", "radiovinyl"] and update_last_selected_rayo_slug:
-        input_text.last_selected_rayo_slug = slug
+    if slug not in ["radio-100", "radiovinyl"] and update_last_selected_audiostream_slug:
+        input_text.last_selected_audiostream_slug = slug
 
-    set_retained_rayo_slug(entity_id, slug)
+    set_retained_audiostream_slug(entity_id, slug)
     attrs = state.getattr(entity_id)
     for grouped_entity_id in attrs.get("group_members", []):
-        set_retained_rayo_slug(grouped_entity_id, slug)
+        set_retained_audiostream_slug(grouped_entity_id, slug)
         
 
 
@@ -1473,9 +1444,9 @@ def play_audiostream_on_sonos(slug, entity_id, update_last_selected_rayo_slug=Tr
 @state_trigger("media_player.stue")
 @state_trigger("media_player.spisestue")
 @state_trigger("media_player.entre")
-def reset_retained_rayo_slug(var_name=None, value = None):
+def reset_retained_audiostream_slug(var_name=None, value = None):
     
-    task.unique(f"reset_retained_rayo_slug_{var_name}")
+    task.unique(f"reset_retained_audiostream_slug_{var_name}")
     asyncio.sleep(30) # Sleep for 30 seconds to allow the media content ID to stabilize
     
     if value == "playing":
@@ -1484,7 +1455,7 @@ def reset_retained_rayo_slug(var_name=None, value = None):
 
         if "bauerdk" not in sonos_media_content_id and "nj16.mp3" not in sonos_media_content_id:
             log.info(f"Resetting retained rayo slug - sonos_media_content_id={sonos_media_content_id}")
-            set_retained_rayo_slug(var_name, None)
+            set_retained_audiostream_slug(var_name, None)
 
 @service
 def play_favorite_on_sonos(media_name, entity_id):

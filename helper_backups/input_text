@@ -226,7 +226,7 @@
       },
       {
         "id": "last_selected_rayo_slug",
-        "name": "last_selected_rayo_slug",
+        "name": "last_selected_autdiostream_slug",
         "max": 100,
         "mode": "text",
         "min": 0
