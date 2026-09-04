@@ -3497,25 +3497,65 @@
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "template": "radio_button",
-                  "variables": {
-                    "preset": "Internet radio/preset/2",
-                    "entity_id": "media_player.kaelder"
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "condition": "or",
+                      "conditions": [
+                        {
+                          "condition": "state",
+                          "entity": "media_player.argon_radio_2i_305890754e1c",
+                          "state": "off"
+                        },
+                        {
+                          "condition": "state",
+                          "entity": "binary_sensor.npo_radio_2_is_playing",
+                          "state": "on"
+                        }
+                      ]
+                    }
+                  ],
+                  "card": {
+                    "type": "custom:button-card",
+                    "template": "radio_button",
+                    "variables": {
+                      "preset": "Internet radio/preset/2",
+                      "entity_id": "media_player.kaelder"
+                    }
                   },
                   "grid_options": {
                     "columns": 4
                   }
                 },
                 {
-                  "type": "custom:button-card",
-                  "template": "radio_button",
-                  "variables": {
-                    "preset": "DAB/preset/3",
-                    "entity_id": "media_player.kaelder"
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "condition": "or",
+                      "conditions": [
+                        {
+                          "condition": "state",
+                          "entity": "media_player.argon_radio_2i_305890754e1c",
+                          "state": "off"
+                        },
+                        {
+                          "condition": "state",
+                          "entity": "binary_sensor.dr_p3_is_playing",
+                          "state": "on"
+                        }
+                      ]
+                    }
+                  ],
+                  "card": {
+                    "type": "custom:button-card",
+                    "template": "radio_button",
+                    "variables": {
+                      "preset": "DAB/preset/3",
+                      "entity_id": "media_player.kaelder"
+                    },
+                    "entity_picture": "/local/p3_logo.png",
+                    "show_entity_picture": true
                   },
-                  "entity_picture": "/local/p3_logo.png",
-                  "show_entity_picture": true,
                   "grid_options": {
                     "columns": 4
                   }
