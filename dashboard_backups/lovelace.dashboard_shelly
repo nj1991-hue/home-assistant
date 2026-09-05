@@ -1876,6 +1876,8 @@
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079"
                       ]
                     }
@@ -2059,10 +2061,9 @@
                     },
                     {
                       "type": "custom:button-card",
-                      "template": "radio_button",
-                      "entity_picture": "/local/radio_solo_logo.png",
+                      "template": "audiostream_button",
                       "variables": {
-                        "preset": "DAB/preset/1"
+                        "slug": "Dr Dick's Dub Shack"
                       },
                       "grid_options": {
                         "columns": 3
@@ -2352,6 +2353,7 @@
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079"
                       ]
                     }
@@ -2371,7 +2373,7 @@
                       "type": "custom:button-card",
                       "template": "audiostream_button",
                       "variables": {
-                        "slug": "nj16"
+                        "slug": "NJ16"
                       },
                       "grid_options": {
                         "columns": 3

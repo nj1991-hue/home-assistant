@@ -13,8 +13,6 @@ from pathlib import Path
 
 state.persist('pyscript.media_metadata')
 state.persist('pyscript.dab_radio_art_urls')
-state.persist('pyscript.audiostream_art_urls')
-state.persist('pyscript.audiostream_media_urls')
 state.persist('pyscript.sonos_art_urls')
 state.persist('pyscript.sonos_media_content_ids')
 state.persist("pyscript.retained_audiostream_slugs")
@@ -24,7 +22,6 @@ state.persist("pyscript.entre_media_channel")
 state.persist("pyscript.stue_media_channel")
 state.persist("pyscript.spisestue_media_channel")
 
-sonos_media = None
 rayo_media = None
 #default_radio_station = "NPO Radio 2"
 #default_radio_station = "Random album"
@@ -37,9 +34,9 @@ main_media_player = "media_player.kokken"
 @service
 @time_trigger("cron(0 3 * * *)")
 def refresh_sonos_media():
-    global sonos_media
     art_attrs = state.getattr("pyscript.sonos_art_urls") or {}
     media_attrs = state.getattr("pyscript.sonos_media_content_ids") or {}
+
     playlists = media_player.browse_media(
         entity_id = "media_player.kokken", 
         media_content_type= "favorites_folder", 
@@ -50,25 +47,11 @@ def refresh_sonos_media():
         media_content_type= "favorites_folder", 
         media_content_id= "object.item.audioItem.audioBroadcast"
     )
-    
-    sonos_media_dict = {}
-    
+
     for media in [streams['media_player.kokken'], playlists['media_player.kokken']]:
         for child in media.children:
-            sonos_media_dict[child.title] = {
-                "media_content_id": child.media_content_id,
-                "thumbnail": child.thumbnail
-            }
             art_attrs[child.title] = child.thumbnail
             media_attrs[child.title] = child.media_content_id
-
-    file_path = "/config/json/sonos/media.json"
-    json_data = json.dumps(sonos_media_dict, indent=4, ensure_ascii=False)
-
-    async with aiofiles.open(file_path, mode="w", encoding="utf-8") as f:
-        await f.write(json_data)
-        
-    sonos_media = None
 
     for slug in get_rayo_media().keys():
         art_attrs[slug] = get_rayo_media()[slug]["image_url"]
@@ -76,8 +59,13 @@ def refresh_sonos_media():
         
     art_attrs["lucky-station"] = "/local/buddha_lucky.png?v1"
 
-    art_attrs["nj16"] = "/local/nj16_logo_v5.jpeg?v1"
-    media_attrs["nj16"]= "x-rincon-mp3radio://http://192.168.1.140:8000/nj16.mp3"
+    media_attrs["NJ16"]= "x-rincon-mp3radio://http://192.168.1.140:8000/nj16.mp3"
+    art_attrs["NJ16"] = "/local/nj16_logo_v5.jpeg?v1"
+
+    for channel_id,thumbnail in get_radiogarden_media().items():
+        title = get_radiogarden_channel_name(channel_id)
+        media_attrs[title] = get_radiogarden_media_content_id(channel_id)
+        art_attrs[title] = thumbnail
 
     state.set("pyscript.sonos_art_urls", "ok", art_attrs)
     state.set("pyscript.sonos_media_content_ids", "ok", media_attrs)
@@ -89,18 +77,11 @@ def refresh_rayo_media():
     service.call("shell_command", "refresh_rayo_media")
     rayo_media = None
 
-def get_sonos_media():
-    global sonos_media
-    
-    if not sonos_media:
-        file_path = "/config/json/sonos/media.json"
-    
-        async with aiofiles.open(file_path, mode="r", encoding="utf-8") as f:
-            content = await f.read()
-    
-        sonos_media = json.loads(content)
-    return sonos_media
-    
+def get_radiogarden_media():
+    return {
+        "mqdXmYNU":"/local/dubshack_logo.png?v1",
+    }
+
 def get_rayo_media():
     global rayo_media
     
@@ -116,9 +97,53 @@ def get_rayo_media():
 def get_media_content_id(media_name):
     return state.getattr("pyscript.sonos_media_content_ids").get(media_name,"")
 
+
+#def get_radiogarden_media_content_id(channel_id):
+#    return f"x-rincon-mp3radio://https://radio.garden/api/ara/content/listen/{channel_id}/channel.mp3"
+
+_RADIOGARDEN_UA = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/120.0 Safari/537.36"
+)
+
+async def get_radiogarden_media_content_id(channel_id):
+    """
+    Resolves a Radio Garden channel id to its actual upstream stream URL
+    (following the proxy's redirect) and returns it as a Sonos
+    x-rincon-mp3radio:// media_content_id.
+    """
+    channel_id = channel_id.split("?")[0].strip("/").split("/")[-1]
+    listen_url = f"https://radio.garden/api/ara/content/listen/{channel_id}/channel.mp3"
+
+    async with aiohttp.ClientSession() as session:
+        async with session.get(
+            listen_url,
+            headers={
+                "User-Agent": _RADIOGARDEN_UA,
+                "Referer": "https://radio.garden/",
+                "Icy-MetaData": "1",
+            },
+            allow_redirects=True,
+        ) as resp:
+            resolved_url = str(resp.url)
+
+    return "x-rincon-mp3radio://" + resolved_url
+
+
+async def get_radiogarden_channel_name(channel_id):
+    url = f"https://radio.garden/api/ara/content/channel/{channel_id}"
+    async with aiohttp.ClientSession() as session:
+        html = await fetch(session, url)
+    data = json.loads(html)
+    return data["data"]["title"]
+
 def get_media_name(media_content_id):
-    sonos_media_inverted = {v["media_content_id"]:k for k,v in get_sonos_media().items()}
+    sonos_media_inverted = {v:k for k,v in state.getattr("pyscript.sonos_media_content_ids").items()}
     return sonos_media_inverted[media_content_id]
+    
+@service
+def test_me():
+    get_media_name("FV:2/57")
     
 def get_media_player(entity_id):
     """
@@ -365,9 +390,9 @@ def set_sonos_meta_data(entity_ids):
                 if sonos_media_content_id.split("/")[-1] in item["premium_url"]:
                     media_header = item["name"]
                     break
-                
-        if "nj16.mp3" in sonos_media_content_id:
-            media_header = "NJ16"
+        
+        if "mp3radio" in sonos_media_content_id and not media_header:
+            media_header = get_media_name(sonos_media_content_id)
 
         if not media_header:
             media_header = sonos_media_channel or sonos_media_playlist or sonos_source or "???"
@@ -487,7 +512,9 @@ def set_sonos_art(entity_id):
     # Radio 100
     if not art_url and "bauerdk" in sonos_media_content_id:
         art_url = "https://play-lh.googleusercontent.com/zx_nqIaKsrcwKVBkqjrAapFyKk1mdA-ZodUyXig-Tt0RDLnuyeQgUPl1sK3SDbnX3A"
-            
+        
+
+    log.info(f"URL: {art_url}")     
     if art_url:
         filename = "sonos_art.png"
         await download_file(art_url,f"/config/www/{filename}")
@@ -1364,7 +1391,7 @@ async def set_default_media():
     possible_defaults += ["flow"]
     possible_defaults += ["radio-soft-modern"]
     possible_defaults += ["radio-soft-classic"]
-    possible_defaults += ["nj16"]
+    possible_defaults += ["NJ16"]
     
     # This is how to add DAB presets
     #possible_defaults += ["DAB/preset/1"] # Radio SOLO
@@ -1453,7 +1480,7 @@ def reset_retained_audiostream_slug(var_name=None, value = None):
         attrs = state.getattr(var_name)
         sonos_media_content_id = attrs.get("media_content_id", "")
 
-        if "bauerdk" not in sonos_media_content_id and "nj16.mp3" not in sonos_media_content_id:
+        if "bauerdk" not in sonos_media_content_id and "mp3radio" not in sonos_media_content_id:
             log.info(f"Resetting retained rayo slug - sonos_media_content_id={sonos_media_content_id}")
             set_retained_audiostream_slug(var_name, None)
 
