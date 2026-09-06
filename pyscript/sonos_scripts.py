@@ -79,7 +79,14 @@ def refresh_rayo_media():
 
 def get_radiogarden_media():
     return {
-        "mqdXmYNU":"/local/dubshack_logo.png?v1",
+        "mqdXmYNU": "/local/dubshack_logo.png?v1",
+        "-KZR7rZZ": "/local/ancient_fm_logo.jpeg?v1",
+        "wkqEBcYB": "/local/radio_krimi_logo.jpeg?v1",
+        "dN4PocpR": "/local/radio_worm_logo.png?v1",
+        "pgQkXK7y": "/local/dance_uk_logo.png?v1",
+        "n5mpFntx": "/local/gds_fm_logo.jpg?v1",
+        "jQjWE2iN": "/local/radio_swiss_jazz_logo.webp?v1",
+        "5pmF2dwi": "/local/le_grigri_logo.jpg?v1",
     }
 
 def get_rayo_media():
@@ -141,10 +148,7 @@ def get_media_name(media_content_id):
     sonos_media_inverted = {v:k for k,v in state.getattr("pyscript.sonos_media_content_ids").items()}
     return sonos_media_inverted[media_content_id]
     
-@service
-def test_me():
-    get_media_name("FV:2/57")
-    
+
 def get_media_player(entity_id):
     """
     returns a media player object given its entity ID
