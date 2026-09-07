@@ -87,6 +87,14 @@ def get_radiogarden_media():
         "n5mpFntx": "/local/gds_fm_logo.jpg?v1",
         "jQjWE2iN": "/local/radio_swiss_jazz_logo.webp?v1",
         "5pmF2dwi": "/local/le_grigri_logo.jpg?v1",
+        "rfVt15jk": "/local/cherie_frency_logo.jpeg?v1",
+        "p8U4xGyV": "/local/cherie_2000_culte.webp?v1",
+        "vGyshU5F": "/local/cherie_gen_2000.webp?v1",
+        "5OyMl3m2": "/local/cherie_cherienouveautes.jpeg?v1",
+        "J5ZoSOqo": "/local/radio_neptune_logo.jpg?v1",
+        "ijKUlByg": "/local/alpha_boys_logo.jpg?v1",
+        "42NInyT6": "/local/radio_c_logo.png?v1",
+        "O7ZIYNOX": "/local/feelgood_fm_logo.jpeg?v1",
     }
 
 def get_rayo_media():
@@ -147,6 +155,13 @@ async def get_radiogarden_channel_name(channel_id):
 def get_media_name(media_content_id):
     sonos_media_inverted = {v:k for k,v in state.getattr("pyscript.sonos_media_content_ids").items()}
     return sonos_media_inverted[media_content_id]
+
+def get_media_art_url(media_content_id):
+    sonos_art_urls = state.getattr("pyscript.sonos_art_urls")
+    
+    log.info(sonos_art_urls)
+    log.info(get_media_name(media_content_id))
+    return sonos_art_urls.get(get_media_name(media_content_id))
     
 
 def get_media_player(entity_id):
@@ -398,6 +413,10 @@ def set_sonos_meta_data(entity_ids):
         if "mp3radio" in sonos_media_content_id and not media_header:
             media_header = get_media_name(sonos_media_content_id)
 
+        if "aac://" in sonos_media_content_id and not media_header:
+            media_header = get_media_name(sonos_media_content_id.replace("aac://", "x-rincon-mp3radio://"))
+            
+
         if not media_header:
             media_header = sonos_media_channel or sonos_media_playlist or sonos_source or "???"
             
@@ -518,8 +537,22 @@ def set_sonos_art(entity_id):
         art_url = "https://play-lh.googleusercontent.com/zx_nqIaKsrcwKVBkqjrAapFyKk1mdA-ZodUyXig-Tt0RDLnuyeQgUPl1sK3SDbnX3A"
         
 
+    if "mp3radio" in sonos_media_content_id and not art_url:
+        art_url = get_media_art_url(sonos_media_content_id)
+
+    if "aac://" in sonos_media_content_id and not art_url:
+        art_url = get_media_art_url(sonos_media_content_id.replace("aac://", "x-rincon-mp3radio://"))
+        
+        
+
     log.info(f"URL: {art_url}")     
-    if art_url:
+    if art_url and art_url.startswith("/local"):
+        set_media_metadata_attributes(
+            entity_id=entity_id,
+            art_url = art_url
+        )
+        
+    elif art_url:
         filename = "sonos_art.png"
         await download_file(art_url,f"/config/www/{filename}")
         

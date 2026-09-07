@@ -1879,6 +1879,9 @@
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079"
                       ]
                     }
@@ -2064,6 +2067,86 @@
                       "type": "custom:button-card",
                       "template": "audiostream_button",
                       "variables": {
+                        "slug": "Radio Neptune"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "audiostream_button",
+                      "variables": {
+                        "slug": "Dance UK Radio"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "audiostream_button",
+                      "variables": {
+                        "slug": "Radio Swiss Jazz"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "audiostream_button",
+                      "variables": {
+                        "slug": "Radio C Luxembourg"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "audiostream_button",
+                      "variables": {
+                        "slug": "Chérie FM - Frenchy"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "audiostream_button",
+                      "variables": {
+                        "slug": "Chérie FM - 2000 Culte"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "audiostream_button",
+                      "variables": {
+                        "slug": "Chérie FM - Generation 2000"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "audiostream_button",
+                      "variables": {
+                        "slug": "Chérie FM - Nouveautés"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "audiostream_button",
+                      "variables": {
                         "slug": "Dr Dick's Dub Shack"
                       },
                       "grid_options": {
@@ -2084,27 +2167,7 @@
                       "type": "custom:button-card",
                       "template": "audiostream_button",
                       "variables": {
-                        "slug": "Radio Worm"
-                      },
-                      "grid_options": {
-                        "columns": 3
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "audiostream_button",
-                      "variables": {
                         "slug": "Radio Krimi"
-                      },
-                      "grid_options": {
-                        "columns": 3
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "audiostream_button",
-                      "variables": {
-                        "slug": "Dance UK Radio"
                       },
                       "grid_options": {
                         "columns": 3
@@ -2124,7 +2187,7 @@
                       "type": "custom:button-card",
                       "template": "audiostream_button",
                       "variables": {
-                        "slug": "Radio Swiss Jazz"
+                        "slug": "Le Grigri"
                       },
                       "grid_options": {
                         "columns": 3
@@ -2134,7 +2197,17 @@
                       "type": "custom:button-card",
                       "template": "audiostream_button",
                       "variables": {
-                        "slug": "Le Grigri"
+                        "slug": "Alpha Boys School Radio"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "audiostream_button",
+                      "variables": {
+                        "slug": "Feelgood.FM"
                       },
                       "grid_options": {
                         "columns": 3
