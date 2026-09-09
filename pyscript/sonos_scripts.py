@@ -95,6 +95,7 @@ def get_radiogarden_media():
         "ijKUlByg": "/local/alpha_boys_logo.jpg?v1",
         "42NInyT6": "/local/radio_c_logo.png?v1",
         "O7ZIYNOX": "/local/feelgood_fm_logo.jpeg?v1",
+        "Gk8543C0": "/local/piano_room_logo.webp?v1",
     }
 
 def get_rayo_media():
