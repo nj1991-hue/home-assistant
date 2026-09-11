@@ -1883,6 +1883,9 @@
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079"
                       ]
                     }
@@ -2098,6 +2101,56 @@
                       "type": "custom:button-card",
                       "template": "audiostream_button",
                       "variables": {
+                        "slug": "Radio Swiss Pop"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "audiostream_button",
+                      "variables": {
+                        "slug": "Piano Practice Room Radio"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "audiostream_button",
+                      "variables": {
+                        "slug": "RaRaRadio"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "audiostream_button",
+                      "variables": {
+                        "slug": "Pinguin Radio"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "audiostream_button",
+                      "variables": {
+                        "slug": "NTS Memory Lane"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "audiostream_button",
+                      "variables": {
                         "slug": "Dr Dick's Dub Shack"
                       },
                       "grid_options": {
@@ -2129,16 +2182,6 @@
                       "template": "audiostream_button",
                       "variables": {
                         "slug": "GDS.FM"
-                      },
-                      "grid_options": {
-                        "columns": 3
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "audiostream_button",
-                      "variables": {
-                        "slug": "Le Grigri"
                       },
                       "grid_options": {
                         "columns": 3

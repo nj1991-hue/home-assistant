@@ -96,6 +96,10 @@ def get_radiogarden_media():
         "42NInyT6": "/local/radio_c_logo.png?v1",
         "O7ZIYNOX": "/local/feelgood_fm_logo.jpeg?v1",
         "Gk8543C0": "/local/piano_room_logo.webp?v1",
+        "HARzTP3k": "/local/radio_swiss_pop_logo.webp?v1",
+        "PguXu8jr": "/local/rara_radio_logo.jpg?v1",
+        "XMUGf4Ky": "/local/pinguin_radio_logo.jpg?v1",
+        "lHgCbYLA": "/local/nts_memory_lane_logo.webp?v2",
     }
 
 def get_rayo_media():
