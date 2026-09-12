@@ -4858,6 +4858,26 @@
                 },
                 {
                   "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "name": "Jellyfin",
+                  "show_last_changed": false,
+                  "sub_button": {
+                    "main": [
+                      {
+                        "entity": "sensor.docker_jellyfin_1cpu",
+                        "show_name": true,
+                        "show_state": true,
+                        "state_background": false,
+                        "name": "CPU"
+                      }
+                    ],
+                    "bottom": []
+                  },
+                  "entity": "sensor.docker_jellyfin_status"
+                },
+                {
+                  "type": "custom:bubble-card",
                   "card_type": "separator",
                   "name": "Velux",
                   "grid_options": {
