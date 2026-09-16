@@ -894,7 +894,8 @@
                   "show_header": true,
                   "margin": "0px",
                   "bg_opacity": "0",
-                  "bg_blur": "9",
+                  "bg_blur": "0",
+                  "shadow_opacity": 0,
                   "margin_top_desktop": "-56px",
                   "margin_top_mobile": "-56px",
                   "hide_backdrop": true,
@@ -1488,7 +1489,8 @@
                       },
                       "name_detail": "none"
                     }
-                  ]
+                  ],
+                  "performance_mode": "performance"
                 },
                 {
                   "type": "custom:bubble-card",
@@ -1505,7 +1507,8 @@
                   "show_header": true,
                   "margin": "0px",
                   "bg_opacity": "0",
-                  "bg_blur": "9",
+                  "shadow_opacity": 0,
+                  "bg_blur": "0",
                   "margin_top_desktop": "-56px",
                   "margin_top_mobile": "-56px",
                   "hide_backdrop": true,
@@ -1831,7 +1834,8 @@
                         "columns": 4
                       }
                     }
-                  ]
+                  ],
+                  "performance_mode": "performance"
                 },
                 {
                   "type": "custom:bubble-card",
@@ -1847,7 +1851,8 @@
                   "hash": "#radio-controls",
                   "margin": "0px",
                   "bg_opacity": "0",
-                  "bg_blur": "9",
+                  "bg_blur": "0",
+                  "shadow_opacity": 0,
                   "margin_top_desktop": "-56px",
                   "margin_top_mobile": "-56px",
                   "hide_backdrop": true,
@@ -1868,6 +1873,8 @@
                     {
                       "condition": "user",
                       "users": [
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
@@ -2003,10 +2010,9 @@
                     },
                     {
                       "type": "custom:button-card",
-                      "template": "radio_button",
-                      "entity_picture": "/local/p6_logo.png",
+                      "template": "audiostream_button",
                       "variables": {
-                        "preset": "DAB/preset/5"
+                        "slug": "Pinguin Radio"
                       },
                       "grid_options": {
                         "columns": 3
@@ -2014,54 +2020,9 @@
                     },
                     {
                       "type": "custom:button-card",
-                      "template": "radio_button",
-                      "entity_picture": "/local/p8_logo.png",
+                      "template": "audiostream_button",
                       "variables": {
-                        "preset": "DAB/preset/6"
-                      },
-                      "grid_options": {
-                        "columns": 3
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "radio_button",
-                      "entity_picture": "/local/p2_logo.png",
-                      "variables": {
-                        "preset": "DAB/preset/2"
-                      },
-                      "grid_options": {
-                        "columns": 3
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "radio_button",
-                      "entity_picture": "/local/p3_logo.png",
-                      "variables": {
-                        "preset": "DAB/preset/3"
-                      },
-                      "grid_options": {
-                        "columns": 3
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "radio_button",
-                      "entity_picture": "/local/p4_logo.png",
-                      "variables": {
-                        "preset": "DAB/preset/4"
-                      },
-                      "grid_options": {
-                        "columns": 3
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "radio_button",
-                      "entity_picture": "/local/p5_logo.png?v=2",
-                      "variables": {
-                        "preset": "DAB/preset/7"
+                        "slug": "NTS Memory Lane"
                       },
                       "grid_options": {
                         "columns": 3
@@ -2131,26 +2092,6 @@
                       "type": "custom:button-card",
                       "template": "audiostream_button",
                       "variables": {
-                        "slug": "Pinguin Radio"
-                      },
-                      "grid_options": {
-                        "columns": 3
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "audiostream_button",
-                      "variables": {
-                        "slug": "NTS Memory Lane"
-                      },
-                      "grid_options": {
-                        "columns": 3
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "audiostream_button",
-                      "variables": {
                         "slug": "Dr Dick's Dub Shack"
                       },
                       "grid_options": {
@@ -2196,8 +2137,75 @@
                       "grid_options": {
                         "columns": 3
                       }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "radio_button",
+                      "entity_picture": "/local/p3_logo.png",
+                      "variables": {
+                        "preset": "DAB/preset/3"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "radio_button",
+                      "entity_picture": "/local/p6_logo.png",
+                      "variables": {
+                        "preset": "DAB/preset/5"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "radio_button",
+                      "entity_picture": "/local/p8_logo.png",
+                      "variables": {
+                        "preset": "DAB/preset/6"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "radio_button",
+                      "entity_picture": "/local/p2_logo.png",
+                      "variables": {
+                        "preset": "DAB/preset/2"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "radio_button",
+                      "entity_picture": "/local/p4_logo.png",
+                      "variables": {
+                        "preset": "DAB/preset/4"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "radio_button",
+                      "entity_picture": "/local/p5_logo.png?v=2",
+                      "variables": {
+                        "preset": "DAB/preset/7"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
                     }
-                  ]
+                  ],
+                  "performance_mode": "performance"
                 },
                 {
                   "type": "custom:bubble-card",
@@ -2213,7 +2221,8 @@
                   "hash": "#apple-music-media",
                   "margin": "0px",
                   "bg_opacity": "0",
-                  "bg_blur": "9",
+                  "bg_blur": "0",
+                  "shadow_opacity": 0,
                   "margin_top_desktop": "-56px",
                   "margin_top_mobile": "-56px",
                   "hide_backdrop": true,
@@ -2239,6 +2248,7 @@
                     {
                       "condition": "user",
                       "users": [
+                        "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
@@ -2427,7 +2437,8 @@
                         "columns": 3
                       }
                     }
-                  ]
+                  ],
+                  "performance_mode": "performance"
                 },
                 {
                   "type": "custom:bubble-card",
@@ -2443,7 +2454,8 @@
                   "hash": "#sonos-media",
                   "margin": "0px",
                   "bg_opacity": "0",
-                  "bg_blur": "9",
+                  "bg_blur": "0",
+                  "shadow_opacity": 0,
                   "margin_top_desktop": "-56px",
                   "margin_top_mobile": "-56px",
                   "hide_backdrop": true,
@@ -2464,6 +2476,7 @@
                     {
                       "condition": "user",
                       "users": [
+                        "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
@@ -2797,7 +2810,8 @@
                         "columns": 3
                       }
                     }
-                  ]
+                  ],
+                  "performance_mode": "performance"
                 },
                 {
                   "type": "custom:bubble-card",
@@ -2813,7 +2827,8 @@
                   "hash": "#now-playing",
                   "margin": "0px",
                   "bg_opacity": "0",
-                  "bg_blur": "9",
+                  "bg_blur": "0",
+                  "shadow_opacity": 0,
                   "margin_top_desktop": "-56px",
                   "margin_top_mobile": "-56px",
                   "hide_backdrop": true,
@@ -2833,6 +2848,7 @@
                     {
                       "condition": "user",
                       "users": [
+                        "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
@@ -2858,7 +2874,8 @@
                         "perform_action": "script.disallow_now_playing_popup_on_shelly"
                       }
                     }
-                  ]
+                  ],
+                  "performance_mode": "performance"
                 }
               ]
             },
