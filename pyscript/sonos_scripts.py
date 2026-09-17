@@ -164,8 +164,6 @@ def get_media_name(media_content_id):
 def get_media_art_url(media_content_id):
     sonos_art_urls = state.getattr("pyscript.sonos_art_urls")
     
-    log.info(sonos_art_urls)
-    log.info(get_media_name(media_content_id))
     return sonos_art_urls.get(get_media_name(media_content_id))
     
 

@@ -4802,100 +4802,6 @@
                 {
                   "type": "custom:bubble-card",
                   "card_type": "separator",
-                  "name": "Docker",
-                  "grid_options": {
-                    "columns": 12,
-                    "rows": 0.45
-                  },
-                  "card_layout": "normal",
-                  "sub_button": {
-                    "main": [],
-                    "bottom": []
-                  }
-                },
-                {
-                  "type": "custom:bubble-card",
-                  "card_type": "button",
-                  "button_type": "state",
-                  "name": "Koffan",
-                  "show_last_changed": false,
-                  "sub_button": {
-                    "main": [
-                      {
-                        "entity": "sensor.docker_koffan_1cpu",
-                        "show_name": true,
-                        "show_state": true,
-                        "state_background": false,
-                        "name": "CPU"
-                      }
-                    ],
-                    "bottom": []
-                  },
-                  "entity": "sensor.docker_koffan_status"
-                },
-                {
-                  "type": "custom:bubble-card",
-                  "card_type": "button",
-                  "button_type": "state",
-                  "show_last_changed": false,
-                  "sub_button": {
-                    "main": [
-                      {
-                        "entity": "sensor.docker_radio_icecast_1_1cpu",
-                        "show_name": true,
-                        "show_state": true,
-                        "state_background": false,
-                        "name": "CPU"
-                      }
-                    ],
-                    "bottom": []
-                  },
-                  "entity": "sensor.docker_radio_icecast_1_status",
-                  "name": "Icecast"
-                },
-                {
-                  "type": "custom:bubble-card",
-                  "card_type": "button",
-                  "button_type": "state",
-                  "name": "Liquidsoap",
-                  "show_last_changed": false,
-                  "sub_button": {
-                    "main": [
-                      {
-                        "entity": "sensor.docker_radio_liquidsoap_1_1cpu",
-                        "show_name": true,
-                        "show_state": true,
-                        "state_background": false,
-                        "name": "CPU"
-                      }
-                    ],
-                    "bottom": []
-                  },
-                  "entity": "sensor.docker_radio_liquidsoap_1_status"
-                },
-                {
-                  "type": "custom:bubble-card",
-                  "card_type": "button",
-                  "button_type": "state",
-                  "name": "Jellyfin",
-                  "show_last_changed": false,
-                  "sub_button": {
-                    "main": [
-                      {
-                        "entity": "sensor.docker_jellyfin_1cpu",
-                        "show_name": true,
-                        "show_state": true,
-                        "state_background": false,
-                        "name": "CPU"
-                      }
-                    ],
-                    "bottom": []
-                  },
-                  "entity": "sensor.docker_jellyfin_status"
-                },
-                {
-                  "type": "custom:bubble-card",
-                  "card_type": "separator",
                   "name": "Velux",
                   "grid_options": {
                     "columns": 12,
@@ -4954,6 +4860,24 @@
                   "entity": "binary_sensor.hue_secure_contact_sensor_entre_velux_opening",
                   "name": "Entre window",
                   "show_state": true
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Docker",
+                  "grid_options": {
+                    "columns": 12,
+                    "rows": 0.45
+                  },
+                  "card_layout": "normal",
+                  "sub_button": {
+                    "main": [],
+                    "bottom": []
+                  }
+                },
+                {
+                  "type": "markdown",
+                  "content": "{% for attr, value in states.pyscript.docker_status.attributes.items() %}\n**{{ attr }}**: {{ value }}\n{% endfor %}\n"
                 }
               ]
             },
