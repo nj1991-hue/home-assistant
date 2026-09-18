@@ -100,6 +100,10 @@ def get_radiogarden_media():
         "PguXu8jr": "/local/rara_radio_logo.jpg?v1",
         "XMUGf4Ky": "/local/pinguin_radio_logo.jpg?v1",
         "lHgCbYLA": "/local/nts_memory_lane_logo.webp?v2",
+        "gduzHpOe": "/local/bob_best_of_rock_logo.jpg?v2",
+        "S1tywS1O": "/local/bob_blues_logo.png?v2",
+        "26x9NPux": "/local/bob_symphonic_metal_logo.webp?v2",
+        "nbTJKl7t": "/local/bob_country_logo.png?v2",
     }
 
 def get_rayo_media():

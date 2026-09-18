@@ -1893,6 +1893,8 @@
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
                         "fc0349e683a1483c8f19af305ac0d079"
                       ]
                     }
@@ -1992,7 +1994,7 @@
                       "type": "custom:button-card",
                       "template": "radio_button",
                       "variables": {
-                        "preset": "Internet radio/preset/9"
+                        "preset": "Internet radio/preset/10"
                       },
                       "grid_options": {
                         "columns": 3
@@ -2002,7 +2004,27 @@
                       "type": "custom:button-card",
                       "template": "radio_button",
                       "variables": {
-                        "preset": "Internet radio/preset/10"
+                        "preset": "Internet radio/preset/9"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "audiostream_button",
+                      "variables": {
+                        "slug": "Radio Swiss Jazz"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "audiostream_button",
+                      "variables": {
+                        "slug": "Radio Swiss Pop"
                       },
                       "grid_options": {
                         "columns": 3
@@ -2052,7 +2074,7 @@
                       "type": "custom:button-card",
                       "template": "audiostream_button",
                       "variables": {
-                        "slug": "Radio Swiss Jazz"
+                        "slug": "Best of Rock Radio by Radio Bob!"
                       },
                       "grid_options": {
                         "columns": 3
@@ -2062,7 +2084,27 @@
                       "type": "custom:button-card",
                       "template": "audiostream_button",
                       "variables": {
-                        "slug": "Radio Swiss Pop"
+                        "slug": "Blues Radio by Radio Bob!"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "audiostream_button",
+                      "variables": {
+                        "slug": "Symphonic Metal Radio by Radio Bob!"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "audiostream_button",
+                      "variables": {
+                        "slug": "Country Radio by Radio Bob!"
                       },
                       "grid_options": {
                         "columns": 3
