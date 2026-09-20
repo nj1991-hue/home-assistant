@@ -24,10 +24,10 @@
           "styles": {
             "card": [
               {
-                "--button-card-ripple-color": "grey"
+                "--button-card-ripple-pressed-color": "rgba(249,159,40,255)"
               },
               {
-                "--button-card-ripple-press-opacity": 0.5
+                "--button-card-ripple-pressed-opacity": 0.8
               },
               {
                 "border-radius": "10%"
@@ -944,11 +944,6 @@
                         "state": [
                           {
                             "font-size": "60px"
-                          }
-                        ],
-                        "card": [
-                          {
-                            "--button-card-ripple-press-opacity": 0
                           }
                         ]
                       },
