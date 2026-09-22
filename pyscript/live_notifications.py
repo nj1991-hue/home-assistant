@@ -1,30 +1,26 @@
 import asyncio
 
-NOTIFY_SERVICE = "notify.mobile_app_nick_s_iphone"
-PLAYER = "media_player.kokken"
-META = "pyscript.media_metadata"
 TAG = "kokken-now-playing"
 
 
 def get_metadata():
     """Pull header/title/subtitle off the pyscript.media_metadata entity."""
-    header = state.getattr(META).get("kokken_media_header")
-    title = state.getattr(META).get("kokken_media_title")
-    subtitle = state.getattr(META).get("kokken_media_subtitle")
+    header = state.getattr("pyscript.media_metadata").get("kokken_media_header")
+    title = state.getattr("pyscript.media_metadata").get("kokken_media_title")
+    subtitle = state.getattr("pyscript.media_metadata").get("kokken_media_subtitle")
     return header, title, subtitle
 
 
-def notify(title, message, live=True):
+def notify(title, message):
     data = {
         "tag": TAG,
         "notification_icon": "mdi:music",
         "notification_icon_color": "#30D158",
         "background_color": "#101820",
         "text_color": "#FFFFFF",
+        "silent": True,
+        "live_update": True,
     }
-    if live:
-        data["live_update"] = True
-    data["silent"] = True
 
     service.call(
         "notify",
@@ -50,13 +46,11 @@ def kitchen_now_playing(**kwargs):
     task.unique("kitchen_live_activity")
     log.info("Updating now-playing")
 
-    player_state = state.get(PLAYER)
+    player_state = state.get("media_player.kokken")
+    home_state = state.get("device_tracker.nick_s_iphone")
 
-    if player_state == "playing":
-        task.sleep(0.8)  # let media_title/artist settle
-        if state.get(PLAYER) != "playing":
-            return  # bailed, state changed during the delay
-
+    if player_state == "playing" and home_state == "Home":
+    
         header, title, subtitle = get_metadata()
         message = f"{title} — {subtitle}" if subtitle else title
 
@@ -65,24 +59,14 @@ def kitchen_now_playing(**kwargs):
             message=message,
         )
 
-    elif player_state == "paused":
-        header, title, subtitle = get_metadata()
-        message = f"⏸ {title} — {subtitle}" if subtitle else f"⏸ {title}"
-
-        notify(
-            title=header,
-            message=message,
-        )
-
-        task.sleep(90)
-        if state.get(PLAYER) != "playing":
-            clear_notification()
-
-    else:  # idle / off / paused-timeout etc.
+    else:
         clear_notification()
 
-
-    
+@state_trigger("device_tracker.nick_s_iphone")
+def clear_notifications_when_leaving_the_house(value=None):
+    if value and "away" in value.lower():
+        clear_notification()
+        
     
     
     
