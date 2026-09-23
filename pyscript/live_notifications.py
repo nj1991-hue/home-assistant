@@ -40,16 +40,16 @@ def clear_notification():
     )
 
 
-@state_trigger("media_player.kokken")
-@state_trigger("pyscript.media_metadata.*")
+#@state_trigger("media_player.kokken")
+@state_trigger("pyscript.media_metadata.kokken_media_title")
 def kitchen_now_playing(**kwargs):
     task.unique("kitchen_live_activity")
-    log.info("Updating now-playing")
-
+    
     player_state = state.get("media_player.kokken")
     home_state = state.get("device_tracker.nick_s_iphone")
-
-    if player_state == "playing" and home_state == "Home":
+    
+    if player_state == "playing" and home_state == "home":
+        log.info("Updating now-playing notification")
     
         header, title, subtitle = get_metadata()
         message = f"{title} — {subtitle}" if subtitle else title
@@ -60,6 +60,7 @@ def kitchen_now_playing(**kwargs):
         )
 
     else:
+        log.info("Clearing now-playing notification")
         clear_notification()
 
 @state_trigger("device_tracker.nick_s_iphone")
