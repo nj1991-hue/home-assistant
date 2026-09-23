@@ -25,6 +25,13 @@ git add .
 
 # Only commit if there are changes
 if ! git diff --cached --quiet; then
+
+    # Skip if the only staged change is scenes.yaml (Because that one gets auto-updated by automations)
+    if [ "$(git diff --cached --name-only)" = "scenes.yaml" ]; then
+        echo "Only scenes.yaml changed, skipping commit."
+        exit 0
+    fi
+
     # Build a human-readable, comma-separated list of changed files (basenames only)
     mapfile -t CHANGED_FILES < <(git diff --cached --name-only | xargs -n1 basename)
     TOTAL_COUNT=${#CHANGED_FILES[@]}
