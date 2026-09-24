@@ -41,10 +41,15 @@ def clear_notification():
     )
 
 
-@state_trigger("media_player.kokken")
-@state_trigger("pyscript.media_metadata.kokken_media_header")
-@state_trigger("pyscript.media_metadata.kokken_media_title")
-@state_trigger("pyscript.media_metadata.kokken_media_subtitle")
+# Turned off because:
+# 1) There is no good way to determine if I am home
+# 2) The notification always buzzes the first time
+# 3) The live_notification system seems buggy. It does not always update the existing card...
+
+#@state_trigger("media_player.kokken")
+#@state_trigger("pyscript.media_metadata.kokken_media_header")
+#@state_trigger("pyscript.media_metadata.kokken_media_title")
+#@state_trigger("pyscript.media_metadata.kokken_media_subtitle")
 def kitchen_now_playing(**kwargs):
     task.unique("kitchen_live_activity")
     asyncio.sleep(3)
@@ -60,12 +65,13 @@ def kitchen_now_playing(**kwargs):
 
         notify(header, message)
     else:
-        log.info("Clearing now-playing notification. Unless something happens in the coming 60-seconds")
+        log.info("Clearing now-playing notification. Unless something happens in the coming 60-seconds.")
         asyncio.sleep(60)
+        log.info("Clearing now-playing notification.")
         clear_notification()
         
 
-@state_trigger("device_tracker.nick_s_iphone")
+#@state_trigger("device_tracker.nick_s_iphone")
 def clear_notifications_when_leaving_the_house(value=None):
     if value and value != "home":
         clear_notification()
