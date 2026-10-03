@@ -779,16 +779,13 @@ play_radio_preset_on_sonos:
       data: {}
       target:
         entity_id: input_boolean.allow_radio_popup_on_shelly
-  - if:
-    - condition: template
-      value_template: '{{ ''Internet radio'' in preset_path }}'
-    then:
-    - action: input_text.set_value
-      metadata: {}
-      target:
-        entity_id: input_text.last_selected_radio_preset
-      data:
-        value: '{{ preset_path }}'
+  - action: input_text.set_value
+    metadata: {}
+    target:
+      entity_id: input_text.last_selected_radio_preset
+    data:
+      value: '{{ preset_path }}'
+    enabled: true
   alias: play_radio_preset_on_sonos
   description: ''
 disallow_apple_music_popup_on_shelly:

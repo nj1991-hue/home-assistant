@@ -67,6 +67,15 @@ def refresh_sonos_media():
         media_attrs[title] = get_radiogarden_media_content_id(channel_id)
         art_attrs[title] = thumbnail
 
+    dab_radio_art_url_attrs = state.getattr("pyscript.dab_radio_art_urls") or {}
+    dab_radio_art_url_attrs["DAB/preset/2"] = "/local/p2_logo.png"
+    dab_radio_art_url_attrs["DAB/preset/3"] = "/local/p3_logo.png"
+    dab_radio_art_url_attrs["DAB/preset/4"] = "/local/p4_logo.png"
+    dab_radio_art_url_attrs["DAB/preset/5"] = "/local/p6_logo.png"
+    dab_radio_art_url_attrs["DAB/preset/6"] = "/local/p8_logo.png"
+    dab_radio_art_url_attrs["DAB/preset/7"] = "/local/p5_logo.png?v=2"
+
+    state.set("pyscript.dab_radio_art_urls", "ok", dab_radio_art_url_attrs)
     state.set("pyscript.sonos_art_urls", "ok", art_attrs)
     state.set("pyscript.sonos_media_content_ids", "ok", media_attrs)
 
