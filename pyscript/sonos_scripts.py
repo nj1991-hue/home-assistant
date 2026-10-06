@@ -872,15 +872,20 @@ async def stop_npo_radio_2_commercial_break():
     
 def start_npo_radio_2_filler_playlist(entity_id):
     set_resume_npo_radio_2_after_commercials(entity_id, True)
-    media_player.shuffle_set(entity_id = entity_id, shuffle=True)
     media_player.play_media(
         media_content_id=input_text.npo_radio_2_filler_playlist_id, 
         media_content_type="favorite_item_id",
-        entity_id=entity_id
+        entity_id=entity_id,
+        blocking=True
     )
-    asyncio.sleep(2)
-    media_player.shuffle_set(entity_id = entity_id, shuffle=True)    
+    sonos.play_queue(
+        entity_id=entity_id,
+        queue_position=random.randint(0, 19),
+        blocking=True,
+    )
     
+    media_player.shuffle_set(entity_id = entity_id, shuffle=True)    
+
     
 @state_trigger("input_text.commercials_on_npo_radio_2")
 async def switch_to_playlist_on_commercial_break(value=None, old_value=None):
