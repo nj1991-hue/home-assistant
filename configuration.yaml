@@ -35,6 +35,8 @@ pyscript:
     tado_home_id: !secret tado_home_id
     music_assistant_username: !secret music_assistant_username
     music_assistant_password: !secret music_assistant_password
+    tmdb_token: !secret tmdb_token
+    tmdb_key: !secret tmdb_key
 
 
 logger:
