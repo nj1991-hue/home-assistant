@@ -278,7 +278,7 @@
             "url_path": "[[[\n  const film = entity?.attributes?.results?.[variables.number - 1];\n  return film\n    ? `http://192.168.1.140:7878/add/new?term=tmdb:${film.id}`\n    : '';\n]]]\n"
           },
           "custom_fields": {
-            "rating": "[[[\n  const film = entity?.attributes?.results?.[variables.number - 1];\n  return film ? `★ ${film.rating}` : '';\n]]]\n"
+            "rating": "[[[\n  const film = entity?.attributes?.results?.[variables.number - 1];\n  return film ? `★ ${film.imdb_rating}` : '';\n]]]\n"
           },
           "styles": {
             "card": [
@@ -368,7 +368,7 @@
                   "background": "rgba(0,0,0,0.6)"
                 },
                 {
-                  "color": "rgba(249,159,40,255)"
+                  "color": "rgba(245, 197, 24, 1)"
                 },
                 {
                   "font-size": "11px"
@@ -914,7 +914,7 @@
                                   "width": "10px"
                                 }
                               ],
-                              "tado_api_status": [
+                              "tado_status": [
                                 {
                                   "position": "absolute"
                                 },
@@ -946,7 +946,7 @@
                             "mattias": "",
                             "nania": "",
                             "kontor": "",
-                            "tado_api_status": "[[[\n  if (states['input_text.tado_api_status'].state == 'ok')\n    return \"\";\n  return \"!\";\n]]]\n"
+                            "tado_status": "[[[\n  const api = states['input_text.tado_api_status']?.state;\n  const sensors = states['input_text.tado_temperature_sensor_status']?.state;\n  if (api === 'ok' && sensors === 'ok')                        \n    return \"\";\n  return \"!\";\n]]]\n"
                           }
                         }
                       ]
@@ -5526,6 +5526,406 @@
                   "template": "film_poster",
                   "variables": {
                     "number": 20
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 21
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 22
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 23
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 24
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 25
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 26
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 27
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 28
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 29
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 30
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 31
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 32
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 33
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 34
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 35
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 36
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 37
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 38
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 39
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 40
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 41
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 42
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 43
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 44
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 45
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 46
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 47
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 48
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 49
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 50
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 51
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 52
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 53
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 54
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 55
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 56
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 57
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 58
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 59
+                  },
+                  "grid_options": {
+                    "columns": 4
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "film_poster",
+                  "variables": {
+                    "number": 60
                   },
                   "grid_options": {
                     "columns": 4

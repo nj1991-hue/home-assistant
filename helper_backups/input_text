@@ -230,6 +230,14 @@
         "max": 100,
         "mode": "text",
         "min": 0
+      },
+      {
+        "id": "tado_temperature_sensor_status",
+        "name": "tado_temperature_sensor_status",
+        "icon": "mdi:home-thermometer",
+        "min": 0,
+        "max": 100,
+        "mode": "text"
       }
     ]
   }

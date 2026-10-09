@@ -375,6 +375,21 @@ def check_tado_response():
         input_text.tado_api_status = error[:255] if error else "ERROR" 
 
 
+def get_temperature_sensor_dict():
+    
+    return {
+        "stue": sensor.aqara_temp_humidity_sensor_t1_temperature_stue,
+        "spisestue": sensor.aqara_temp_humidity_sensor_spisestue_temperature,
+        "mattias": sensor.aqara_temp_humidity_sensor_t1_temperature_mattias,
+        "kokken": sensor.aqara_temp_humidity_sensor_t1_temperature_kokken,
+        "orangerie": sensor.aqara_temp_humidity_sensor_t1_temperature_orangerie,
+        #"toilet": sensor.aqara_temp_humidity_sensor_t1_temperature_toilet,
+        "sasha": sensor.aqara_temp_humidity_sensor_sasha_temperature,
+        "nania": sensor.aqara_temp_humidity_sensor_t1_temperature_nania,
+        "kontor": sensor.aqara_temp_humidity_sensor_t1_temperature_kontor,
+        "entre": sensor.entre_temperature
+    }    
+
 #@state_trigger("climate.smart_radiator_toilet == 'heat'")
 @state_trigger("climate.smart_radiator_entre == 'heat'")
 @service
@@ -397,18 +412,7 @@ async def adjust_offset(var_name = None):
     
     entity_dict = get_entity_dict()   
     
-    temperature_sensor_dict = {
-        "stue": sensor.aqara_temp_humidity_sensor_t1_temperature_stue,
-        "spisestue": sensor.aqara_temp_humidity_sensor_spisestue_temperature,
-        "mattias": sensor.aqara_temp_humidity_sensor_t1_temperature_mattias,
-        "kokken": sensor.aqara_temp_humidity_sensor_t1_temperature_kokken,
-        "orangerie": sensor.aqara_temp_humidity_sensor_t1_temperature_orangerie,
-        #"toilet": sensor.aqara_temp_humidity_sensor_t1_temperature_toilet,
-        "sasha": sensor.aqara_temp_humidity_sensor_sasha_temperature,
-        "nania": sensor.aqara_temp_humidity_sensor_t1_temperature_nania,
-        "kontor": sensor.aqara_temp_humidity_sensor_t1_temperature_kontor,
-        "entre": sensor.entre_temperature
-    }
+    temperature_sensor_dict = get_temperature_sensor_dict()
 
     rooms_and_devices = get_tado_rooms_and_devices()
 
@@ -695,6 +699,17 @@ def change_presence_to_away():
     change_presence("AWAY")
     
 
+@service
+@time_trigger("cron(0 * * * *)")
+def check_tado_temperature_sensors():
+    temperature_sensor_dict = get_temperature_sensor_dict()
+    
+    for temperature_sensor in temperature_sensor_dict.values():
+        if temperature_sensor == "unavailable":
+            input_text.tado_temperature_sensor_status = "Temperature sensor unavailable"
+            return
+    
+    input_text.tado_temperature_sensor_status = "ok"
 
                     
                     

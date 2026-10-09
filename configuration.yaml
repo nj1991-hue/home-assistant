@@ -37,6 +37,7 @@ pyscript:
     music_assistant_password: !secret music_assistant_password
     tmdb_token: !secret tmdb_token
     tmdb_key: !secret tmdb_key
+    omdb_key: !secret omdb_key
 
 
 logger:
@@ -44,6 +45,13 @@ logger:
   logs:
     custom_components.pyscript: info
     #homeassistant.components.roomba: debug
+
+recorder:
+  exclude:
+    entities:
+      - sensor.arthouse_films
+      - pyscript.sonos_art_urls
+      - pyscript.sonos_media_content_ids
 
 automation: !include automations.yaml
 script: !include scripts.yaml
