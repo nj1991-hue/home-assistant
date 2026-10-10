@@ -590,9 +590,9 @@ def get_lucky_station():
     stations_to_choose_from = [
         get_media_content_id("radiovinyl"),
         get_media_content_id("flow"),
-        get_media_content_id("10's Hits"),
-        get_media_content_id("00's Hits"),
-        get_media_content_id("Top 100 Listen"),
+        get_media_content_id("10s-hits"),
+        get_media_content_id("00s-hits"),
+        get_media_content_id("top-100-listen"),
         get_media_content_id("New Music Daily"),
        ]
        
@@ -600,27 +600,27 @@ def get_lucky_station():
         stations_to_choose_from += [get_media_content_id("Julehits")]
        
     if hour < 10:
-        stations_to_choose_from += [get_media_content_id("Chillout Lounge")]
+        stations_to_choose_from += [get_media_content_id("chillout-lounge")]
     else:
-        stations_to_choose_from += [get_media_content_id("mix 7")]
+        stations_to_choose_from += [get_media_content_id("mix")]
        
     if weekday == 0: # Monday
-        stations_to_choose_from += [get_media_content_id("70'er Hits")]
+        stations_to_choose_from += [get_media_content_id("70er-hits")]
     if weekday == 1: # Tuesday
-        stations_to_choose_from += [get_media_content_id("80's Hits")]
+        stations_to_choose_from += [get_media_content_id("80s-hits")]
     if weekday == 2: # Wednesday
-        stations_to_choose_from += [get_media_content_id("90's Hits")]
+        stations_to_choose_from += [get_media_content_id("90s-hits")]
     if weekday == 3: # Thursday
-        stations_to_choose_from += [get_media_content_id("Radio Soft Classic")]
+        stations_to_choose_from += [get_media_content_id("radio-soft-classic")]
     if weekday == 4: # Friday
         if hour >= 18:
-            stations_to_choose_from += [get_media_content_id("Dennis' Weekendmix")]
+            stations_to_choose_from += [get_media_content_id("dennis-weekendmix")]
         else:
-            stations_to_choose_from += [get_media_content_id("Radio Soft Modern")]
+            stations_to_choose_from += [get_media_content_id("radio-soft-modern")]
     if weekday == 5: # Saturday
-        stations_to_choose_from += [get_media_content_id("myROCK Legends Of Rock")]
+        stations_to_choose_from += [get_media_content_id("myrock-legends-rock")]
     if weekday == 6: # Sunday
-        stations_to_choose_from += [get_media_content_id("Radio 100")]
+        stations_to_choose_from += [get_media_content_id("radio-100")]
         
     current_station = getattr(media_player.kokken, "media_content_id", None)
     
