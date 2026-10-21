@@ -121,9 +121,9 @@ async def refresh_arthouse_films():
             films.append(film)
 
     # Add IMDB ratings
-    ratings = fetch_imdb_ratings([f["imdb_id"] for f in films])
+    ratings = fetch_imdb_ratings([f["imdb_id"] for f in films if f.get("imdb_id")])
     for film in films:
-        rating, votes = ratings.get(film["imdb_id"], (None, None))
+        rating, votes = ratings.get(film.get("imdb_id"), (None, None))
         film["imdb_rating"] = rating
         film["imdb_votes"] = votes    
 

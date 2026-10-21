@@ -4726,6 +4726,36 @@
                 {
                   "type": "custom:bubble-card",
                   "card_type": "separator",
+                  "name": "Admin",
+                  "grid_options": {
+                    "columns": 12,
+                    "rows": 0.45
+                  },
+                  "card_layout": "normal"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "button_type": "state",
+                  "entity": "input_boolean.guest_is_staying_in_the_entre",
+                  "name": "Guest is staying in the entré",
+                  "icon": "mdi:bed-outline",
+                  "show_name": true,
+                  "force_icon": false,
+                  "show_icon": true,
+                  "scrolling_effect": true,
+                  "tap_action": {
+                    "action": "toggle"
+                  },
+                  "button_action": {
+                    "tap_action": {
+                      "action": "toggle"
+                    }
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
                   "name": "iRobot",
                   "grid_options": {
                     "columns": 12,

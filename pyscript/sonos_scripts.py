@@ -803,8 +803,6 @@ async def start_npo_radio_2_commercial_break():
 
     if hour >= 19 and 25 < minute < 45:
         log.info("Not starting half-hour commercial break because the time is past 19:00")
-    elif weekday == 6  and 25 < minute < 45:
-        log.info("Not starting half-hour commercial break because it is Sunday")
     else:
         if npo_radio_2_is_playing():
             interval = 30

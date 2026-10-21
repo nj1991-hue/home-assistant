@@ -1683,3 +1683,26 @@
       entity_id: input_boolean.vacuum_while_away
     data: {}
   mode: single
+- id: '1792479575130'
+  alias: clean_entre
+  description: ''
+  triggers:
+  - trigger: time
+    at: 01:00:00
+  conditions:
+  - condition: state
+    entity_id: alarm_control_panel.verisure_alarm
+    state:
+    - armed_home
+    - armed_away
+  - condition: state
+    entity_id: input_boolean.guest_is_staying_in_the_entre
+    state:
+    - 'off'
+  actions:
+  - action: vacuum.start
+    metadata: {}
+    target:
+      entity_id: vacuum.muis
+    data: {}
+  mode: single
