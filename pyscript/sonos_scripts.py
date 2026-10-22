@@ -1510,7 +1510,7 @@ def play_audiostream_on_sonos(slug, entity_id, update_last_selected_audiostream_
     
     # Radio 100 and Radio vinyl are always shown on the main screen.
     if slug not in ["radio-100", "radiovinyl"] and update_last_selected_audiostream_slug:
-        input_text.last_selected_audiostream_slug = slug
+        input_text.last_selected_audiostream_slug_2 = slug
 
     set_retained_audiostream_slug(entity_id, slug)
     attrs = state.getattr(entity_id)

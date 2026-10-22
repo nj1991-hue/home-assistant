@@ -3091,7 +3091,7 @@
                   "type": "custom:button-card",
                   "template": "audiostream_button",
                   "variables": {
-                    "slug": "[[[\n  return states['input_text.last_selected_audiostream_slug'].state\n]]]\n"
+                    "slug": "[[[\n  return states['input_text.last_selected_audiostream_slug_2'].state\n]]]\n"
                   },
                   "grid_options": {
                     "columns": 4

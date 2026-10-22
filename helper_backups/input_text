@@ -225,16 +225,16 @@
         "min": 0
       },
       {
-        "id": "last_selected_rayo_slug",
-        "name": "last_selected_autdiostream_slug",
-        "max": 100,
-        "mode": "text",
-        "min": 0
-      },
-      {
         "id": "tado_temperature_sensor_status",
         "name": "tado_temperature_sensor_status",
         "icon": "mdi:home-thermometer",
+        "min": 0,
+        "max": 100,
+        "mode": "text"
+      },
+      {
+        "id": "last_selected_audiostream_slug",
+        "name": "last_selected_audiostream_slug",
         "min": 0,
         "max": 100,
         "mode": "text"
