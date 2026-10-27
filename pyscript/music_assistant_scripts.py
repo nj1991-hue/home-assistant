@@ -1,5 +1,6 @@
 import aiohttp
 import asyncio
+import random
 from utils import post, get_genre
 
 state.persist('pyscript.music_assistant_metadata')
@@ -217,12 +218,36 @@ def dont_stop_the_music(player_name):
         dont_stop_the_music_enabled = True
     )
 
+def is_apple_music_app_token_valid():
+    """
+    Returns True if Apple Music accepts the app token, False otherwise
+    """
+    provider_data = get_music_assistant_provider_data("apple_music")
+    if not provider_data or provider_data["status"] != "loaded":
+      return False
+    
+    # Music Assistant caches search results, so vary the query and limit
+    # to make sure Apple Music is actually asked every time
+    query = random.choice(["love", "night", "heart", "dance", "summer", "blue", "home"])
+    
+    results = run_music_assistant_command(
+      "music/search",
+      search_query=query,
+      media_types=["track"],
+      limit=random.randint(1, 50),
+      providers=[provider_data["instance_id"]],
+    )
+    return bool(results and results.get("tracks"))
+
+@service
 def set_apple_music_provider_status():
     provider_data = get_music_assistant_provider_data("apple_music")
     last_error = provider_data["last_error"]
     
     if last_error:
         input_text.apple_music_provider_status = last_error[:255]
+    elif not is_apple_music_app_token_valid():
+        input_text.apple_music_provider_status = "APP TOKEN INVALID"
     else:
         if media_player.argon_radio_2i_305890754e1c_3 == "unavailable":
             input_text.apple_music_provider_status = "UNAVAILABLE"
