@@ -1229,18 +1229,8 @@
     state:
     - cleaning
     - paused
+    - docked
   actions:
-  - if:
-    - condition: state
-      entity_id: vacuum.sheldon
-      state:
-      - paused
-    then:
-    - action: vacuum.stop
-      metadata: {}
-      target:
-        entity_id: vacuum.sheldon
-      data: {}
   - if:
     - condition: state
       entity_id: vacuum.sheldon
@@ -1248,6 +1238,12 @@
       - cleaning
     then:
     - action: vacuum.return_to_base
+      metadata: {}
+      target:
+        entity_id: vacuum.sheldon
+      data: {}
+    else:
+    - action: vacuum.stop
       metadata: {}
       target:
         entity_id: vacuum.sheldon
