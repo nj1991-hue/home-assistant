@@ -108,25 +108,6 @@
           },
           "show_entity_picture": true
         },
-        "sonos_favorite_button": {
-          "template": "square_button",
-          "entity_picture": "[[[\n  return states['pyscript.sonos_art_urls'].attributes[variables.media_name]\n]]]\n",
-          "variables": {
-            "media_name": "",
-            "entity_id": "media_player.kokken"
-          },
-          "show_name": false,
-          "show_icon": false,
-          "tap_action": {
-            "action": "call-service",
-            "service": "pyscript.play_favorite_on_sonos",
-            "data": {
-              "entity_id": "[[[\n  return variables.entity_id\n]]]\n",
-              "media_name": "[[[\n  return variables.media_name\n]]]\n"
-            }
-          },
-          "show_entity_picture": true
-        },
         "audiostream_button": {
           "template": "square_button",
           "entity_picture": "[[[\n  return states['pyscript.sonos_art_urls'].attributes[variables.slug]\n]]]\n",
@@ -2650,9 +2631,9 @@
                     },
                     {
                       "type": "custom:button-card",
-                      "template": "sonos_favorite_button",
+                      "template": "audiostream_button",
                       "variables": {
-                        "media_name": "New Music Daily"
+                        "slug": "New Music Daily"
                       },
                       "grid_options": {
                         "columns": 3
@@ -2660,9 +2641,9 @@
                     },
                     {
                       "type": "custom:button-card",
-                      "template": "sonos_favorite_button",
+                      "template": "audiostream_button",
                       "variables": {
-                        "media_name": "Album of the week"
+                        "slug": "Album of the week"
                       },
                       "grid_options": {
                         "columns": 3
@@ -2670,9 +2651,9 @@
                     },
                     {
                       "type": "custom:button-card",
-                      "template": "sonos_favorite_button",
+                      "template": "audiostream_button",
                       "variables": {
-                        "media_name": "Weekend Warriors"
+                        "slug": "Weekend Warriors"
                       },
                       "grid_options": {
                         "columns": 3
@@ -2680,9 +2661,9 @@
                     },
                     {
                       "type": "custom:button-card",
-                      "template": "sonos_favorite_button",
+                      "template": "audiostream_button",
                       "variables": {
-                        "media_name": "Power Metal Essentials"
+                        "slug": "Power Metal Essentials"
                       },
                       "grid_options": {
                         "columns": 3
@@ -2690,9 +2671,9 @@
                     },
                     {
                       "type": "custom:button-card",
-                      "template": "sonos_favorite_button",
+                      "template": "audiostream_button",
                       "variables": {
-                        "media_name": "Metal Workout"
+                        "slug": "Metal Workout"
                       },
                       "grid_options": {
                         "columns": 3
@@ -2900,9 +2881,9 @@
                     },
                     {
                       "type": "custom:button-card",
-                      "template": "sonos_favorite_button",
+                      "template": "audiostream_button",
                       "variables": {
-                        "media_name": "Akustiske hits"
+                        "slug": "Akustiske hits"
                       },
                       "grid_options": {
                         "columns": 3
@@ -2910,9 +2891,9 @@
                     },
                     {
                       "type": "custom:button-card",
-                      "template": "sonos_favorite_button",
+                      "template": "audiostream_button",
                       "variables": {
-                        "media_name": "Disco: Essentials"
+                        "slug": "Disco: Essentials"
                       },
                       "grid_options": {
                         "columns": 3
@@ -2920,9 +2901,9 @@
                     },
                     {
                       "type": "custom:button-card",
-                      "template": "sonos_favorite_button",
+                      "template": "audiostream_button",
                       "variables": {
-                        "media_name": "Everyday Hits"
+                        "slug": "Everyday Hits"
                       },
                       "grid_options": {
                         "columns": 3
@@ -2930,9 +2911,9 @@
                     },
                     {
                       "type": "custom:button-card",
-                      "template": "sonos_favorite_button",
+                      "template": "audiostream_button",
                       "variables": {
-                        "media_name": "Happy Hits"
+                        "slug": "Happy Hits"
                       },
                       "grid_options": {
                         "columns": 3
@@ -3837,9 +3818,9 @@
                 },
                 {
                   "type": "custom:button-card",
-                  "template": "sonos_favorite_button",
+                  "template": "audiostream_button",
                   "variables": {
-                    "media_name": "New Music Daily",
+                    "slug": "New Music Daily",
                     "entity_id": "media_player.kaelder"
                   },
                   "grid_options": {

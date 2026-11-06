@@ -1489,21 +1489,23 @@ def set_retained_audiostream_slug(entity_id, slug):
     attrs[entity_id] = slug
     state.set("pyscript.retained_audiostream_slugs", "ok", attrs)
 
+
 def get_retained_audiostream_slug(entity_id):
     attrs = state.getattr("pyscript.retained_audiostream_slugs") or {}
     return attrs.get(entity_id)
-    
 
+    
 @service
 def play_audiostream_on_sonos(slug, entity_id, update_last_selected_audiostream_slug=True):
     
     if slug == "lucky-station":
         play_lucky_station(entity_id)
     else:
+        media_content_id = get_media_content_id(slug)
         script.force_play_media(
             target_media_player=entity_id,
-            media_content_id=get_media_content_id(slug),
-            media_content_type="music"
+            media_content_id=media_content_id,
+            media_content_type="favorite_item_id" if media_content_id.startswith("FV:") else "music"
         )    
     input_boolean.turn_off(entity_id="input_boolean.allow_sonos_popup_on_shelly")
     set_resume_npo_radio_2_after_commercials(entity_id, False)
@@ -1517,7 +1519,6 @@ def play_audiostream_on_sonos(slug, entity_id, update_last_selected_audiostream_
     for grouped_entity_id in attrs.get("group_members", []):
         set_retained_audiostream_slug(grouped_entity_id, slug)
         
-
 
 @state_trigger("media_player.kokken.*")
 @state_trigger("media_player.stue.*")
@@ -1540,15 +1541,7 @@ def reset_retained_audiostream_slug(var_name=None, value = None):
             log.info(f"Resetting retained rayo slug - sonos_media_content_id={sonos_media_content_id}")
             set_retained_audiostream_slug(var_name, None)
 
-@service
-def play_favorite_on_sonos(media_name, entity_id):
-    script.force_play_media(
-        target_media_player=entity_id,
-        media_content_id=get_media_content_id(media_name),
-        media_content_type="favorite_item_id"
-    )    
-    input_boolean.turn_off(entity_id="input_boolean.allow_sonos_popup_on_shelly")
-    set_resume_npo_radio_2_after_commercials(entity_id, False)
+
 
 
 @service
