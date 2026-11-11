@@ -597,7 +597,7 @@
   - trigger: time
     at: '12:01:00'
   - trigger: time
-    at: '17:01:00'
+    at: '18:01:00'
   - trigger: state
     entity_id:
     - media_player.kokken

@@ -169,7 +169,7 @@ def set_home_state_to_home():
     if hour < 12:
         home_state = "Home - Morning"
     else:
-        if hour < 17:
+        if hour < 18:
             home_state = "Home - Afternoon"
         else:
             home_state = "Home - Evening"
@@ -706,7 +706,9 @@ def check_tado_temperature_sensors():
     
     for temperature_sensor in temperature_sensor_dict.values():
         if temperature_sensor == "unavailable":
-            input_text.tado_temperature_sensor_status = "Temperature sensor unavailable"
+            msg = f"{temperature_sensor.entity_id} unavailable"
+            log.warning(msg)
+            input_text.tado_temperature_sensor_status = msg
             return
     
     input_text.tado_temperature_sensor_status = "ok"
