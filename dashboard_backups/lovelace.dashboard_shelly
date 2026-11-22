@@ -89,6 +89,34 @@
             ]
           }
         },
+        "aurral_button": {
+          "template": "square_button",
+          "show_name": false,
+          "show_icon": false,
+          "show_entity_picture": true,
+          "variables": {
+            "item": "",
+            "entity_id": "media_player.kokken"
+          },
+          "entity_picture": "[[[ return states['pyscript.aurral_metadata'].attributes[variables.item + '_thumbnail'] ]]]\n",
+          "tap_action": {
+            "action": "call-service",
+            "service": "pyscript.play_aurral_on_sonos",
+            "data": {
+              "entity_id": "[[[ return variables.entity_id ]]]",
+              "item": "[[[ return variables.item ]]]"
+            }
+          },
+          "hold_action": {
+            "action": "call-service",
+            "service": "pyscript.play_aurral_on_sonos",
+            "data": {
+              "entity_id": "[[[ return variables.entity_id ]]]",
+              "item": "[[[ return variables.item ]]]",
+              "enqueue": "add"
+            }
+          }
+        },
         "radio_button": {
           "template": "square_button",
           "entity_picture": "[[[\n  return states['pyscript.dab_radio_art_urls'].attributes[variables.preset]\n]]]\n",
@@ -2599,6 +2627,26 @@
                     "target": {}
                   },
                   "cards": [
+                    {
+                      "type": "custom:button-card",
+                      "template": "aurral_button",
+                      "variables": {
+                        "item": "playlist_the_tender_bar_soundtrack_amazon_prime_2022"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "aurral_button",
+                      "variables": {
+                        "item": "playlist_radar_weekly"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
                     {
                       "type": "custom:button-card",
                       "template": "audiostream_button",

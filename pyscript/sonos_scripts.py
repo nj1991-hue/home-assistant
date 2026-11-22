@@ -432,6 +432,8 @@ def set_sonos_meta_data(entity_ids):
         if "aac://" in sonos_media_content_id and not media_header:
             media_header = get_media_name(sonos_media_content_id.replace("aac://", "x-rincon-mp3radio://"))
             
+        if "192.168.1.140:3002" in sonos_media_content_id and not media_header:
+            media_header = "aurral"
 
         if not media_header:
             media_header = sonos_media_channel or sonos_media_playlist or sonos_source or "???"

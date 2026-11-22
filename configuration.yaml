@@ -38,6 +38,11 @@ pyscript:
     tmdb_token: !secret tmdb_token
     tmdb_key: !secret tmdb_key
     omdb_key: !secret omdb_key
+    aurral_url: "http://192.168.1.140:3001"
+    aurral_username: !secret aurral_username
+    aurral_password: !secret aurral_password
+    aurral_stream_url: "http://192.168.1.140:3002/sonos/track.mp3"
+    
 
 
 logger:
@@ -52,6 +57,7 @@ recorder:
       - sensor.arthouse_films
       - pyscript.sonos_art_urls
       - pyscript.sonos_media_content_ids
+      - pyscript.aurral_metadata
 
 automation: !include automations.yaml
 script: !include scripts.yaml
