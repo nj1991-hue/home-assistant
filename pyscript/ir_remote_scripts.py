@@ -176,8 +176,9 @@ def handle_ir_remote_events(**kwargs):
     elif event_name == "netflix":
         service.call(
             "pyscript",
-            "play_audiostream_on_sonos",
-            slug="New Music Daily",
+            "play_aurral_on_sonos",
+            item="playlist_radar_weekly",
+            shuffle=True,
             entity_id=media_player_obj.entity_id)
     elif event_name == "youtube":
         service.call(

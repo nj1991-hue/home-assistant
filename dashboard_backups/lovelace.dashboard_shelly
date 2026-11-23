@@ -96,7 +96,8 @@
           "show_entity_picture": true,
           "variables": {
             "item": "",
-            "entity_id": "media_player.kokken"
+            "entity_id": "media_player.kokken",
+            "shuffle": false
           },
           "entity_picture": "[[[ return states['pyscript.aurral_metadata'].attributes[variables.item + '_thumbnail'] ]]]\n",
           "tap_action": {
@@ -104,7 +105,8 @@
             "service": "pyscript.play_aurral_on_sonos",
             "data": {
               "entity_id": "[[[ return variables.entity_id ]]]",
-              "item": "[[[ return variables.item ]]]"
+              "item": "[[[ return variables.item ]]]",
+              "shuffle": "[[[ return variables.shuffle ]]]"
             }
           },
           "hold_action": {
@@ -113,6 +115,7 @@
             "data": {
               "entity_id": "[[[ return variables.entity_id ]]]",
               "item": "[[[ return variables.item ]]]",
+              "shuffle": "[[[ return variables.shuffle ]]]",
               "enqueue": "add"
             }
           }
@@ -591,7 +594,7 @@
                     "cog": "[[[\n  return `<ha-icon\n    icon=\"mdi:cog\"\n    style=\"width: 20px; height: 20px; color: rgba(249,159,40,255);\">\n    </ha-icon>`\n]]]\n",
                     "equalizer": "[[[\n  if (\n    states['media_player.'+variables.room].state === 'playing'\n  ) {\n    return `\n      <div class=\"eq-bar\"></div>\n      <div class=\"eq-bar\"></div>\n      <div class=\"eq-bar\"></div>\n    `;\n  }\n  return '';\n]]]\n",
                     "lucky": "[[[\n  const room = variables.room\n  if (\n    entity.attributes[`${room}_feels_lucky`]\n  ) {\n  return `<ha-icon\n    icon=\"mdi:clover\"\n    style=\"width: 20px; height: 20px; color: rgba(249,159,40,255);\">\n    </ha-icon>`\n  }\n  return '';\n]]]\n",
-                    "next_album": "[[[\n  const room = variables.room\n  if (\n    states[`input_boolean.album_added_to_queue`].state === \"on\"\n  ) {\n  const pictureKey = states['input_text.next_album'].state + '_thumbnail';\n  const url = states['pyscript.music_assistant_metadata'].attributes[pictureKey];\n\n  if (url) {\n    return `\n      <img src=\"${url}\"\n        style=\"\n          width: 30px;\n          height: 30px;\n          border-radius: 14px;\n          object-fit: cover;\n        \"\n      />\n    `;\n  }\n  }\n  return '';\n]]]\n",
+                    "next_album": "[[[\n  const room = variables.room\n  if (\n    states[`input_boolean.album_added_to_queue`].state === \"on\"\n  ) {\n  const pictureKey = states['input_text.next_album'].state + '_thumbnail';\n  const url = states['pyscript.aurral_metadata'].attributes[pictureKey];\n\n  if (url) {\n    return `\n      <img src=\"${url}\"\n        style=\"\n          width: 30px;\n          height: 30px;\n          border-radius: 14px;\n          object-fit: cover;\n        \"\n      />\n    `;\n  }\n  }\n  return '';\n]]]\n",
                     "volume": "[[[\n  const room = variables.room\n  const vol = Math.round(\n    parseFloat(states[`input_number.${room}_volume`].state)\n  );\n\n  let icon = 'mdi:volume-mute';\n  if (vol > 12) icon = 'mdi:volume-high';\n  else if (vol >= 5) icon = 'mdi:volume-medium';\n  else if (vol >= 1) icon = 'mdi:volume-low';\n\n  return `\n    <ha-icon\n      icon=\"${icon}\"\n      style=\"width: 18px; height: 18px; color: rgba(249,159,40,255);\">\n    </ha-icon>\n    <span>${vol}%</span>\n  `;\n]]]    \n"
                   },
                   "extra_styles": ".eq-bar {\n  width: 5px;\n  height: 20px;\n  background: rgba(249,159,40,255);\n  animation: eq-bounce 1s infinite ease-in-out;\n  transform-origin: bottom;\n}    \n\n.eq-bar:nth-child(1) { animation-delay: 0s; }\n.eq-bar:nth-child(2) { animation-delay: 0.3s; }\n.eq-bar:nth-child(3) { animation-delay: 0.2s; }\n\n@keyframes eq-bounce {\n  0%, 100% { transform: scaleY(0.3); }\n  50% { transform: scaleY(1); }\n}\n"
@@ -668,9 +671,9 @@
                           "show_icon": false,
                           "tap_action": {
                             "action": "navigate",
-                            "navigation_path": "#apple-music-media"
+                            "navigation_path": "#aurral-media"
                           },
-                          "entity_picture": "/local/apple_music_logo_4.png",
+                          "entity_picture": "/local/aurral_logo.png",
                           "show_entity_picture": true,
                           "grid_options": {
                             "columns": 4
@@ -678,7 +681,7 @@
                           "visibility": [
                             {
                               "condition": "state",
-                              "entity": "input_text.apple_music_provider_status",
+                              "entity": "input_text.aurral_status",
                               "state": "OK"
                             }
                           ]
@@ -689,7 +692,7 @@
                           "visibility": [
                             {
                               "condition": "state",
-                              "entity": "input_text.apple_music_provider_status",
+                              "entity": "input_text.aurral_status",
                               "state_not": "OK"
                             }
                           ]
@@ -2641,7 +2644,19 @@
                       "type": "custom:button-card",
                       "template": "aurral_button",
                       "variables": {
-                        "item": "playlist_radar_weekly"
+                        "item": "playlist_new_alternative",
+                        "shuffle": true
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "aurral_button",
+                      "variables": {
+                        "item": "playlist_radar_weekly",
+                        "shuffle": true
                       },
                       "grid_options": {
                         "columns": 3
@@ -2679,49 +2694,10 @@
                     },
                     {
                       "type": "custom:button-card",
-                      "template": "audiostream_button",
+                      "template": "aurral_button",
                       "variables": {
-                        "slug": "New Music Daily"
-                      },
-                      "grid_options": {
-                        "columns": 3
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "audiostream_button",
-                      "variables": {
-                        "slug": "Album of the week"
-                      },
-                      "grid_options": {
-                        "columns": 3
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "audiostream_button",
-                      "variables": {
-                        "slug": "Weekend Warriors"
-                      },
-                      "grid_options": {
-                        "columns": 3
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "audiostream_button",
-                      "variables": {
-                        "slug": "Power Metal Essentials"
-                      },
-                      "grid_options": {
-                        "columns": 3
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "audiostream_button",
-                      "variables": {
-                        "slug": "Metal Workout"
+                        "item": "playlist_jul",
+                        "shuffle": true
                       },
                       "grid_options": {
                         "columns": 3
@@ -2732,16 +2708,6 @@
                       "template": "audiostream_button",
                       "variables": {
                         "slug": "dansk-jul"
-                      },
-                      "grid_options": {
-                        "columns": 3
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "audiostream_button",
-                      "variables": {
-                        "slug": "Julehits"
                       },
                       "grid_options": {
                         "columns": 3
@@ -2762,6 +2728,26 @@
                       "template": "audiostream_button",
                       "variables": {
                         "slug": "radio-klassisk"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "audiostream_button",
+                      "variables": {
+                        "slug": "radio-soft-classic"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "audiostream_button",
+                      "variables": {
+                        "slug": "radio-soft-modern"
                       },
                       "grid_options": {
                         "columns": 3
@@ -2906,66 +2892,6 @@
                       "grid_options": {
                         "columns": 3
                       }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "audiostream_button",
-                      "variables": {
-                        "slug": "radio-soft-classic"
-                      },
-                      "grid_options": {
-                        "columns": 3
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "audiostream_button",
-                      "variables": {
-                        "slug": "radio-soft-modern"
-                      },
-                      "grid_options": {
-                        "columns": 3
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "audiostream_button",
-                      "variables": {
-                        "slug": "Akustiske hits"
-                      },
-                      "grid_options": {
-                        "columns": 3
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "audiostream_button",
-                      "variables": {
-                        "slug": "Disco: Essentials"
-                      },
-                      "grid_options": {
-                        "columns": 3
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "audiostream_button",
-                      "variables": {
-                        "slug": "Everyday Hits"
-                      },
-                      "grid_options": {
-                        "columns": 3
-                      }
-                    },
-                    {
-                      "type": "custom:button-card",
-                      "template": "audiostream_button",
-                      "variables": {
-                        "slug": "Happy Hits"
-                      },
-                      "grid_options": {
-                        "columns": 3
-                      }
                     }
                   ],
                   "performance_mode": "performance"
@@ -3029,6 +2955,239 @@
                       "tap_action": {
                         "action": "perform-action",
                         "perform_action": "script.disallow_now_playing_popup_on_shelly"
+                      }
+                    }
+                  ],
+                  "performance_mode": "performance"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "pop-up",
+                  "modules": [
+                    "default"
+                  ],
+                  "slide_to_close_distance": "40000",
+                  "close_on_click": true,
+                  "background_update": false,
+                  "close_by_clicking_outside": true,
+                  "show_header": true,
+                  "hash": "#aurral-media",
+                  "margin": "0px",
+                  "bg_opacity": "0",
+                  "bg_blur": "0",
+                  "shadow_opacity": 0,
+                  "margin_top_desktop": "-56px",
+                  "margin_top_mobile": "-56px",
+                  "hide_backdrop": true,
+                  "button_type": "name",
+                  "sub_button": {
+                    "main": [],
+                    "bottom": []
+                  },
+                  "slider_fill_orientation": "left",
+                  "slider_value_position": "right",
+                  "auto_close": "300000",
+                  "open_action": {
+                    "action": "perform-action",
+                    "perform_action": "script.allow_apple_music_popup_on_shelly_2",
+                    "target": {}
+                  },
+                  "trigger": [
+                    {
+                      "condition": "state",
+                      "entity": "input_boolean.allow_apple_music_popup_on_shelly",
+                      "state": "on"
+                    },
+                    {
+                      "condition": "user",
+                      "users": [
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079",
+                        "fc0349e683a1483c8f19af305ac0d079"
+                      ]
+                    }
+                  ],
+                  "close_action": {
+                    "action": "perform-action",
+                    "perform_action": "script.disallow_apple_music_popup_on_shelly",
+                    "target": {}
+                  },
+                  "cards": [
+                    {
+                      "type": "custom:button-card",
+                      "template": "aurral_button",
+                      "entity": "media_player.kokken",
+                      "variables": {
+                        "item": "recently_added_album_1"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "aurral_button",
+                      "entity": "media_player.kokken",
+                      "variables": {
+                        "item": "recently_added_album_2"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "aurral_button",
+                      "entity": "media_player.kokken",
+                      "variables": {
+                        "item": "recently_added_album_3"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "aurral_button",
+                      "entity": "media_player.kokken",
+                      "variables": {
+                        "item": "recently_added_album_4"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "aurral_button",
+                      "entity": "media_player.kokken",
+                      "variables": {
+                        "item": "recently_added_album_5"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "aurral_button",
+                      "entity": "media_player.kokken",
+                      "variables": {
+                        "item": "recently_added_album_6"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "aurral_button",
+                      "entity": "media_player.kokken",
+                      "variables": {
+                        "item": "recently_added_album_7"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "aurral_button",
+                      "entity": "media_player.kokken",
+                      "variables": {
+                        "item": "random_album"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "aurral_button",
+                      "entity": "media_player.kokken",
+                      "variables": {
+                        "item": "playlist_1"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "aurral_button",
+                      "entity": "media_player.kokken",
+                      "variables": {
+                        "item": "playlist_2"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "aurral_button",
+                      "entity": "media_player.kokken",
+                      "variables": {
+                        "item": "playlist_3"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "aurral_button",
+                      "entity": "media_player.kokken",
+                      "variables": {
+                        "item": "playlist_4"
+                      },
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "square_button",
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "square_button",
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "square_button",
+                      "grid_options": {
+                        "columns": 3
+                      }
+                    },
+                    {
+                      "type": "custom:button-card",
+                      "template": "square_button",
+                      "entity": "media_player.kokken",
+                      "show_name": false,
+                      "show_icon": true,
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "pyscript.sync_music_assistant_library"
+                      },
+                      "icon": "mdi:refresh",
+                      "grid_options": {
+                        "columns": 3
                       }
                     }
                   ],
@@ -3145,17 +3304,17 @@
                   "visibility": [
                     {
                       "condition": "state",
-                      "entity": "input_text.apple_music_provider_status",
+                      "entity": "input_text.aurral_status",
                       "state_not": "OK"
                     }
                   ]
                 },
                 {
                   "type": "custom:button-card",
-                  "template": "music_assistant_button",
+                  "template": "aurral_button",
                   "entity": "media_player.kokken",
                   "variables": {
-                    "album": "random_album"
+                    "item": "random_album"
                   },
                   "grid_options": {
                     "columns": 4
@@ -3163,7 +3322,7 @@
                   "visibility": [
                     {
                       "condition": "state",
-                      "entity": "input_text.apple_music_provider_status",
+                      "entity": "input_text.aurral_status",
                       "state": "OK"
                     }
                   ]
@@ -3180,10 +3339,10 @@
                 },
                 {
                   "type": "custom:button-card",
-                  "template": "music_assistant_button",
+                  "template": "aurral_button",
                   "entity": "media_player.kokken",
                   "variables": {
-                    "album": "spotlight_album"
+                    "item": "spotlight_album"
                   },
                   "grid_options": {
                     "columns": 4
@@ -3191,7 +3350,7 @@
                   "visibility": [
                     {
                       "condition": "state",
-                      "entity": "input_text.apple_music_provider_status",
+                      "entity": "input_text.aurral_status",
                       "state": "OK"
                     }
                   ]
@@ -3210,7 +3369,7 @@
                   "visibility": [
                     {
                       "condition": "state",
-                      "entity": "input_text.apple_music_provider_status",
+                      "entity": "input_text.aurral_status",
                       "state_not": "OK"
                     }
                   ]

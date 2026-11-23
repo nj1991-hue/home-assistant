@@ -115,6 +115,14 @@
         "name": "entre_temperature_helper",
         "mode": "slider",
         "step": 1.0
+      },
+      {
+        "id": "next_album_queue_id",
+        "min": 0.0,
+        "max": 9999999999.0,
+        "name": "next_album_queue_id",
+        "step": 1.0,
+        "mode": "slider"
       }
     ]
   }

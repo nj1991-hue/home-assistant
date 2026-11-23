@@ -433,7 +433,7 @@ def set_sonos_meta_data(entity_ids):
             media_header = get_media_name(sonos_media_content_id.replace("aac://", "x-rincon-mp3radio://"))
             
         if "192.168.1.140:3002" in sonos_media_content_id and not media_header:
-            media_header = "aurral"
+            media_header = input_text.aurral_playlist_name
 
         if not media_header:
             media_header = sonos_media_channel or sonos_media_playlist or sonos_source or "???"
@@ -1126,7 +1126,7 @@ def update_media_channel_when_media_content_id_changes(var_name):
     if "RINCON_804AF2CAFA8001400" in media_content_id:
         return
     else:
-        state.set(f"pyscript.{room}_media_channel", media_content_id)
+        state.set(f"pyscript.{room}_media_channel", media_content_id[:255])
     
 
 def adjust_volume_for_quiet_music(var_name, value, old_value, keywords):
@@ -1348,9 +1348,10 @@ def handle_radio_playback(trigger_entity_id):
         group_if_same_content()
     
 
-@state_trigger("media_player.argon_radio_2i_305890754e1c")
-@state_trigger("media_player.argon_radio_2i_305890754e1c.media_content_id")
-@state_trigger("media_player.argon_radio_2i_305890754e1c_3.media_content_id")
+# Turned off because this is now aurral-based
+#@state_trigger("media_player.argon_radio_2i_305890754e1c")
+#@state_trigger("media_player.argon_radio_2i_305890754e1c.media_content_id")
+#@state_trigger("media_player.argon_radio_2i_305890754e1c_3.media_content_id")
 def reset_album_added_to_queue():
     if media_player.argon_radio_2i_305890754e1c != "playing":
         input_boolean.turn_off(entity_id="input_boolean.album_added_to_queue")

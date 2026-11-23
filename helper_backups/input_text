@@ -238,6 +238,20 @@
         "min": 0,
         "max": 100,
         "mode": "text"
+      },
+      {
+        "id": "aurral_status",
+        "name": "aurral_status",
+        "min": 0,
+        "max": 100,
+        "mode": "text"
+      },
+      {
+        "id": "aurral_playlist_name",
+        "name": "aurral_playlist_name",
+        "min": 0,
+        "max": 100,
+        "mode": "text"
       }
     ]
   }

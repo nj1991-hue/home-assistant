@@ -293,6 +293,37 @@ def _add_item(attrs, key, item_type, item, thumbnail):
     attrs[f"{key}_thumbnail"] = thumbnail or "/local/404.png"
 
 
+async def _artist_genres(artist_mbid):
+    async with aiohttp.ClientSession(
+        auth=aiohttp.BasicAuth(_config("aurral_username"), _config("aurral_password"))
+    ) as session:
+        async with session.get(
+            f"{_base_url()}/api/artists/{artist_mbid}",
+            params={"mode": "core"},
+            timeout=aiohttp.ClientTimeout(total=20),
+        ) as response:
+            if response.status != 200:
+                return []
+            return (await response.json()).get("genres", [])
+
+
+def _album_genres(album):
+    genres = [g["name"] for g in album.get("genres", [])]
+    if not genres:
+        artists = album.get("artists") or []
+        mbid = artists[0].get("musicBrainzId") if artists else None
+        if mbid:
+            genres = _artist_genres(mbid)
+    return genres
+
+
+def is_not_metal(album):
+    genres = _album_genres(album)
+    if genres and not "metal" in str(genres).lower():
+        return True
+    else:
+        return False
+
 @service
 @time_trigger("startup")
 @time_trigger("cron(*/30 * * * *)")
@@ -300,7 +331,7 @@ def update_aurral_metadata():
     """Refresh pyscript.aurral_metadata (newest monitored albums, a random monitored album, playlists/Flows) and cache their covers."""
     try:
         newest = _monitored_albums("newest", NEWEST_ALBUMS * 2)
-        randoms = _monitored_albums("random", 5)
+        randoms = _monitored_albums("random", 100)
         playlists = _get("getPlaylists")["playlists"].get("playlist", [])
     except Exception as e:
         log.warning(f"Aurral: metadata refresh failed, keeping the old metadata: {e}")
@@ -311,8 +342,7 @@ def update_aurral_metadata():
         cached[filename.split(".")[0]] = filename
     used = set()
 
-    attrs = {"friendly_name": "Aurral metadata"}
-
+    attrs = state.getattr("pyscript.aurral_metadata") or {"friendly_name": "Aurral metadata"}
     # Newest albums: skip ones without art so the buttons never go blank.
     i = 0
     for album in newest:
@@ -322,10 +352,14 @@ def update_aurral_metadata():
         if thumbnail:
             i += 1
             _add_item(attrs, f"recently_added_album_{i}", "album", album, thumbnail)
+            
+            if is_not_metal(album):
+                _add_item(attrs, f"spotlight_album", "album", album, thumbnail)
 
     for album in randoms:
         thumbnail = _cover(album, cached, used)
-        if thumbnail:
+        genres = _album_genres(album)
+        if thumbnail and is_not_metal(album) and album["id"] != attrs.get("spotlight_album_id"):
             _add_item(attrs, "random_album", "album", album, thumbnail)
             break
 
@@ -453,7 +487,7 @@ def play_aurral_on_sonos(entity_id, item, enqueue=None, shuffle=False):
     shuffle: shuffle the tracks first.
     """
     task.unique(f"play_aurral_on_sonos_{entity_id}")
-
+    
     metadata = state.getattr("pyscript.aurral_metadata") or {}
     item_id = metadata.get(f"{item}_id")
     item_type = metadata.get(f"{item}_type")
@@ -462,8 +496,23 @@ def play_aurral_on_sonos(entity_id, item, enqueue=None, shuffle=False):
         return
 
     songs = _album_songs(item_id) if item_type == "album" else _playlist_songs(item_id)
-    _play_songs_on_sonos(entity_id, songs, enqueue, shuffle)
+    
+    if enqueue:
+        input_boolean.turn_on(entity_id="input_boolean.album_added_to_queue")
+        input_text.set_value(entity_id="input_text.next_album", value=item)
+        
+        queue_size = state.getattr(entity_id).get("queue_size")
+        if queue_size:
+            input_number.set_value(entity_id="input_number.next_album_queue_id", value=queue_size+1)
+        
+    else:
+        input_boolean.turn_off(entity_id="input_boolean.album_added_to_queue")
+        input_number.set_value(entity_id="input_number.next_album_queue_id", value=0)
+        name = metadata.get(f"{item}_name", "")
+        input_text.set_value(entity_id="input_text.aurral_playlist_name", value=name)
 
+    _play_songs_on_sonos(entity_id, songs, enqueue, shuffle)
+        
 
 @service
 def play_aurral_album_on_sonos(entity_id, query, enqueue=None, shuffle=False):
@@ -491,6 +540,20 @@ def play_aurral_playlist_on_sonos(entity_id, name, enqueue=None, shuffle=False):
         log.warning(f"Aurral: no playlist called {name}")
         return
     _play_songs_on_sonos(entity_id, _playlist_songs(playlist_id), enqueue, shuffle)
+
+
+
+@state_trigger("media_player.kokken.media_content_id")
+def reset_album_added_to_queue_when_media_content_id_changes():
+    media_content_id = getattr(media_player.kokken, "media_content_id", "")
+    if "192.168.1.140:3002" not in media_content_id:
+        input_boolean.turn_off(entity_id="input_boolean.album_added_to_queue")
+
+@state_trigger("media_player.kokken.queue_position")
+def reset_album_added_to_queue_when_queue_position_changes():
+    queue_position = getattr(media_player.kokken, "queue_position")
+    if queue_position and queue_position >= float(input_number.next_album_queue_id):
+        input_boolean.turn_off(entity_id="input_boolean.album_added_to_queue")
 
 
 # ---------------------------------------------------------------------------
