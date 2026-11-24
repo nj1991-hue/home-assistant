@@ -170,7 +170,31 @@ async def get_radiogarden_channel_name(channel_id):
     data = json.loads(html)
     return data["data"]["title"]
 
+def is_aurral_slug(slug):
+
+    aurral_media = state.getattr("pyscript.aurral_metadata")
+    aurral_name = f"{slug}_name"
+    
+    if aurral_name in aurral_media:
+        return True
+    else:
+        return False
+
+def is_aurral_media_content_id(media_content_id):
+    if "192.168.1.140:3002" in media_content_id:
+        return True
+    else:
+        return False
+    
+
 def get_media_name(media_content_id):
+    
+    if is_aurral_media_content_id(media_content_id):
+        return str(input_text.aurral_playlist_name)
+        
+    if is_aurral_slug(media_content_id):
+        return aurral_media[aurral_name]
+    
     sonos_media_inverted = {v:k for k,v in state.getattr("pyscript.sonos_media_content_ids").items()}
     return sonos_media_inverted[media_content_id]
 
@@ -432,7 +456,7 @@ def set_sonos_meta_data(entity_ids):
         if "aac://" in sonos_media_content_id and not media_header:
             media_header = get_media_name(sonos_media_content_id.replace("aac://", "x-rincon-mp3radio://"))
             
-        if "192.168.1.140:3002" in sonos_media_content_id and not media_header:
+        if is_aurral_media_content_id(sonos_media_content_id) and not media_header:
             media_header = input_text.aurral_playlist_name
 
         if not media_header:
@@ -870,22 +894,31 @@ async def stop_npo_radio_2_commercial_break():
     log.info("Stopping commercial break")
     input_text.commercials_on_npo_radio_2 = "False"
     
+
 def start_npo_radio_2_filler_playlist(entity_id):
     set_resume_npo_radio_2_after_commercials(entity_id, True)
-    media_player.play_media(
-        media_content_id=input_text.npo_radio_2_filler_playlist_id, 
-        media_content_type="favorite_item_id",
-        entity_id=entity_id,
-        blocking=True
-    )
-    sonos.play_queue(
-        entity_id=entity_id,
-        queue_position=random.randint(0, 19),
-        blocking=True,
-    )
     
-    media_player.shuffle_set(entity_id = entity_id, shuffle=True)    
-
+    if input_text.npo_radio_2_filler_playlist_id.startswith("FV"):
+        media_player.play_media(
+            media_content_id=input_text.npo_radio_2_filler_playlist_id, 
+            media_content_type="favorite_item_id",
+            entity_id=entity_id,
+            blocking=True
+        )
+        sonos.play_queue(
+            entity_id=entity_id,
+            queue_position=random.randint(0, 19),
+            blocking=True,
+        )
+        
+        media_player.shuffle_set(entity_id = entity_id, shuffle=True)    
+    else:
+        service.call(
+            "pyscript",
+            "play_aurral_on_sonos",
+            item=input_text.npo_radio_2_filler_playlist_id,
+            shuffle=True,
+            entity_id=entity_id)
     
 @state_trigger("input_text.commercials_on_npo_radio_2")
 async def switch_to_playlist_on_commercial_break(value=None, old_value=None):
@@ -919,7 +952,10 @@ async def switch_to_playlist_on_commercial_break(value=None, old_value=None):
             )        
 
 def get_media_playlist(media_player_obj):
-    return getattr(media_player_obj,"media_playlist", None) or getattr(media_player_obj,"media_channel", None)
+    if is_aurral_media_content_id(getattr(media_player_obj, "media_content_id", "")):
+        return str(input_text.aurral_playlist_name)
+    else:
+        return getattr(media_player_obj,"media_playlist", None) or getattr(media_player_obj,"media_channel", None)
 
 def get_media_title(media_player_obj):
     return getattr(media_player_obj,"media_title", None)
