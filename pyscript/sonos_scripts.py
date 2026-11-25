@@ -193,6 +193,8 @@ def get_media_name(media_content_id):
         return str(input_text.aurral_playlist_name)
         
     if is_aurral_slug(media_content_id):
+        aurral_media = state.getattr("pyscript.aurral_metadata")
+        aurral_name = f"{media_content_id}_name"
         return aurral_media[aurral_name]
     
     sonos_media_inverted = {v:k for k,v in state.getattr("pyscript.sonos_media_content_ids").items()}

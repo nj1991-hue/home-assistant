@@ -3115,7 +3115,8 @@
                       "template": "aurral_button",
                       "entity": "media_player.kokken",
                       "variables": {
-                        "item": "playlist_1"
+                        "item": "playlist_1",
+                        "shuffle": true
                       },
                       "grid_options": {
                         "columns": 3
@@ -3126,7 +3127,8 @@
                       "template": "aurral_button",
                       "entity": "media_player.kokken",
                       "variables": {
-                        "item": "playlist_2"
+                        "item": "playlist_2",
+                        "shuffle": true
                       },
                       "grid_options": {
                         "columns": 3
@@ -3137,7 +3139,8 @@
                       "template": "aurral_button",
                       "entity": "media_player.kokken",
                       "variables": {
-                        "item": "playlist_3"
+                        "item": "playlist_3",
+                        "shuffle": true
                       },
                       "grid_options": {
                         "columns": 3
@@ -3148,7 +3151,8 @@
                       "template": "aurral_button",
                       "entity": "media_player.kokken",
                       "variables": {
-                        "item": "playlist_4"
+                        "item": "playlist_4",
+                        "shuffle": true
                       },
                       "grid_options": {
                         "columns": 3
