@@ -345,6 +345,8 @@ def update_aurral_metadata():
     attrs = state.getattr("pyscript.aurral_metadata") or {"friendly_name": "Aurral metadata"}
     # Newest albums: skip ones without art so the buttons never go blank.
     i = 0
+    spotlight_album_found = False
+    
     for album in newest:
         if i >= NEWEST_ALBUMS:
             break
@@ -353,8 +355,9 @@ def update_aurral_metadata():
             i += 1
             _add_item(attrs, f"recently_added_album_{i}", "album", album, thumbnail)
             
-            if is_not_metal(album):
+            if is_not_metal(album) and not spotlight_album_found:
                 _add_item(attrs, f"spotlight_album", "album", album, thumbnail)
+                spotlight_album_found = True
 
     for album in randoms:
         thumbnail = _cover(album, cached, used)
